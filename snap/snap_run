@@ -11,9 +11,8 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-# The purpose of this script is to echo an OS specific command before launching
-# the actual process. This provides a way for Erlang to hard-kill its external
-# processes.
+# The purpose of this script is to initialize environment variables and Erlang
+# configuration files so that couchdb will run inside a Snap package's confinement
 
 export HOME=$SNAP_DATA
 export ERL_FLAGS="-couch_ini ${SNAP}/rel/couchdb/etc/default.ini ${SNAP}/rel/couchdb/etc/snap.ini ${SNAP_DATA}/local.ini"
