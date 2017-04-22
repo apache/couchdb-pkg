@@ -1,0 +1,107 @@
+CouchDB 2.0 for Debian
+----------------------
+
+CouchDB 2.0 uses an erlang rebar release for installation. This is akin
+to a python virtualenv or a ruby rbenv setup. This relocatable CouchDB
+install contains the Erlang BEAM VM, all support libraries, the CouchDB
+libraries (including any natively-compiled code), couchjs, and so on.
+
+Because of this upstream architectural change, it has become impractical
+to install couchdb into the standard /usr hierarchy.
+
+This package installs CouchDB 2.0 into /opt/couchdb, with the following
+exceptions:
+
+  * Database files are stored and expected in /var/lib/couchdb
+  * Log files are stored in /var/log/couchdb
+
+This means that CouchDB configuration files are NO LONGER stored in
+/etc/couchdb, but instead are located at /opt/couchdb/etc/*.ini.
+A reminder has been placed in /etc/couchdb in case you forget.
+
+This package does NOT create the _global_changes database. If you
+wish to enable this functionality, simply create the _global_changes
+database:
+
+  curl -X PUT http://localhost:5984/_global_changes
+
+
+Logging
+-------
+
+CouchDB 2.0 changed default logging to be stderr only. Unfortunately,
+currently for Debian and Ubuntu, systemd's journal is not persisted
+to disk, only to a ring buffer in /run. rsyslogd still maintains
+the contents of /var/log.
+
+This package overrides this behaviour and logs to /var/log/couchdb
+as in 1.x.
+
+If, in the future, Debian and Ubuntu enable systemd logging via the
+journal, this file will be removed.
+
+Administrators who wish to override this behaviour can specify a
+new [log] stanza in local.ini or any local.d/*.ini file.
+
+
+Pre-seeding package configuration
+---------------------------------
+
+The Debian and Ubuntu CouchDB 2.0 packages support pre-seeding answers
+to configuration questions via debconf-set-selections. This allows
+for unattended, non-interactive ("headless") installation of CouchDB
+while supporting configuration in standalone, clustered or "no-config"
+mode.
+
+The following commands will install CouchDB in standalone mode,
+bound to 127.0.0.1, and set an admin password of "password":
+
+COUCHDB_PASSWORD=password
+echo "couchdb couchdb/mode select standalone
+couchdb couchdb/mode seen true
+couchdb couchdb/bindaddress string 127.0.0.1
+couchdb couchdb/bindaddress seen true
+couchdb couchdb/adminpass password ${COUCHDB_PASSWORD}
+couchdb couchdb/adminpass seen true
+couchdb couchdb/adminpass_again password ${COUCHDB_PASSWORD}
+couchdb couchdb/adminpass_again seen true" | debconf-set-selections
+DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes couchdb
+
+The following commands will install CouchDB in clustered mode,
+bound to all interfaces, and set the Erlang nodename, cookie, and
+admin password:
+
+COUCHDB_PASSWORD=password
+echo "couchdb couchdb/mode select clustered
+couchdb couchdb/mode seen true
+couchdb couchdb/nodename string couchdb@machine.domain.com
+couchdb couchdb/nodename seen true
+couchdb couchdb/cookie string elmo
+couchdb couchdb/cookie seen true
+couchdb couchdb/bindaddress string 0.0.0.0
+couchdb couchdb/bindaddress seen true
+couchdb couchdb/adminpass password ${COUCHDB_PASSWORD}
+couchdb couchdb/adminpass seen true
+couchdb couchdb/adminpass_again password ${COUCHDB_PASSWORD}
+couchdb couchdb/adminpass_again seen true" | debconf-set-selections
+DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes couchdb
+
+And the following commands will install CouchDB with absolutely
+no configuration (suitable for configuration via external tools):
+
+echo "couchdb couchdb/mode select none" | debconf-set-selections
+DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes couchdb
+
+
+Upgrading from CouchDB 1.x
+--------------------------
+
+The installer attempts to detect if any CouchDB 1.x databases exist
+in /var/lib/couchdb. If so, the installer will warn that manual
+action is required to migrate these databases to CouchDB 2.0, and
+includes instructions on how to perform the migration step.
+
+Migration is accomplished via the /opt/couchdb/bin/couchup tool. Run
+this program to see the invocation parameters and display other help.
+
+ -- Joan Touzet <wohali@apache.org>, Thu, 06 Apr 2017 02:50:15 -0400

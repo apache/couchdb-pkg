@@ -1,0 +1,2 @@
+var/log/couchdb opt/couchdb/var/log
+var/lib/couchdb opt/couchdb/data

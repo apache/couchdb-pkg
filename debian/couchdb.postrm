@@ -1,0 +1,44 @@
+#!/bin/sh -e
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy of
+# the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
+
+. /usr/share/debconf/confmodule
+
+case $1 in
+    purge)
+        rm -rf /opt/couchdb/erl_crash.dump
+        if test -d "/opt/couchdb/etc"; then
+            rm -rf "/opt/couchdb/etc"
+        fi
+        if test -d "/var/lib/couchdb"; then
+            rm -rf "/var/lib/couchdb"
+        fi
+        if test -d "/var/log/couchdb"; then
+            rm -rf "/var/log/couchdb"
+        fi
+        pkill -u couchdb >/dev/null 2>&1 || true
+        if getent passwd couchdb > /dev/null; then
+            deluser couchdb >/dev/null 2>&1
+        fi
+        if getent group couchdb > /dev/null; then
+            delgroup couchdb >/dev/null 2>&1
+        fi
+        db_reset couchdb/mode
+        db_reset couchdb/nodename
+        db_reset couchdb/cookie
+        db_reset couchdb/adminpass
+        db_reset couchdb/adminpass_again
+        db_reset couchdb/bindaddress
+        ;;
+esac
+
+#DEBHELPER#

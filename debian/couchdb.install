@@ -1,0 +1,4 @@
+#!/usr/bin/dh-exec
+debian/NO_LONGER_USED_MOVED_TO_opt_couchdb_etc => etc/couchdb/NO_LONGER_USED_MOVED_TO_opt_couchdb_etc
+debian/10-filelog.ini => opt/couchdb/etc/default.d/10-filelog.ini
+rel/couchdb /opt

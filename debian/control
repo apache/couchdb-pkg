@@ -1,0 +1,62 @@
+Source: couchdb
+Section: misc
+Priority: optional
+Maintainer: CouchDB Developers <dev@couchdb.apache.org>
+Standards-Version: 3.9.6
+Build-Depends: debhelper (>= 9),
+               dh-exec,
+               dh-systemd (>= 1.5),
+               erlang-dev (>= 1:16.b.3),
+               nodejs (>= 6.10.1),
+               erlang-crypto,
+               erlang-dialyzer,
+               erlang-eunit,
+               erlang-inets,
+               erlang-xmerl,
+               erlang-os-mon,
+               erlang-reltool,
+               erlang-syntax-tools,
+               git,
+               help2man,
+               libcurl4-openssl-dev,
+               libicu-dev,
+               libmozjs185-dev,
+               lsb-release,
+               po-debconf,
+               python-sphinx,
+               shunit2
+Homepage: http://couchdb.apache.org/
+
+Package: couchdb
+Architecture: any
+Depends: adduser,
+         curl,
+         debconf,
+         init-system-helpers,
+         procps,
+         python-requests,
+         ${misc:Depends},
+         ${shlibs:Depends},
+         ${misc:Depends}
+Recommends: python-progressbar
+Replaces: couchdb-bin,
+          couchdb-common
+Breaks: couchdb-bin,
+        couchdb-common
+Description: RESTful document oriented database
+ Apache CouchDB is a distributed, fault-tolerant and schema-free
+ document-oriented database accessible via a RESTful HTTP/JSON API. Among other
+ features, it provides robust, incremental replication with bi-directional
+ conflict detection and resolution, and is queryable and indexable using a
+ table-oriented view engine with JavaScript acting as the default view
+ definition language.
+ .
+ CouchDB is written in Erlang, but can be easily accessed from any environment
+ that provides means to make HTTP requests. There are a multitude of third-party
+ client libraries that make this even easier for a variety of programming
+ languages and environments.
+ .
+ This package prompts at install time whether the instance will be a
+ standalone node or part of a cluster, and associated other parameters as
+ necessary. It adds the systemd / init job and other items needed for a
+ system-wide CouchDB instance that is started at boot.

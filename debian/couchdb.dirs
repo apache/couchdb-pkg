@@ -1,0 +1,6 @@
+opt/couchdb
+opt/couchdb/etc/default.d
+opt/couchdb/etc/local.d
+var/lib/couchdb
+var/log/couchdb
+etc/couchdb
