@@ -1,0 +1,9 @@
+Document: couchdb
+Title: CouchDB Manual
+Author: CouchDB Developers <dev@couchdb.apache.org>
+Abstract: This manual describes what Apache CouchDB is, and how it can be used.
+Section: Data Management
+
+Format: HTML
+Index: /opt/couchdb/share/www/docs/index.html
+Files: /opt/couchdb/share/www/docs/*

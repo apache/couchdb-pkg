@@ -1,0 +1,38 @@
+Build notes
+-----------
+
+Debian 8
+========
+Works perfectly.
+
+Ubuntu 12.04 (precise)
+======================
+1. remove dh-systemd from control file
+2. remove dependency on init-system-helpers from control file
+3. edit rules file to remove --with-systemd
+4. build as usual
+
+Ubuntu 14.04 (trusty)
+=====================
+1. erlang solutions has no 18.3 packages?! grumble.
+
+Ubuntu 16.04 (xenial)
+=====================
+1. Does not recognize vendor profiles anywhere but /usr/share/lintian/profiles
+
+
+Current build script
+--------------------
+
+```
+curl http://www.apache.org/dist/couchdb/source/2.0.0/apache-couchdb-2.0.0.tar.gz> apache-couchdb-2.0.0.tar.gz
+mv apache-couchdb-2.0.0.tar.gz /usr/src/couchdb/couchdb_2.0.0.orig.tar.gz
+cd /usr/src/couchdb && tar xfz couchdb_2.0.0.orig.tar.gz
+cd apache-couchdb-2.0.0
+cp -R /path/to/couchdb-pkg/debian .
+export DEBEMAIL="dev@couchdb.apache.org"
+export DEBFULLNAME="CouchDB Developers"
+dpkg-buildpackage -us -uc
+# optional
+cd .. && lintian --profile couchdb couch*deb
+```

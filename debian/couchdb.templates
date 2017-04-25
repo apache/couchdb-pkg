@@ -1,0 +1,96 @@
+# NOTE TO DEVELOPERS
+# If you change this file, run debconf-updatepo !
+# Failure to do so will result in a rejected pull request.
+
+Template: couchdb/mode
+Type: select
+__Choices: standalone, clustered, none
+Default: standalone
+_Description: General type of CouchDB configuration:
+ Please select the CouchDB server configuration type that best meets your needs.
+ .
+ For single-server configurations, select standalone mode. This will set up
+ CouchDB to run as a single server.
+ .
+ For clustered configuration, select clustered mode. This will prompt for
+ additional parameters required to configure CouchDB in a clustered
+ configuration.
+ .
+ If you prefer to configure CouchDB yourself, select none. You will then
+ need to edit /opt/couchdb/etc/vm.args and /opt/couchdb/etc/local.d/*.ini
+ yourself. Be aware that this will bypass *all* configuration steps, including
+ setup of a CouchDB admin user - leaving CouchDB in "admin party" mode.
+
+Template: couchdb/nodename
+Type: string
+Default: couchdb@localhost
+_Description: CouchDB Erlang node name:
+ A CouchDB node has an Erlang node name of the form couchdb@<name>.
+ .
+ For clustered installations, it is REQUIRED that the node name be of the
+ form couchdb@fully.qualified.domain.name. It is also REQUIRED that all nodes
+ in the cluster be able to resolve other node names via DNS.
+ .
+ If you have trouble joining a node to a cluster, double-check that you
+ have correctly specified the FQDN for the node name, and that DNS resolution
+ for this FQDN works across the cluster.
+
+Template: couchdb/cookie
+Type: string
+Default: monster
+_Description: CouchDB Erlang magic cookie:
+ A CouchDB node has an Erlang magic cookie value set at startup.
+ .
+ This value must match for all nodes in the cluster. If they do not match,
+ attempts to connect the node to the cluster will be rejected.
+
+Template: couchdb/bindaddress
+Type: string
+Default: 127.0.0.1
+_Description: CouchDB interface bind address:
+ A CouchDB node must bind to a specific network interface. This is done
+ via IP address. Only a single address is supported at this time.
+ .
+ The special value '0.0.0.0' binds CouchDB to all network interfaces.
+ .
+ The default is 127.0.0.1 (loopback) for standalone nodes, and 0.0.0.0
+ (all interfaces) for clustered nodes. In clustered mode, it is not allowed
+ to bind to 127.0.0.1.
+
+Template: couchdb/adminpass
+Type: password
+_Description: Password for the CouchDB "admin" user:
+ It is highly recommended that you create a CouchDB admin user, which
+ takes CouchDB out of the insecure "admin party" mode. Entering a password
+ here will take care of this step for you.
+ .
+ If this field is left blank, an admin user will not be created.
+ .
+ A pre-existing admin user will not be overwritten by this package.
+
+Template: couchdb/adminpass_again
+Type: password
+_Description: Repeat password for the CouchDB "admin" user:
+
+Template: couchdb/adminpass_mismatch
+Type: error
+_Description: Password input error
+ The two passwords you entered were not the same. Please try again.
+
+Template: couchdb/error_setting_password
+Type: error
+_Description: Unable to set password for the CouchDB "admin" user
+ An error occurred while setting the password for the CouchDB
+ administrative user. This may have happened because the account
+ already has a password, or because of local edits to the
+ /opt/couchdb/etc/local.ini file.
+ .
+ You should check the account's password after the package installation.
+
+Template: couchdb/have_1x_databases
+Type: note
+_Description: CouchDB 1.x databases found
+ During installation, unsharded databases have been detected in the
+ /var/lib/couchdb directory. These need migration to be used in
+ CouchDB 2.x and forward. Use the `couchup' utility to assist in
+ the migration process.

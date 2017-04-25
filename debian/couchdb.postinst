@@ -1,0 +1,199 @@
+#!/bin/sh
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy of
+# the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
+
+set -e
+# without this, debconf doesn't run on initial install
+. /usr/share/debconf/confmodule
+
+db_get couchdb/mode && mode="$RET"
+
+setadminpass() {
+  # don't try and set a password if debconf didn't get one
+  # this allows Admin Party if a blank password is entered
+  db_get couchdb/adminpass && adminpw="$RET"
+  if [ -z "${adminpw}" ]; then
+    return 0
+  fi
+
+  # don't overwrite an admin password already in an ini file
+  for i in /opt/couchdb/etc/default.ini \
+      /opt/couchdb/etc/default.d/*.ini \
+      /opt/couchdb/etc/local.ini \
+      /opt/couchdb/etc/local.d/*.ini; do
+    if grep -q '^admin = ' $i >/dev/null 2>&1; then
+      return 0
+    fi
+  done
+
+  # forget we ever saw the password.
+  # don't use reset, to keep the seen status
+  db_set couchdb/adminpass ""
+  db_set couchdb/adminpass_again ""
+
+  # this avoids us having to call "curl" with $adminpw
+  # CouchDB hashes the password for us on startup
+  adminsinifile='
+# Package-introduced administrative user
+[admins]
+admin = '"${adminpw}"'
+'
+  echo "${adminsinifile}" > /opt/couchdb/etc/local.d/10-admins.ini
+}
+
+setbindaddress() {
+  db_fget "couchdb/bindaddress" seen || true
+  bindaddress_set="$RET"
+  if [ "${bindaddress_set}" != "true" ]; then
+    return 0
+  fi
+
+  # don't overwrite a bind address already in an ini file
+  # other than default.ini
+  for i in /opt/couchdb/etc/default.d/*.ini \
+      /opt/couchdb/etc/local.ini \
+      /opt/couchdb/etc/local.d/*.ini; do
+    if grep -q '^bind_address = ' $i >/dev/null 2>&1; then
+      return 0
+    fi
+  done
+
+  db_get couchdb/bindaddress && bindaddr="$RET"
+  bindinifile='
+# Package-introduced bind address
+[chttpd]
+bind_address = '"${bindaddr}"'
+'
+  echo "${bindinifile}" > /opt/couchdb/etc/default.d/10-bind-address.ini
+}
+
+createdb() {
+  # see if db already exists; if not, create DB
+  db=$1
+  db_get couchdb/bindaddress && ip="$RET"
+  if [ "${ip}" = "0.0.0.0" ]; then
+    ip=127.0.0.1
+  fi
+  if [ ! -z "${adminpw}" ]; then
+    url="http://admin:${adminpw}@${ip}:5984"
+  else
+    url="http://${ip}:5984"
+  fi
+  if curl -s "${url}/${db}" | grep -q "${db}"; then
+    return 0
+  fi
+  curl -s -X PUT "${url}/${db}" >/dev/null 2>&1
+  return $?
+}
+
+case $1 in
+  configure)
+    if dpkg --compare-versions "$2" lt-nl 1.2.0-2ubuntu1; then
+      # Hack to make the upgrade from the 1.0.1 Ubuntu package more correct:
+      chown root:root /etc/couchdb
+      chown root:root /etc/couchdb/default.ini
+      chown -R root:root /etc/couchdb/default.d
+      chmod 755 /etc/couchdb
+      chmod 644 /etc/couchdb/default.ini
+      chmod 755 /etc/couchdb/default.d
+    fi
+    if ! getent passwd couchdb > /dev/null; then
+      adduser --system --quiet \
+        --home /opt/couchdb --no-create-home \
+        --disabled-login --disabled-password \
+        --shell /bin/bash --group \
+        --gecos "CouchDB Administrator" \
+        couchdb
+    fi
+    if test "`id -u couchdb`" -eq 0; then
+      echo "The couchdb administrative user must not be root." >&2
+      false
+    fi
+    if test "`id -g couchdb`" -eq 0; then
+      echo "The couchdb administrative group must not be root." >&2
+      false
+    fi
+
+    case $mode in
+      none)
+      ;;
+      standalone)
+        setbindaddress
+        if ! setadminpass; then
+          password_error="yes"
+        fi
+      ;;
+      clustered)
+        db_get couchdb/nodename && nodename="$RET"
+        db_get couchdb/cookie && cookie="$RET"
+
+        sed -i "s/^-name .*$/-name ${nodename}/" /opt/couchdb/etc/vm.args
+        sed -i "s/^-setcookie .*$/-setcookie ${cookie}/" /opt/couchdb/etc/vm.args
+
+        setbindaddress
+
+        if ! setadminpass; then
+          password_error="yes"
+        fi
+      ;;
+      *)
+        echo "incomprehensible couchdb mode '$mode'!" 1>&2
+        exit 1
+      ;;
+    esac
+
+    # These should be owned by the couchdb user and group:
+    chown -R couchdb:couchdb /opt/couchdb/etc
+    chown -R couchdb:couchdb /var/lib/couchdb
+    chown -R couchdb:couchdb /var/log/couchdb
+    # These should also not be world readable or writable:
+    find /opt/couchdb/etc -name *.ini -exec chmod 0640 {} \;
+    chmod a+x /opt/couchdb/bin/couchup
+    chmod 0750 /var/log/couchdb
+    chmod 0750 /var/lib/couchdb
+
+    if [ "${password_error}" = "yes" ]; then
+      db_input high couchdb/error_setting_password || true
+      db_go
+    fi
+
+    if ls /var/lib/couchdb/[A-Za-z0-9]*.couch >/dev/null 2>&1; then
+      db_input high couchdb/have_1x_databases || true
+      db_go
+    fi
+
+    #DEBHELPER#
+
+    # just in case - CouchDB can be slow to startup
+    sleep 5
+
+    # if standalone, create _users and _replicator DBs
+    case $mode in
+      standalone)
+        createdb _users
+        createdb _replicator
+      ;;
+      clustered)
+      ;;
+      *)
+      ;;
+    esac
+  ;;
+
+  abort-upgrade|abort-remove|abort-configure)
+  ;;
+
+  *)
+    echo "postinst called with unknown argument '$1'" 1>&2
+    exit 1
+  ;;
+esac

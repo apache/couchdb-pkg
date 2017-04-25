@@ -1,3 +1,6 @@
-*.swp
-*~
-
+debian/*.log
+debian/*.debhelper
+debian/*.substvars
+debian/files
+debian/couchdb
+debian/tmp

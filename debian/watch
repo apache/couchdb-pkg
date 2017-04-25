@@ -1,0 +1,3 @@
+# watch control file for uscan
+version=3
+http://www.apache.org/dist/couchdb/source/([\d\.]+)/apache-couchdb-([\d\.]+)\.tar\.gz

@@ -1,0 +1,238 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: couchdb\n"
+"Report-Msgid-Bugs-To: couchdb@packages.debian.org\n"
+"POT-Creation-Date: 2017-04-22 06:31+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: select
+#. Choices
+#: ../couchdb.templates:2001
+msgid "standalone"
+msgstr ""
+
+#. Type: select
+#. Choices
+#: ../couchdb.templates:2001
+msgid "clustered"
+msgstr ""
+
+#. Type: select
+#. Choices
+#: ../couchdb.templates:2001
+msgid "none"
+msgstr ""
+
+#. Type: select
+#. Description
+#: ../couchdb.templates:2002
+msgid "General type of CouchDB configuration:"
+msgstr ""
+
+#. Type: select
+#. Description
+#: ../couchdb.templates:2002
+msgid ""
+"Please select the CouchDB server configuration type that best meets your "
+"needs."
+msgstr ""
+
+#. Type: select
+#. Description
+#: ../couchdb.templates:2002
+msgid ""
+"For single-server configurations, select standalone mode. This will set up "
+"CouchDB to run as a single server."
+msgstr ""
+
+#. Type: select
+#. Description
+#: ../couchdb.templates:2002
+msgid ""
+"For clustered configuration, select clustered mode. This will prompt for "
+"additional parameters required to configure CouchDB in a clustered "
+"configuration."
+msgstr ""
+
+#. Type: select
+#. Description
+#: ../couchdb.templates:2002
+msgid ""
+"If you prefer to configure CouchDB yourself, select none. You will then need "
+"to edit /opt/couchdb/etc/vm.args and /opt/couchdb/etc/local.d/*.ini "
+"yourself. Be aware that this will bypass *all* configuration steps, "
+"including setup of a CouchDB admin user - leaving CouchDB in \"admin party\" "
+"mode."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../couchdb.templates:3001
+msgid "CouchDB Erlang node name:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../couchdb.templates:3001
+msgid "A CouchDB node has an Erlang node name of the form couchdb@<name>."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../couchdb.templates:3001
+msgid ""
+"For clustered installations, it is REQUIRED that the node name be of the "
+"form couchdb@fully.qualified.domain.name. It is also REQUIRED that all nodes "
+"in the cluster be able to resolve other node names via DNS."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../couchdb.templates:3001
+msgid ""
+"If you have trouble joining a node to a cluster, double-check that you have "
+"correctly specified the FQDN for the node name, and that DNS resolution for "
+"this FQDN works across the cluster."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../couchdb.templates:4001
+msgid "CouchDB Erlang magic cookie:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../couchdb.templates:4001
+msgid "A CouchDB node has an Erlang magic cookie value set at startup."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../couchdb.templates:4001
+msgid ""
+"This value must match for all nodes in the cluster. If they do not match, "
+"attempts to connect the node to the cluster will be rejected."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../couchdb.templates:5001
+msgid "CouchDB interface bind address:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../couchdb.templates:5001
+msgid ""
+"A CouchDB node must bind to a specific network interface. This is done via "
+"IP address. Only a single address is supported at this time."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../couchdb.templates:5001
+msgid "The special value '0.0.0.0' binds CouchDB to all network interfaces."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../couchdb.templates:5001
+msgid ""
+"The default is 127.0.0.1 (loopback) for standalone nodes, and 0.0.0.0 (all "
+"interfaces) for clustered nodes. In clustered mode, it is not allowed to "
+"bind to 127.0.0.1."
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../couchdb.templates:6001
+msgid "Password for the CouchDB \"admin\" user:"
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../couchdb.templates:6001
+msgid ""
+"It is highly recommended that you create a CouchDB admin user, which takes "
+"CouchDB out of the insecure \"admin party\" mode. Entering a password here "
+"will take care of this step for you."
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../couchdb.templates:6001
+msgid "If this field is left blank, an admin user will not be created."
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../couchdb.templates:6001
+msgid "A pre-existing admin user will not be overwritten by this package."
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../couchdb.templates:7001
+msgid "Repeat password for the CouchDB \"admin\" user:"
+msgstr ""
+
+#. Type: error
+#. Description
+#: ../couchdb.templates:8001
+msgid "Password input error"
+msgstr ""
+
+#. Type: error
+#. Description
+#: ../couchdb.templates:8001
+msgid "The two passwords you entered were not the same. Please try again."
+msgstr ""
+
+#. Type: error
+#. Description
+#: ../couchdb.templates:9001
+msgid "Unable to set password for the CouchDB \"admin\" user"
+msgstr ""
+
+#. Type: error
+#. Description
+#: ../couchdb.templates:9001
+msgid ""
+"An error occurred while setting the password for the CouchDB administrative "
+"user. This may have happened because the account already has a password, or "
+"because of local edits to the /opt/couchdb/etc/local.ini file."
+msgstr ""
+
+#. Type: error
+#. Description
+#: ../couchdb.templates:9001
+msgid "You should check the account's password after the package installation."
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../couchdb.templates:10001
+msgid "CouchDB 1.x databases found"
+msgstr ""
+
+#. Type: note
+#. Description
+#: ../couchdb.templates:10001
+msgid ""
+"During installation, unsharded databases have been detected in the /var/lib/"
+"couchdb directory. These need migration to be used in CouchDB 2.x and "
+"forward. Use the `couchup' utility to assist in the migration process."
+msgstr ""

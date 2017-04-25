@@ -1,0 +1,10 @@
+# The following are misidentified minified source files
+couchdb source: source-is-missing share/server/coffee-script.js
+couchdb source: source-is-missing share/www/dashboard.assets/ZeroClipboard.swf
+couchdb source: source-is-missing share/docs/html/_static/underscore.js
+couchdb source: source-is-missing share/docs/html/_static/jquery.js
+couchdb source: source-is-missing src/fauxton/assets/js/plugins/prettify.js
+couchdb source: source-is-missing src/fauxton/assets/js/libs/spin.min.js
+couchdb source: source-is-missing src/docs/themes/couchdb/static/underscore.js
+couchdb source: source-is-missing src/docs/themes/couchdb/static/jquery.js
+

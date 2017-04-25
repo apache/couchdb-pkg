@@ -1,0 +1,14 @@
+# We rely on upstream Erlang binary packages that do not specify ld -z relro
+couchdb: hardening-no-relro
+
+# CouchDB is installed as a fully self-contained release that includes
+# bundled assets we can't rely on the system to provide for us, esp.
+# at the correct version.
+couchdb: duplicate-font-file opt/couchdb/share/www/dashboard.assets/fonts/fontawesome-webfont.ttf also in fonts-font-awesome
+
+# This file is not user-executable and thus does not need chmod +x
+couchdb: script-not-executable opt/couchdb/lib/couch-2.0.0/priv/spawnkillable/couchspawnkillable.sh
+
+# And we want to be extra sure our license is not ignored
+couchdb: extra-license-file opt/couchdb/LICENSE
+
