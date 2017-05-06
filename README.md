@@ -1,3 +1,8 @@
 # CouchDB Packaging support files
 
-TBD - testing GH-ASF integration
+Quickstart:
+
+```shell
+$ cd .. && git clone https://github.com/apache/couchdb
+$ cd couchdb-pkg && make -f Makefile.nightly build-couch $(lsb_release)
+```

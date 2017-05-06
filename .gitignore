@@ -4,3 +4,7 @@ debian/*.substvars
 debian/files
 debian/couchdb
 debian/tmp
+rpm/BUILD
+rpm/BUILDROOT
+rpm/RPMS
+rpm/SRPMS
