@@ -23,7 +23,6 @@ Source:        https://www.apache.org/dist/couchdb/source/${version}/apache-couc
 Source1:       %{name}.service
 Source2:       %{name}.init
 Source3:       10-filelog.ini
-Source4:       couchup
 Source5:       %{name}.logrotate
 Prefix:        %{prefix}
 Group:         Applications/Databases
@@ -101,7 +100,6 @@ if ! /usr/bin/getent passwd couchdb > /dev/null; then /usr/sbin/adduser \
 %{__install} -d -m0750 %{buildroot}/var/log/%{name}
 %{__install} -d -m0750 %{buildroot}%{_sharedstatedir}/%{name}
 %{__install} -Dp -m0644 %{SOURCE3} %{buildroot}/opt/%{name}/etc/default.d/10-filelog.ini
-%{__install} -Dp -m0755 %{SOURCE4} %{buildroot}/opt/%{name}/bin/couchup
 %{__install} -Dp -m0644 %{SOURCE5} %{buildroot}/etc/logrotate.d/%{name}
 /bin/find %{buildroot}/opt/%{name} -name *.ini -exec %{__chmod} 0640 {} \;
 
