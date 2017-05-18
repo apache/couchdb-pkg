@@ -63,7 +63,7 @@ parts:
     erlang:
         plugin: nil
         stage-packages:
-            - erlang-base-hipe
+            - erlang-base
             - erlang-crypto
             - erlang-eunit
             - erlang-inets
