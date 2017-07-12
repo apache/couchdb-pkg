@@ -32,7 +32,8 @@ precise-prep:
 	sed -i 's/ --with=systemd//' $(DISTDIR)/debian/rules
 
 # Ubuntu 14.04
-trusty: debian
+# Need to work around missing erlang-* pkgs for 1:18.3-1
+trusty: find-couch-dist copy-debian trusty-fix-control update-changelog dpkg lintian
 
 # Ubuntu 16.04
 xenial: debian
@@ -57,11 +58,14 @@ find-couch-dist:
 	$(eval ORIGDISTDIR := $(shell cd $(COUCHDIR) && find . -type d -name apache-couchdb-\*))
 	$(eval NEWDIR := $(shell echo $(ORIGDISTDIR) | sed 's/.\/apache-couchdb/couchdb/'))
 	mv $(COUCHDIR)/$(ORIGDISTDIR) $(COUCHDIR)/$(NEWDIR)
-	$(eval DISTDIR := $(COUCHDIR)/$(NEWDIR))
+	$(eval DISTDIR := $(shell readlink -f $(COUCHDIR)/$(NEWDIR)))
 
 copy-debian:
 	rm -rf $(DISTDIR)/debian
 	cp -R debian $(DISTDIR)
+
+trusty-fix-control:
+	sed -i '/erlang-*/d' $(DISTDIR)/debian/control
 
 update-changelog:
 	cd $(DISTDIR) && dch -d $(DEBCHANGELOG)
