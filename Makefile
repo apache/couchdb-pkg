@@ -32,8 +32,13 @@ precise-prep:
 	sed -i 's/ --with=systemd//' $(DISTDIR)/debian/rules
 
 # Ubuntu 14.04
-# Need to work around missing erlang-* pkgs for 1:18.3-1
-trusty: find-couch-dist copy-debian trusty-fix-control update-changelog dpkg lintian
+# Need to work around missing esl erlang-* pkgs for 1:18.3-1 :/
+trusty: find-couch-dist copy-debian trusty-prep update-changelog dpkg lintian
+
+# see changelog for ubuntu ufw package, this is safe
+trusty-prep:
+	sudo sed -i 's/conffile/conffile, postrm-does-not-call-updaterc.d-for-init.d-script/' /usr/share/lintian/profiles/couchdb/main.profile
+	sed -i '/erlang-*/d' $(DISTDIR)/debian/control
 
 # Ubuntu 16.04
 xenial: debian
@@ -63,9 +68,6 @@ find-couch-dist:
 copy-debian:
 	rm -rf $(DISTDIR)/debian
 	cp -R debian $(DISTDIR)
-
-trusty-fix-control:
-	sed -i '/erlang-*/d' $(DISTDIR)/debian/control
 
 update-changelog:
 	cd $(DISTDIR) && dch -d $(DEBCHANGELOG)
