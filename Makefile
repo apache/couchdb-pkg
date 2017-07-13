@@ -48,7 +48,7 @@ centos: find-couch-dist link-couch-dist build-rpm
 
 centos6: make-rpmbuild install-js185 centos
 
-centos7: make-rpmbuild centos
+centos7: make-rpmbuild centos rm-js185-rpms
 
 # ######################################
 get-couch:
@@ -99,3 +99,6 @@ make-js185:
 install-js185:
 	sudo rpm -i ~/rpmbuild/RPMS/x86_64/js-1*
 	sudo rpm -i ~/rpmbuild/RPMS/x86_64/js-devel*
+
+rm-js185-rpms:
+	rm -f ~/rpmbuild/RPMS/x86_64/js*
