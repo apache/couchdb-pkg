@@ -4,7 +4,7 @@ Quickstart:
 
 ```shell
 $ cd .. && git clone https://github.com/apache/couchdb
-$ cd couchdb-pkg && make build-couch $(lsb_release -cs)
+$ cd couchdb-pkg && make build-couch $(lsb_release -cs) PLATFORM=$(lsb_release -cs)
 ```
 
 # Feedback, Issues, Contributing

@@ -62,8 +62,9 @@ build-couch:
 find-couch-dist:
 	$(eval ORIGDISTDIR := $(shell cd $(COUCHDIR) && find . -type d -name apache-couchdb-\*))
 	$(eval NEWDIR := $(shell echo $(ORIGDISTDIR) | sed 's/.\/apache-couchdb/couchdb/'))
-	mv $(COUCHDIR)/$(ORIGDISTDIR) $(COUCHDIR)/$(NEWDIR)
-	$(eval DISTDIR := $(shell readlink -f $(COUCHDIR)/$(NEWDIR)))
+	$(eval VERSION := $(shell echo $(ORIGDISTDIR) | sed 's/.\/apache-couchdb-//'))
+	mv $(COUCHDIR)/$(ORIGDISTDIR) $(COUCHDIR)/$(NEWDIR)-$(PLATFORM)
+	$(eval DISTDIR := $(shell readlink -f $(COUCHDIR)/$(NEWDIR)-$(PLATFORM)))
 
 copy-debian:
 	rm -rf $(DISTDIR)/debian
@@ -82,6 +83,7 @@ lintian:
 link-couch-dist:
 	rm -rf ~/rpmbuild/BUILD
 	ln -s $(DISTDIR) ~/rpmbuild/BUILD
+	$(eval VERSION := $(shell echo $(VERSION) | sed 's/-/\./'))
 
 make-rpmbuild:
 	rm -rf ~/rpmbuild
@@ -89,7 +91,7 @@ make-rpmbuild:
 	cp -R rpm/* ~/rpmbuild
 
 build-rpm:
-	cd ~/rpmbuild && rpmbuild --verbose -bb SPECS/couchdb.spec --define "erlang_version $(ERLANG_VERSION)"
+	cd ~/rpmbuild && rpmbuild --verbose -bb SPECS/couchdb.spec --define "erlang_version $(ERLANG_VERSION)" --define '_version $(VERSION)'
 
 # ######################################
 make-js185:
