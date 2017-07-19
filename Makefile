@@ -11,7 +11,7 @@
 # the License.
 
 COUCHDIR=../couchdb
-DEBCHANGELOG="Automatically generated package from upstreasm."
+DEBCHANGELOG="Automatically generated package from upstream."
 ERLANG_VERSION=18.3
 
 export DEBFULLNAME="CouchDB Developers"
@@ -60,18 +60,16 @@ build-couch:
 
 # ######################################
 find-couch-dist:
-	$(eval ORIGDISTDIR := $(shell cd $(COUCHDIR) && find . -type d -name apache-couchdb-\*))
-	$(eval NEWDIR := $(shell echo $(ORIGDISTDIR) | sed 's/.\/apache-couchdb/couchdb/'))
-	$(eval VERSION := $(shell echo $(ORIGDISTDIR) | sed 's/.\/apache-couchdb-//'))
-	mv $(COUCHDIR)/$(ORIGDISTDIR) $(COUCHDIR)/$(NEWDIR)-$(PLATFORM)
-	$(eval DISTDIR := $(shell readlink -f $(COUCHDIR)/$(NEWDIR)-$(PLATFORM)))
+	$(eval SHORTDISTDIR := $(shell cd $(COUCHDIR) && find . -type d -name apache-couchdb-\*))
+	$(eval VERSION := $(shell echo $(SHORTDISTDIR) | sed 's/.\/apache-couchdb-//'))
+	$(eval DISTDIR := $(shell readlink -f $(COUCHDIR)/$(SHORTDISTDIR)))
 
 copy-debian:
 	rm -rf $(DISTDIR)/debian
 	cp -R debian $(DISTDIR)
 
 update-changelog:
-	cd $(DISTDIR) && dch -d $(DEBCHANGELOG)
+	cd $(DISTDIR) && dch -v $(VERSION)~$(PLATFORM) $(DEBCHANGELOG)
 
 dpkg:
 	cd $(DISTDIR) && dpkg-buildpackage -b -us -uc

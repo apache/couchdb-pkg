@@ -8,3 +8,6 @@ rpm/BUILD
 rpm/BUILDROOT
 rpm/RPMS
 rpm/SRPMS
+repo/db
+repo/dists
+repo/pool
