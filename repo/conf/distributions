@@ -11,7 +11,12 @@ Description: Official CouchDB Debian stretch repository
 Codename: precise
 Components: main
 Architectures: amd64
-Description: Official CouchDB Ubuntu 14.04 precise repository
+Description: Official CouchDB Ubuntu 12.04 precise repository
+
+Codename: trusty
+Components: main
+Architectures: amd64
+Description: Official CouchDB Ubuntu 14.04 trusty repository
 
 Codename: xenial
 Components: main
