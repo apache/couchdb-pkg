@@ -49,7 +49,7 @@ xenial: debian
 # RPM default
 centos: find-couch-dist link-couch-dist build-rpm
 
-centos6: make-rpmbuild install-js185 centos
+centos6: make-rpmbuild centos
 
 centos7: make-rpmbuild centos rm-js185-rpms
 
@@ -93,7 +93,8 @@ make-rpmbuild:
 
 # If we don't change $HOME it'll force building in ~/rpmbuild. Boo.
 build-rpm:
-	cd ../rpmbuild && export HOME=$(readlink -f ..) && rpmbuild --verbose -bb SPECS/couchdb.spec --define "erlang_version $(ERLANG_VERSION)" --define '_version $(VERSION)'
+	$(eval HOME := $(shell readlink -f ..))
+	export HOME=$(HOME) && cd ../rpmbuild && rpmbuild --verbose -bb SPECS/couchdb.spec --define "erlang_version $(ERLANG_VERSION)" --define '_version $(VERSION)'
 
 # ######################################
 make-js185:

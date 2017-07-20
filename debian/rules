@@ -35,3 +35,7 @@ override_dh_auto_install:
 
 get-orig-source:
 	uscan --noconf --download-current-version --destdir=. --rename
+
+# this allows us to use a fake/equivs libmozjs185-1.0 in automated testing
+override_dh_shlibdeps:
+	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
