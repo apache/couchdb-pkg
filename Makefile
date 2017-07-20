@@ -33,11 +33,14 @@ precise-prep:
 
 # Ubuntu 14.04
 # Need to work around missing esl erlang-* pkgs for 1:18.3-1 :/
-trusty: find-couch-dist copy-debian trusty-prep update-changelog dpkg lintian
+# No lintian run because of bogus failure on
+# postrm-does-not-call-updaterc.d-for-init.d-script
+# See Ubuntu ufw changelog for why they disabled this check
+trusty: find-couch-dist copy-debian trusty-prep update-changelog dpkg
 
 # see changelog for ubuntu ufw package, this is safe
 trusty-prep:
-	sudo sed -i 's/conffile/conffile, postrm-does-not-call-updaterc.d-for-init.d-script/' /usr/share/lintian/profiles/couchdb/main.profile
+	#sudo sed -i 's/conffile/conffile, postrm-does-not-call-updaterc.d-for-init.d-script/' /usr/share/lintian/profiles/couchdb/main.profile
 	sed -i '/erlang-*/d' $(DISTDIR)/debian/control
 
 # Ubuntu 16.04
@@ -79,26 +82,27 @@ lintian:
 
 # ######################################
 link-couch-dist:
-	rm -rf ~/rpmbuild/BUILD
-	ln -s $(DISTDIR) ~/rpmbuild/BUILD
+	rm -rf ../rpmbuild/BUILD
+	ln -s $(DISTDIR) ../rpmbuild/BUILD
 	$(eval VERSION := $(shell echo $(VERSION) | sed 's/-/\./'))
 
 make-rpmbuild:
-	rm -rf ~/rpmbuild
-	mkdir -p ~/rpmbuild
-	cp -R rpm/* ~/rpmbuild
+	rm -rf ../rpmbuild
+	mkdir -p ../rpmbuild
+	cp -R rpm/* ../rpmbuild
 
+# If we don't change $HOME it'll force building in ~/rpmbuild. Boo.
 build-rpm:
-	cd ~/rpmbuild && rpmbuild --verbose -bb SPECS/couchdb.spec --define "erlang_version $(ERLANG_VERSION)" --define '_version $(VERSION)'
+	cd ../rpmbuild && export HOME=$(readlink -f ..) && rpmbuild --verbose -bb SPECS/couchdb.spec --define "erlang_version $(ERLANG_VERSION)" --define '_version $(VERSION)'
 
 # ######################################
 make-js185:
 	spectool -g -R rpm/SPECS/js-1.8.5.spec
-	cd ~/rpmbuild && rpmbuild --verbose -bb SPECS/js-1.8.5.spec
+	cd ../rpmbuild && rpmbuild --verbose -bb SPECS/js-1.8.5.spec
 
 install-js185:
-	sudo rpm -i ~/rpmbuild/RPMS/x86_64/js-1*
-	sudo rpm -i ~/rpmbuild/RPMS/x86_64/js-devel*
+	sudo rpm -i ../rpmbuild/RPMS/x86_64/js-1*
+	sudo rpm -i ../rpmbuild/RPMS/x86_64/js-devel*
 
 rm-js185-rpms:
-	rm -f ~/rpmbuild/RPMS/x86_64/js*
+	rm -f ../rpmbuild/RPMS/x86_64/js*
