@@ -58,6 +58,15 @@ get-couch:
 	mkdir -p $(COUCHDIR)
 	git clone https://github.com/apache/couchdb
 
+download-couch:
+	mkdir -p $(COUCHDIR)
+	cd $(COUCHDIR) && curl -O $(URL) && tar xfz *.tar.gz
+
+copy-couch:
+	mkdir -p $(COUCHDIR)
+	cp $(COUCHTARBALL) $(COUCHDIR)
+	cd $(COUCHDIR) && tar xfz *.tar.gz
+
 build-couch:
 	cd $(COUCHDIR) && make dist
 
@@ -107,3 +116,10 @@ install-js185:
 
 rm-js185-rpms:
 	rm -f ../rpmbuild/RPMS/x86_64/js*
+
+# ######################################
+copy-pkgs:
+	mkdir -p pkgs/$(PLATFORM)
+	-cp ../rpmbuild/RPMS/x86_64/*.rpm pkgs/$(PLATFORM)
+	-cp ../couchdb/*deb pkgs/$(PLATFORM)
+	-chmod -R a+rwx pkgs/$(PLATFORM)

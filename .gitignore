@@ -11,3 +11,5 @@ rpm/SRPMS
 repo/db
 repo/dists
 repo/pool
+pkgs/
+couchdb/
