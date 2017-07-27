@@ -123,3 +123,6 @@ copy-pkgs:
 	-cp ../rpmbuild/RPMS/x86_64/*.rpm pkgs/$(PLATFORM)
 	-cp ../couchdb/*deb pkgs/$(PLATFORM)
 	-chmod -R a+rwx pkgs/$(PLATFORM)
+
+clean:
+	rm -rf couchdb_2.0_amd64.snap parts prime snap/.snapcraft stage

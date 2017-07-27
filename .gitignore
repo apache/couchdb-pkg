@@ -13,3 +13,8 @@ repo/dists
 repo/pool
 pkgs/
 couchdb/
+couchdb_2.0_amd64.snap
+parts/
+prime/
+snap/.snapcraft/
+stage/

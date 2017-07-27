@@ -33,6 +33,18 @@ or
 
 Packages will be placed in the `pkgs/` subdirectory.
 
+# Building snaps
+
+## Prerequisites
+
+1. Ubuntu 16.04
+1. `sudo apt install snapd snapcraft`
+
+## How to do it
+
+1. Edit `snap/snapcraft.yaml` to point to the correct tag (e.g. `2.1.0`)
+1. `snapcraft`
+
 # Feedback, Issues, Contributing
 
 General feedback is welcome at our [user][1] or [developer][2] mailing lists.
