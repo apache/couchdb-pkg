@@ -29,7 +29,7 @@ Run:
 
 or
 
-    $ ./make-pacakges http://url/to/apache-couchdb-VERSION.tar.gz
+    $ ./make-packages http://url/to/apache-couchdb-VERSION.tar.gz
 
 Packages will be placed in the `pkgs/` subdirectory.
 
