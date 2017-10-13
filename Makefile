@@ -23,6 +23,9 @@ debian: find-couch-dist copy-debian update-changelog dpkg lintian
 # Debian 8
 jessie: debian
 
+# Debian 9
+stretch: debian
+
 # Ubuntu 12.04
 precise: find-couch-dist copy-debian precise-prep dpkg lintian
 
