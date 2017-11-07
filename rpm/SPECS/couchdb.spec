@@ -108,12 +108,12 @@ if ! /usr/bin/getent passwd couchdb > /dev/null; then /usr/sbin/adduser \
 %else
 %{__install} -Dp -m0755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
 %endif
+%{__ln_s} -f -T %{_sharedstatedir}/%{name} %{buildroot}/opt/%{name}/data
+%{__ln_s} -f -T /var/log/%{name} %{buildroot}/opt/%{name}/var/log/%{name}
 
 %post
 %{__chown} -R couchdb:couchdb /opt/%{name}
 %{__chmod} a+x /opt/%{name}/bin/*
-%{__ln_s} %{_sharedstatedir}/%{name} /opt/%{name}/data
-%{__ln_s} /var/log/%{name} /opt/%{name}/var/log/%{name}
 %if 0%{?fedora} || 0%{?rhel} >= 7
 %systemd_post %{name}.service
 %else
