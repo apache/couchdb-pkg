@@ -27,7 +27,7 @@ jessie: debian
 stretch: debian
 
 # Ubuntu 12.04
-precise: find-couch-dist copy-debian precise-prep dpkg lintian
+precise: find-couch-dist copy-debian precise-prep update-changelog dpkg
 
 precise-prep:
 	sed -i '/dh-systemd/d' $(DISTDIR)/debian/control

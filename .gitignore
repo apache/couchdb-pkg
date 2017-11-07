@@ -18,3 +18,4 @@ parts/
 prime/
 snap/.snapcraft/
 stage/
+apache-couchdb*.tar.gz

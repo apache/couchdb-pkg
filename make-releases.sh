@@ -3,6 +3,7 @@ IMAGES=(
   centos-6-erlang-18.3 centos6 \
   centos-7-erlang-18.3 centos7 \
   debian-8-erlang-18.3 jessie \
+  debian-9-erlang-18.3 stretch \
   ubuntu-14.04-erlang-18.3 trusty \
   ubuntu-16.04-erlang-18.3 xenial
 )
