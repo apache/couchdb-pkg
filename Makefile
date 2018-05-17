@@ -128,4 +128,13 @@ copy-pkgs:
 	-chmod -R a+rwx pkgs/$(PLATFORM)
 
 clean:
-	rm -rf couchdb_2.0_amd64.snap parts prime snap/.snapcraft stage
+	rm -rf couchdb_2.0_amd64.snap parts prime snap/.snapcraft stage js/build
+
+# ######################################
+couch-js-clean:
+	rm -rf js/build
+
+couch-js-debs: couch-js-clean
+	mkdir js/build && cd js/build && tar xf ../src/js185-1.0.0.tar.gz --strip-components=1
+	cp -r js/debian js/build
+	cd js/build && dpkg-buildpackage -b -us -uc	

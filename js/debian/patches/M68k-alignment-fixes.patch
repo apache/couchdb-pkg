@@ -1,0 +1,42 @@
+--- a/js/src/jscntxt.h
++++ b/js/src/jscntxt.h
+@@ -419,7 +419,11 @@ class StackSegment
+ #ifdef DEBUG
+     JS_REQUIRES_STACK bool contains(const JSStackFrame *fp) const;
+ #endif
++#if !defined(__mc68000__)
+ };
++#else
++} __attribute__ ((aligned(4)));     /* enforce 32-bit alignment on m68k */
++#endif
+ 
+ static const size_t VALUES_PER_STACK_SEGMENT = sizeof(StackSegment) / sizeof(Value);
+ JS_STATIC_ASSERT(sizeof(StackSegment) % sizeof(Value) == 0);
+--- a/js/src/jsinterp.h
++++ b/js/src/jsinterp.h
+@@ -791,7 +791,11 @@ struct JSStackFrame
+     /* Poison scopeChain value set before a frame is flushed. */
+     static JSObject *const sInvalidScopeChain;
+ #endif
++#if !defined(__mc68000__)
+ };
++#else
++} __attribute__ ((aligned(4)));     /* enforce 32-bit alignment on m68k */
++#endif
+ 
+ namespace js {
+ 
+--- a/js/src/jsscript.h
++++ b/js/src/jsscript.h
+@@ -579,7 +579,11 @@ struct JSScript {
+     }
+ 
+     void copyClosedSlotsTo(JSScript *other);
++#if !defined(__mc68000__)
+ };
++#else
++} __attribute__ ((aligned(4)));     /* enforce 32-bit alignment on m68k */
++#endif
+ 
+ #define SHARP_NSLOTS            2       /* [#array, #depth] slots if the script
+                                            uses sharp variables */

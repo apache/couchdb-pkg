@@ -1,0 +1,62 @@
+https://bugzilla.mozilla.org/show_bug.cgi?id=627664
+https://bugzilla.mozilla.org/show_bug.cgi?id=674522
+
+--- a/js/src/jsval.h
++++ b/js/src/jsval.h
+@@ -306,11 +306,11 @@ typedef union jsval_layout
+             int32          i32;
+             uint32         u32;
+             JSWhyMagic     why;
+-            jsuword        word;
+         } payload;
+     } s;
+     double asDouble;
+     void *asPtr;
++    jsuword asWord;
+ } jsval_layout;
+ # endif  /* JS_BITS_PER_WORD */
+ #else   /* defined(IS_LITTLE_ENDIAN) */
+@@ -343,6 +343,7 @@ typedef union jsval_layout
+         uint64             payload47 : 47;
+     } debugView;
+     struct {
++        uint32             padding;
+         union {
+             int32          i32;
+             uint32         u32;
+@@ -351,10 +352,13 @@ typedef union jsval_layout
+     } s;
+     double asDouble;
+     void *asPtr;
++    jsuword asWord;
+ } jsval_layout;
+ # endif /* JS_BITS_PER_WORD */
+ #endif  /* defined(IS_LITTLE_ENDIAN) */
+ 
++JS_STATIC_ASSERT(sizeof(jsval_layout) == 8);
++
+ #if JS_BITS_PER_WORD == 32
+ 
+ /*
+--- a/js/src/jsvalue.h
++++ b/js/src/jsvalue.h
+@@ -291,7 +291,6 @@ JSVAL_EXTRACT_NON_DOUBLE_TAG_IMPL(jsval_
+ }
+ 
+ #ifdef __cplusplus
+-JS_STATIC_ASSERT(offsetof(jsval_layout, s.payload) == 0);
+ JS_STATIC_ASSERT((JSVAL_TYPE_NONFUNOBJ & 0xF) == JSVAL_TYPE_OBJECT);
+ JS_STATIC_ASSERT((JSVAL_TYPE_FUNOBJ & 0xF) == JSVAL_TYPE_OBJECT);
+ #endif
+@@ -729,7 +728,11 @@ class Value
+     }
+ 
+     const jsuword *payloadWord() const {
++#if JS_BITS_PER_WORD == 32
+         return &data.s.payload.word;
++#elif JS_BITS_PER_WORD == 64
++        return &data.asWord;
++#endif
+     }
+ 
+   private:

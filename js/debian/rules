@@ -1,0 +1,40 @@
+#!/usr/bin/make -f
+
+DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+VENDOR ?= $(shell dpkg-vendor --query vendor)
+
+SRCDIR = $(CURDIR)/js/src
+
+# CouchDB has found methodjit breaks couchjs in weird ways!
+CONFIGURE_FLAGS += --disable-methodjit
+
+ifeq ($(VENDOR), Ubuntu)
+ifneq (,$(findstring $(DEB_BUILD_ARCH),armel armhf))
+        CONFIGURE_FLAGS += --enable-thumb2
+endif
+endif
+
+%:
+	dh $@ --sourcedirectory=$(SRCDIR) --with pkgkde-symbolshelper,autotools_dev
+
+# dh_auto_configure does not properly handle autoconf2.13 generated configure
+# scripts, so we call configure ourselves.
+# http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=570375
+override_dh_auto_configure:
+	cd $(SRCDIR) && ./configure \
+		--host=$(DEB_HOST_GNU_TYPE) \
+		--build=$(DEB_BUILD_GNU_TYPE) \
+		--prefix=/usr \
+		--with-system-nspr \
+		--disable-tests \
+		--disable-strip \
+		--enable-ctypes \
+		--enable-threadsafe \
+		--enable-system-ffi \
+		$(CONFIGURE_FLAGS)
+
+override_dh_auto_test:
+	make -C $(SRCDIR) -k check || true
+

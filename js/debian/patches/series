@@ -1,0 +1,16 @@
+Allow-to-build-against-system-libffi.patch
+Force-NativeARM.o-to-have-arch-armv4t-in-its-.ARM.at.patch
+Bug-638056-Avoid-The-cacheFlush-support-is-missing-o.patch
+Bug-626035-Modify-the-way-arm-compiler-flags-are-set.patch
+Bug-589744-Fallback-to-perf-measurement-stub-when-pe.patch
+64bit-big-endian.patch
+destdir.patch
+fix-map-pages-on-ia64.patch
+disable-static-strings-on-ia64.patch
+autoconf.patch
+disable-nanojit-on-sparc64.patch
+fix-811665.patch
+M68k-alignment-fixes.patch
+disable-nanojit-on-x32.patch
+disable-yarrjit-on-x32.patch
+fix-cas-on-x32.patch

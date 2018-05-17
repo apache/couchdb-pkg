@@ -1,0 +1,7 @@
+When updating this package, please remember that the following files should be removed from the tarball:
+
+js/src/jit-test/tests/sunspider/check-string-unpack-code.js
+js/src/metrics/jint/sunspider/string-unpack-code.js
+js/src/t/string-unpack-code.js
+js/src/js.mdp
+js/src/ctypes/libffi/doc/libffi.info

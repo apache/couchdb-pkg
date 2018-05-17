@@ -1,0 +1,14 @@
+# DP: use 32-bit cas on x32 (static assert further up in the file proves this)
+
+--- a/js/src/jslock.cpp
++++ b/js/src/jslock.cpp
+@@ -117,7 +117,8 @@ NativeCompareAndSwap(volatile jsword *w,
+                                             reinterpret_cast<void * volatile *>(w));
+ }
+ 
+-#elif defined(__i386) && (defined(__GNUC__) || defined(__SUNPRO_CC))
++#elif (defined(__i386) || (defined(__x86_64__) && defined(__ILP32__))) && \
++    (defined(__GNUC__) || defined(__SUNPRO_CC))
+ 
+ /* Note: This fails on 386 cpus, cmpxchgl is a >= 486 instruction */
+ static JS_ALWAYS_INLINE int

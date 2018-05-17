@@ -1,0 +1,282 @@
+couch-libmozjs185 (1.8.5-1.0.0+couch-1) unstable; urgency=medium
+
+  * First Apache CouchDB-packaged version.
+  * Disables unstable methodjit option for a more stable couchjs
+
+ -- CouchDB Developers <dev@couchdb.apache.org>  Thu, 17 May 2018 18:28:05 -0400
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-8) unstable; urgency=medium
+
+  * QA upload.
+  * Change debian/libmozjs185-1.0.symbols to use arch-bits instead of an
+    explicit list of architectures.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Thu, 29 Mar 2018 22:58:49 +0200
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-7) unstable; urgency=medium
+
+  * QA upload.
+
+  [ Tobias Frost ]
+  * Add debian/watch from the PTS
+  * Fix VCS-Browser to point to right project.
+
+  [ Thorsten Glaser ]
+  * Refresh all patches with quilt.
+  * Fix FTBFS on x32:
+    - Disable nanojit and YARR JIT
+    - Use 32-bit CAS
+    - Update debian/libmozjs185-1.0.symbols
+
+ -- Thorsten Glaser <tg@mirbsd.de>  Wed, 01 Mar 2017 16:37:11 +0100
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-6) unstable; urgency=medium
+
+  * QA upload
+  * Remove Modify_tagged_pointer_structure_js1.8.5.patch, which causes an
+    ABI change and would therefore require a soname bump (Closes: #847747)
+
+ -- Ben Hutchings <ben@decadent.org.uk>  Mon, 12 Dec 2016 06:01:03 +0000
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-5.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Update debian/libmozjs185-1.0.symbols for m68k.
+
+ -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Fri, 09 Dec 2016 12:50:35 +0100
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-5.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Add Modify_tagged_pointer_structure_js1.8.5.patch to modify tagged
+    pointer to use 48 bit virtual address space (Closes: #839048).
+  * Add M68k-alignment-fixes.patch to enforce 32-bit alignment
+    on m68k for some StackSegment, JSStackFrame and JSScript.
+
+ -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Fri, 09 Dec 2016 02:53:56 +0100
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-5) unstable; urgency=medium
+
+  * QA upload.
+  * Set Maitnainer to the QA Group.
+  * Fix FTBFS with GCC 6, see new patch fix-811655.patch (Closes: #811665)
+  * Move the packaging repository to collab-maint.
+  * Update homepage
+  * Fix capitalization of JavaScript and SpiderMonkey in short description
+    (Closes: #762246)
+  * Remove some files via debian/clean to allow build twice in a row
+
+ -- Tobias Frost <tobi@debian.org>  Sun, 25 Sep 2016 14:38:22 +0200
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-4.5) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Fix typo in debian/libmozjs185-1.0.symbols ('s390' -> 's390x').
+
+ -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Sun, 08 Nov 2015 21:34:32 +0100
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-4.4) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Add disable-nanojit-on-sparc64.patch to disable nanojit on sparc64
+    where it is currently unsupported and needs to be ported first.
+  * Update debian/libmozjs185-1.0.symbols for alpha, powerpcspe, ppc64
+    sh4 and sparc64 (Closes: #669944).
+
+ -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Sun, 08 Nov 2015 19:30:45 +0100
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-4.3) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Add to / Update symbols file:
+    + ppc64el (thanks Fernando Seiti Furusato) (Closes: #752415)
+    + alpha (Closes: #657425)
+    + hppa (Closes: #734549)
+    + mips64 / mips64el (Closes: #724799)
+    + powerpcspe (Closes: #693644)
+  * respect DEB_BUILD_OPTIONS nocheck (Closes: #682771)
+
+ -- Andreas Barth <aba@ayous.org>  Fri, 12 Sep 2014 22:23:47 +0000
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-4.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Update debian/patches/64bit-big-endian.patch, backported from newer
+    versions, to correctly support 64-bit big endian platforms.
+    Thanks to Aurelien Jarno for the fix (Closes: #755176).
+
+ -- Margarita Manterola <marga@debian.org>  Sat, 23 Aug 2014 13:50:01 -0700
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-4.1) unstable; urgency=low
+
+  [ Colin Watson ]
+  * Non-maintainer upload.
+  * Updated symbols file and use autotools-dev to update config.{sub,guess}
+    (Closes: #726402)
+
+ -- Wookey <wookey@debian.org>  Wed, 02 Apr 2014 18:01:37 +0000
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-4) unstable; urgency=low
+
+  [ Stephan Schreiber ]
+  * Fix MapPages() to work on ia64
+    - add debian/patches/fix-map-pages-on-ia64.patch
+    - update debian/patches/series
+  * Disable JS static strings on ia64
+    - add debian/patches/disable-static-strings-on-ia64.patch
+    - update debian/patches/series
+  * Closes: #659186
+
+  [ gregor herrmann ]
+  * Fix "libmozjs185-dev depends on libffi-dev": add libffi-dev to Depends in
+    libmozjs185-dev binary package. Thanks Nicolas Boulenguez.
+    (Closes: #678859)
+
+ -- Chris Coulson <chrisccoulson@ubuntu.com>  Thu, 25 Oct 2012 20:10:45 +0100
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-3) unstable; urgency=low
+
+  * Drop a couple of symbols that were exposed from the internal libffi
+    on powerpc (Closes: #657247)
+    - update debian/libmozjs185-1.0.symbols
+
+ -- Chris Coulson <chrisccoulson@ubuntu.com>  Tue, 24 Jan 2012 23:05:41 +0000
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-2) unstable; urgency=low
+
+  [ Michael Biebl ]
+  * Fix various issues in the package. Thanks a lot Mike Hommey for the
+    patches and the help tracking down those build failures. (Closes: #656722)
+  * Fix build failures on arm and disable thumb2 support for Debian builds
+    (but keep it enabled for Ubuntu builds).
+    - Add Bug-626035-Modify-the-way-arm-compiler-flags-are-set.patch.
+    - Remove no-neon-or-softfp-on-arm patch.
+    - Force-NativeARM.o-to-have-arch-armv4t-in-its-.ARM.at.patch.
+    - Disable methodjit support on armel for Debian builds.
+  * Fix "The cacheFlush support is missing on this platform" build failure on
+    mips, ia64 and s390.
+    - Add Bug-638056-Avoid-The-cacheFlush-support-is-missing-o.patch
+  * Build against the system libffi library.
+    - Add Allow-to-build-against-system-libffi.patch.
+    - Add Build-Depends on libffi-dev and pkg-config.
+    - Pass --enable-system-ffi to ./configure.
+  * Fix build failure on 64bit big endian architecture (s390).
+    - Add 64bit-big-endian.patch.
+  * Fix broken library symlinks on "make install" when using DESTDIR instead
+    of creating those symlinks manually.
+    - Add destdir.patch.
+    - Remove debian/libmozjs185-{1.0,dev}.links.
+    - Update debian/libmozjs185-{1.0,dev}.install.
+  * Enable test-suite but don't abort on failures.
+  * Since dh_auto_configure does not properly handle configure scripts
+    generated by autoconf2.13, call ./configure with the correct flags
+    ourselves.
+  * Update symbols file (using pkgkde-symbolshelper).
+
+ -- Chris Coulson <chrisccoulson@ubuntu.com>  Tue, 24 Jan 2012 21:38:44 +0000
+
+couch-libmozjs185 (1.8.5-1.0.0+dfsg-1) unstable; urgency=low
+
+  [ Chris Coulson ]
+  * Use pkgkde-symbolshelper for creating the symbol file. Thanks to
+    Michael Biebl!
+    - update debian/control
+    - update debian/rules
+    - update debian/libmozjs185-1.0.symbols
+  * Drop the libmozjs-dev Provides. This never really helped at all, as it
+    isn't a drop in replacement for the Debian libmozjs-dev
+    - update debian/control
+  * Fix various lintian warnings for debian/copyright
+    - update debian/copyright
+    - add debian/MPL
+    - add debian/docs
+  * Bump Standards-Version to 3.9.2
+  * Add build-depend on python
+    - update debian/control
+  * Add a list of files removed from the tarball to debian/README.source
+
+  [ Jordi Mallach ]
+  * Update debian/copyright with various missing bits, as pointed out by
+    Debian ftp-master.
+
+ -- Chris Coulson <chrisccoulson@ubuntu.com>  Thu, 19 Jan 2012 20:30:27 +0000
+
+couch-libmozjs185 (1.8.5-1.0.0-0ubuntu8) precise; urgency=low
+
+  * Update symbols file for armhf
+
+ -- Chris Coulson <chris.coulson@canonical.com>  Fri, 06 Jan 2012 20:08:07 +0000
+
+couch-libmozjs185 (1.8.5-1.0.0-0ubuntu7) precise; urgency=low
+
+  * Use a single symbol file by using c++ and arch tags
+    - remove debian/libmozjs185-1.0.symbols.{i386,amd64,armel,powerpc}
+    - add debian/libmozjs185-1.0.symbols
+  * Add Vcs-Bzr URL
+
+ -- Chris Coulson <chris.coulson@canonical.com>  Fri, 06 Jan 2012 18:53:39 +0000
+
+couch-libmozjs185 (1.8.5-1.0.0-0ubuntu6) precise; urgency=low
+
+  * Add debian/patches/no-neon-or-softfp-on-arm:
+    - Remove the configure test that was unconditionally enabling
+      NEON extensions, as well as setting -mfloat-abi=softfp
+  * Allow use of thumb2 on armel and armhf, as it's our default.
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Thu, 01 Dec 2011 06:42:48 -0700
+
+couch-libmozjs185 (1.8.5-1.0.0-0ubuntu5) natty; urgency=low
+
+  * libmozjs185-dev nees to depend on libnspr4-dev, as it's required by
+    the pkg-config file. couchdb *will* build now :)
+
+ -- Chris Coulson <chris.coulson@canonical.com>  Fri, 15 Apr 2011 17:08:29 +0100
+
+couch-libmozjs185 (1.8.5-1.0.0-0ubuntu3) natty; urgency=low
+
+  * Install pkg-config file
+    - update debian/libmozjs185-dev.install
+  * Remove debian revision from version numbers in symbols files
+
+ -- Chris Coulson <chris.coulson@canonical.com>  Mon, 11 Apr 2011 01:32:38 +0100
+
+couch-libmozjs185 (1.8.5-1.0.0-0ubuntu2) natty; urgency=low
+
+  * Update symbols files after we turned on threadsafe and ctypes
+    - update debian/libmozjs185-1.0.symbols.amd64
+    - update debian/libmozjs185-1.0.symbols.i386
+    - update debian/libmozjs185-1.0.symbols.powerpc
+    - update debian/libmozjs185-1.0.symbols.armel
+
+ -- Chris Coulson <chris.coulson@canonical.com>  Sat, 09 Apr 2011 00:28:23 +0100
+
+couch-libmozjs185 (1.8.5-1.0.0-0ubuntu1) natty; urgency=low
+
+  * Update to stable release version
+  * Drop patches
+    - remove debian/patches/js-config-fix.patch
+    - remove debian/patches/soname-fix.patch
+    - update debian/patches/series
+  * Build with --enable-ctypes --enable-threadsafe
+    - update debian/rules
+
+ -- Chris Coulson <chris.coulson@canonical.com>  Fri, 01 Apr 2011 22:31:11 +0100
+
+couch-libmozjs185 (1.8.5~hg20110306r6-0ubuntu2) natty; urgency=low
+
+  * Fix up copyright file
+  * Add arch-specific symbol files to cope with the name mangling not being
+    the same across all of them
+    - add debian/libmozjs185-1.0.symbols.amd64
+    - add debian/libmozjs185-1.0.symbols.i386
+    - add debian/libmozjs185-1.0.symbols.powerpc
+    - add debian/libmozjs185-1.0.symbols.armel
+    - remove debian/libmozjs185-1.0.symbols
+
+ -- Chris Coulson <chris.coulson@canonical.com>  Thu, 24 Mar 2011 12:43:46 +0000
+
+couch-libmozjs185 (1.8.5~hg20110306r6-0ubuntu1) natty; urgency=low
+
+  * Initial release (Closes LP: #740815)
+
+ -- Chris Coulson <chris.coulson@canonical.com>  Thu, 24 Mar 2011 09:38:43 +0000

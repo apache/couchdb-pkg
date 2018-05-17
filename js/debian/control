@@ -1,0 +1,33 @@
+Source: couch-libmozjs185
+Section: libs
+Priority: extra
+Maintainer: CouchDB Developers <dev@couchdb.apache.org>
+Build-Depends: debhelper (>= 7.0.50~), libffi-dev, libnspr4-dev (>= 4.7.0), zip, pkg-kde-tools, python, pkg-config, autotools-dev
+Standards-Version: 3.9.2
+Homepage: https://developer.mozilla.org/en/docs/Mozilla/Projects/SpiderMonkey/Releases/1.8.5
+
+Package: couch-libmozjs185-1.0
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Replaces: libmozjs185
+Breaks: libmozjs185
+Description: SpiderMonkey JavaScript engine
+ SpiderMonkey is the code-name for the Mozilla's C implementation of
+ JavaScript. It is intended to be embedded in other applications
+ that provide host environments for JavaScript.
+ .
+ This is the CouchDB-approved version of this library.
+
+Package: couch-libmozjs185-dev
+Architecture: any
+Section: libdevel
+Depends: ${shlibs:Depends}, ${misc:Depends}, libmozjs185-1.0 (= ${binary:Version}), libnspr4-dev, libffi-dev
+Replaces: libmozjs185-dev
+Breaks: libmozjs185-dev
+Description: SpiderMonkey JavaScript library - development headers
+ SpiderMonkey is the code-name for the Mozilla's C implementation of
+ JavaScript. It is intended to be embedded in other applications
+ that provide host environments for JavaScript.
+ .
+ This package contains the header files and static library which is
+ needed for developing SpiderMonkey embedders.

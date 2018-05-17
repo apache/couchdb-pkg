@@ -1,0 +1,341 @@
+Format: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=173
+Upstream-Name: Spidermonkey
+Source: http://ftp.mozilla.org/pub/mozilla.org/js/
+
+License: MPL-1.1
+ The complete text of the Mozilla Public License can be found in
+ the `MPL' file in the same directory as this file.
+
+License: GPL-2
+ On Debian systems, the complete text of the GNU General Public
+ License can be found in the file /usr/share/common-licenses/GPL-2'.
+
+License: LGPL-2
+ On Debian systems, the complete text of the GNU Lesser General Public
+ License version 2 can be found in the file
+ `/usr/share/common-licenses/LGPL-2'.
+
+License: LGPL-2.1
+ On Debian systems, the complete text of the GNU Lesser General Public
+ License can be found in the file `/usr/share/common-licenses/LGPL-2.1'.
+
+Files: *
+Copyright: 1998-2001, Netscape Communications Corporation
+           2002-2010, Mozilla Corporation
+           2005-2006, Igor Bukanov
+           2004-2007, Adobe System Incorporated
+License: MPL-1.1 or GPL-2 or LGPL-2.1
+
+Files: js/src/jsgcchunk.cpp
+Copyright: 2006-2008 Jason Evans <jasone@FreeBSD.org>
+License: BSD
+ Copyright (C) 2006-2008 Jason Evans <jasone@FreeBSD.org>.
+ All rights reserved.
+ .
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice(s), this list of conditions and the following disclaimer as
+    the first lines of this file unmodified other than the possible
+    addition of one or more copyright notices.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice(s), this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the
+    distribution.
+
+Files: js/src/dtoa.cpp
+Copyright: 1991, 2000, 2001 by Lucent Technologies
+License: other
+ Permission to use, copy, modify, and distribute this software for any
+ purpose without fee is hereby granted, provided that this entire notice
+ is included in all copies of any software which is or includes a copy
+ or modification of this software and in all copies of the supporting
+ documentation for such software.
+
+Files: js/src/assembler
+Copyright: 2003, 2006-2009, Apple Inc.
+           2007-2009 Torch Mobile, Inc.
+License: BSD
+ Copyright (C) <YEAR> <OWNER>
+ All rights reserved.
+ .
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+Files: js/src/assembler/moco/*
+Copyright: 1998, Netscape Communications Corporation
+License: MPL-1.1 or GPL-2 or LGPL-2.1
+
+Files: js/src/assembler/assembler/*ARM*
+       js/src/assembler/assembler/AssemblerBufferWithConstantPool.h
+Copyright: 2009-2010 University of Szeged
+License: BSD
+ Copyright (C) 2009 University of Szeged
+ All rights reserved.
+ . 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+Files: js/src/assembler/jit/ExecutableAllocatorSymbian.cpp
+Copyright: 2009 Nokia Corporation and/or its subsidiary(-ies)
+License: LGPL-2
+
+Files: js/src/config/mkdepend/*
+Copyright: 1992 Network Computing Devices, Inc.
+           1993, 1994, 1998 The Open Group
+License: Other
+ Permission to use, copy, modify, distribute, and sell this software and its
+ documentation for any purpose is hereby granted without fee, provided that
+ the above copyright notice appear in all copies and that both that
+ copyright notice and this permission notice appear in supporting
+ documentation.
+
+Files: js/src/config/mkdepend/imakemdep.h
+Copyright: 1993, 1994  X Consortium
+License: MIT
+ Copyright (c) 1993, 1994  X Consortium
+ .
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of this software and associated documentation files (the
+ ``Software''), to deal in the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included
+ in all copies or substantial portions of the Software.
+
+Files: js/src/ctypes/libffi/*
+Copyright: 1996-2003, 2007-2008, Red Hat, Inc.
+           2002, 2006-2009, Free Software Foundation, Inc
+           2009, Bradley Smith <brad@brad-smith.co.uk>
+           1998, Cygnus Solutions
+           2004, Simon Posnjak
+           2005, Axis Communications AB
+           2004, 2009, Anthony Green
+           2000, Hewlett Packard Company
+           2004, Renesas Technology
+           2008, David Daney
+           2003-2004, Randolph Chung <tausq@debian.org>
+           1998, Geoffrey Keating
+           2001, John Hornkvist
+           2000, 2007, Software AG
+           2002-2008, Kaz Kojima
+           2002, Ranjit Mathew
+           2002, Bo Thorsen
+           2002, Roger Sayle
+License: MIT
+ Copyright (C) <YEAR> <OWNER>
+ .
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of this software and associated documentation files (the
+ ``Software''), to deal in the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included
+ in all copies or substantial portions of the Software.
+
+Files: js/src/jit-test/tests/arguments/strict-args.js
+       js/src/jit-test/tests/arguments/strict-nested-shadow-eval.js
+       js/src/jit-test/tests/arguments/nonstrict-assign.js
+       js/src/jit-test/tests/arguments/strict-nested-assign-shadowed-var.js
+       js/src/jit-test/tests/arguments/nonstrict-noargs.js
+       js/src/jit-test/tests/arguments/strict-nested-assign-shadow-function.js
+       js/src/jit-test/tests/arguments/strict-assign-outer-param.js
+       js/src/jit-test/tests/arguments/strict-nested-assign-shadowed-catch.js
+       js/src/jit-test/tests/arguments/nonstrict-assign-parameter-get-element.js
+       js/src/jit-test/tests/arguments/nonstrict-assign-element-get-parameter.js
+       js/src/jit-test/tests/arguments/strict-assign-after.js
+       js/src/jit-test/tests/arguments/strict-eval-mutation.js
+       js/src/jit-test/tests/arguments/strict-assign.js
+       js/src/jit-test/tests/arguments/strict-nested-assign-shadowed-catch-call.js
+       js/src/jit-test/tests/arguments/strict-nested-shadow-maybe-eval.js
+       js/src/jit-test/tests/arguments/strict-noargs.js
+       js/src/jit-test/tests/arguments/strict-nested-assign-shadow-function-name.js
+       js/src/jit-test/tests/arguments/strict-nested-eval.js
+       js/src/jit-test/tests/arguments/strict-eval.js
+       js/src/jit-test/tests/arguments/nonstrict-args.js
+       js/src/jit-test/tests/arguments/strict-assign-outer-param-psych.js
+       js/src/jit-test/tests/arguments/strict-assign-parameter-get-element.js
+       js/src/jit-test/tests/arguments/strict-maybe-assign-outer.js
+       js/src/jit-test/tests/arguments/nonstrict-later-assign.js
+       js/src/jit-test/tests/arguments/strict-maybe-nested-eval.js
+       js/src/jit-test/tests/arguments/strict-args-flushstack.js
+       js/src/jit-test/tests/arguments/strict-assign-arguments-element.js
+       js/src/jit-test/tests/arguments/strict-args-generator-flushstack.js
+       js/src/jit-test/tests/arguments/strict-nested-assign-shadow-function-call.js
+       js/src/jit-test/tests/basic/bug584565.js
+       js/src/jit-test/tests/basic/bug586917.js
+       js/src/jit-test/tests/basic/wrap-primitive-this.js
+       js/src/jit-test/tests/basic/bug513898-regexp.js
+       js/src/jit-test/tests/basic/bug625141-2.js
+       js/src/jit-test/tests/basic/bug625141-1.js
+Copyright: not applicable
+License: public-domain
+ The files listed have been put on the public domain by the Mozilla
+ contributors, as stated in the license headers of each file.
+
+Files: js/src/jit-test/sunspider/*
+Copyright: 2007 Apple Inc.
+           2005 Bob Ippolito
+           2004 Arthur Langereis
+           1999-2002 Paul Johnston
+           Rich Moore
+License: BSD
+ Copyright (C) <YEAR> <OWNER>  All rights reserved.
+ .
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+Files: js/src/jit-test/sunspider/check-date-format-xparb.js
+Copyright: 2004 Baron Schwartz
+License: LGPL-2.1
+
+Files: js/src/jit-test/v8-v5/check-crypto.js
+       js/src/v8/crypto.js
+Copyright: 2003-2005 Tom Wu
+License: MIT
+ Copyright (c) 2003-2005  Tom Wu
+ All Rights Reserved.
+ .
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of this software and associated documentation files (the
+ "Software"), to deal in the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+ .
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+
+Files: js/src/jit-test/tests/v8-v5/check-deltablue.js
+       js/src/v8/deltablue.js
+Copyright: 2008 the V8 project authors
+           2008 Google
+           1996 John Maloney
+           1996 Mario Wolczko
+License: GPL-2
+
+Files: js/src/jit-test/v8-v5/check-regexp.js
+       js/src/jit-test/v8-v5/check-richards.js
+       js/src/jit-test/v8-v5/check-splay.js
+       js/src/metrics/jint/v8/base.js
+       js/src/metrics/jint/v8/crypto.js
+       js/src/metrics/jint/v8/deltablue.js
+       js/src/metrics/jint/v8/richards.js
+       js/src/metrics/jint/v8/run-earley-boyer.js
+       js/src/metrics/jint/v8/run-raytrace.js
+       js/src/metrics/jint/v8/run-richards.js
+       js/src/metrics/jint/v8/run.js
+       js/src/v8/base.js
+       js/src/v8/crypto.js
+       js/src/v8/deltablue.js
+       js/src/v8/richards.js
+       js/src/v8/run-crypto.js
+       js/src/v8/run-deltablue.js
+       js/src/v8/run-earley-boyer.js
+       js/src/v8/run-raytrace.js
+       js/src/v8/run-richards.js
+       js/src/v8/run.js
+       js/src/v8-dtoa/*
+Copyright: 2006-2010 the V8 project authors
+           2007, 2008 Google
+License: BSD
+ Copyright <YEARS>, <OWNER>. All rights reserved.
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are
+ met:
+ .
+     * Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+     * Redistributions in binary form must reproduce the above
+       copyright notice, this list of conditions and the following
+       disclaimer in the documentation and/or other materials provided
+       with the distribution.
+     * Neither the name of Google Inc. nor the names of its
+       contributors may be used to endorse or promote products derived
+       from this software without specific prior written permission.
+
+Files: js/src/metrics/jint/sunspider/3d-morph.js
+       js/src/metrics/jint/sunspider/3d-raytrace.js
+       js/src/metrics/jint/sunspider/bitops-bitwise-and.js
+       js/src/metrics/jint/sunspider/crypto-md5.js
+       js/src/metrics/jint/sunspider/crypto-sha1.js
+       js/src/metrics/jint/sunspider/math-cordic.js
+       js/src/metrics/jint/sunspider/string-tagcloud.js
+       js/src/t/3d-morph.js
+       js/src/t/3d-raytrace.js
+       js/src/t/bitops-bitwise-and.js
+       js/src/t/crypto-md5.js
+       js/src/t/crypto-sha1.js
+       js/src/t/math-cordic.js
+       js/src/t/string-tagcloud.js
+Copyright: 2007 Apple Inc.
+           1999-2002 Paul Johnston
+           Rich Moore
+License: BSD
+ Copyright (C) <YEAR> <OWNER>
+ .
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+Files: js/src/metrics/jint/sunspider/date-format-xparb.js
+       js/src/t/date-format-xparb.js
+Copyright: 2004 Baron Schwartz
+License: LGPL-2.1
+
+Files: js/src/metrics/jint/sunspider/string-base64.js
+       js/src/t/string-base64.js
+Copyright: 2000 Martijn Pieters
+           2000 Samuel Sieb
+License: MPL-1.1 or GPL-2 or LGPL-2.1
+
+Files: js/src/yarr/*
+Copyright: 2004, 2006-2009, Apple Inc.
+           1997-2006, University of Cambridge
+           2007, Eric Seidel <eric@webkit.org>
+License: BSD
+ Copyright (C) <YEAR> <OWNER>
+ .
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+Files: debian/*
+Copyright: 2010 Canonical Ltd.
+License: GPL-2

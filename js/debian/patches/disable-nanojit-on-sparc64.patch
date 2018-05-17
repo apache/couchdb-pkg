@@ -1,0 +1,29 @@
+Description: Disable nanojit on sparc64 as it needs explicit porting
+ The integrated nanojit compiler is not yet supported on sparc64
+ and therefore results in mozjs failing to build from source on
+ this architecture. Thus, disable nanojit on sparc64 until it has
+ been explicitly ported to sparc64.
+ .
+
+--- a/js/src/configure
++++ b/js/src/configure
+@@ -7928,7 +7928,7 @@ EOF
+ EOF
+ 
+     ;;
+-sparc*-*)
++sparc-*)
+     ENABLE_TRACEJIT=1
+     NANOJIT_ARCH=Sparc
+     cat >> confdefs.h <<\EOF
+--- a/js/src/configure.in
++++ b/js/src/configure.in
+@@ -2956,7 +2956,7 @@ arm*-*)
+     AC_DEFINE(JS_CPU_ARM)
+     AC_DEFINE(JS_NUNBOX32)
+     ;;
+-sparc*-*)
++sparc-*)
+     ENABLE_TRACEJIT=1
+     NANOJIT_ARCH=Sparc
+     AC_DEFINE(JS_CPU_SPARC)
