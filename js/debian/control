@@ -9,8 +9,9 @@ Homepage: https://developer.mozilla.org/en/docs/Mozilla/Projects/SpiderMonkey/Re
 Package: couch-libmozjs185-1.0
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Replaces: libmozjs185
-Breaks: libmozjs185
+Replaces: libmozjs185-1.0
+Breaks: libmozjs185-1.0
+Provides: libmozjs185-1.0
 Description: SpiderMonkey JavaScript engine
  SpiderMonkey is the code-name for the Mozilla's C implementation of
  JavaScript. It is intended to be embedded in other applications
@@ -21,9 +22,10 @@ Description: SpiderMonkey JavaScript engine
 Package: couch-libmozjs185-dev
 Architecture: any
 Section: libdevel
-Depends: ${shlibs:Depends}, ${misc:Depends}, libmozjs185-1.0 (= ${binary:Version}), libnspr4-dev, libffi-dev
+Depends: ${shlibs:Depends}, ${misc:Depends}, couch-libmozjs185-1.0 (= ${binary:Version}), libnspr4-dev, libffi-dev
 Replaces: libmozjs185-dev
 Breaks: libmozjs185-dev
+Provides: libmozjs185-dev
 Description: SpiderMonkey JavaScript library - development headers
  SpiderMonkey is the code-name for the Mozilla's C implementation of
  JavaScript. It is intended to be embedded in other applications
