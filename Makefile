@@ -15,7 +15,7 @@ DEBCHANGELOG="Automatically generated package from upstream."
 ERLANG_VERSION=18.3
 
 JS_DEBCHANGELOG="Automatically generated package from couchdb-ci repository."
-JS_VERSION=1.8.5-1.0.0+couch-1
+JS_VERSION=1.8.5-1.0.0+couch-2
 
 export DEBFULLNAME="CouchDB Developers"
 export DEBEMAIL="dev@couchdb.apache.org"
