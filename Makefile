@@ -14,6 +14,9 @@ COUCHDIR=../couchdb
 DEBCHANGELOG="Automatically generated package from upstream."
 ERLANG_VERSION=18.3
 
+JS_DEBCHANGELOG="Automatically generated package from couchdb-ci repository."
+JS_VERSION=1.8.5-1.0.0+couch-1
+
 export DEBFULLNAME="CouchDB Developers"
 export DEBEMAIL="dev@couchdb.apache.org"
 
@@ -137,4 +140,5 @@ couch-js-clean:
 couch-js-debs: couch-js-clean
 	mkdir js/build && cd js/build && tar xf ../src/js185-1.0.0.tar.gz --strip-components=1
 	cp -r js/debian js/build
+	cd js/build && dch -v $(JS_VERSION)~$(PLATFORM) $(JS_DEBCHANGELOG)
 	cd js/build && dpkg-buildpackage -b -us -uc	
