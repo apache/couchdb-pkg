@@ -1,21 +1,31 @@
 #% global hgdate 51702867d932
 
 Summary:		JavaScript interpreter and libraries
-Name:		js
+Name:		couch-js
+Epoch:		1
 Version:		1.8.5
-Release:		7%{?hgdate:.hg%{hgdate}}%{?dist}
+Release:		21%{?hgdate:.hg%{hgdate}}%{?dist}
 License:		GPLv2+ or LGPLv2+ or MPLv1.1
 Group:		Development/Languages
 URL:			http://www.mozilla.org/js/
 Source0:		http://ftp.mozilla.org/pub/mozilla.org/js/js185-1.0.0.tar.gz
-Patch0:			js-1.8.5-64bit-big-endian.patch
-Patch1:			js-1.8.5-secondary-jit.patch
-Patch2:			js185-destdir.patch
+Patch0:		js-1.8.5-64bit-big-endian.patch
+Patch1:		js-1.8.5-secondary-jit.patch
+Patch2:		js185-destdir.patch
+Patch3:		js-1.8.5-537701.patch
+Patch4:		js185-arm-nosoftfp.patch
+Patch7:         0001-Make-js-config.h-multiarch-compatible.patch
+Patch8:		ppc64le.patch
+Patch9:         bz1027492-aarch64.patch
+Patch10:        mozjs1.8.5-tag.patch
+Patch11:	Allow-to-build-against-system-libffi.patch
 Provides:		libjs = %{version}-%{release}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
-Buildrequires:	python, zip
-Buildrequires:	ncurses-devel, autoconf213
-Epoch:		1
+Buildrequires:	nspr-devel >= 4.7
+BuildRequires:	python
+BuildRequires:	zip
+BuildRequires:	ncurses-devel
+BuildRequires:	autoconf213
 
 
 %description
@@ -30,7 +40,7 @@ Summary: Header files, libraries and development documentation for %{name}
 Group: Development/Libraries
 Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: pkgconfig
-Requires: ncurses-devel readline-devel
+Requires: ncurses-devel
 Provides: libjs-devel = %{version}-%{release}
 
 %description devel
@@ -40,11 +50,17 @@ you will need to install %{name}-devel.
 
 
 %prep
-# All patches come from old version and maintainer. I think it is Fedora related only
-%setup -q -n %{name}-%{version}
+%setup -q -n js-1.8.5
 %patch0 -p2 -b .64bit-big-endian
 %patch1 -p2 -b .secondary-jit
 %patch2 -p0 -b .destdir
+%patch3 -p1 -b .537701
+%patch4 -p1 -b .armhfp
+%patch7 -p1 -b .multilib
+%patch8 -p1 -b .ppc64le
+%patch9 -p1 -b .aarch64
+%patch10 -p1 -b .tag
+%patch11 -p1 -b .system-libffi
 cd js
 
 # Rm parts with spurios licenses, binaries
@@ -54,16 +70,10 @@ rm -rf src/ctypes/libffi src/t src/tests/src/jstests.jar src/tracevis src/v8
 
 pushd src
 autoconf-2.13
-%configure \
-    --with-system-nspr \
-    --disable-tests \
-    --disable-strip \
-    --disable-ctypes
-
 popd
 
 # Create pkgconfig file
-%{__cat} > libjs.pc << 'EOF'
+cat > libjs.pc << 'EOF'
 prefix=%{_prefix}
 exec_prefix=%{_prefix}
 libdir=%{_libdir}
@@ -79,32 +89,41 @@ EOF
 
 
 %build
-cd js
-%{__make} %{?_smp_mflags} -C src
+cd js/src
+%configure \
+    --with-system-nspr \
+    --disable-tests \
+    --disable-strip \
+    --enable-ctypes \
+    --enable-threadsafe \
+    --enable-system-ffi \
+    --disable-methodjit
+make %{?_smp_mflags}
+
 
 %install
 cd js
-%{__make} -C src install DESTDIR=%{buildroot}
+make -C src install DESTDIR=%{buildroot}
 # We don't want this
-%{__rm} -f %{buildroot}%{_bindir}/js-config
-%{__install} -m 0755 src/jscpucfg src/shell/js %{buildroot}%{_bindir}/
-#%{__rm} -rf %{buildroot}%{_libdir}/*.a
-#%{__rm} -rf %{buildroot}%{_libdir}/*.la
-
-%{__install} -m 0644 src/js*.h src/prmjtime.h src/js.msg src/*.tbl %{buildroot}%{_includedir}/
+rm -f %{buildroot}%{_bindir}/js-config
+install -m 0755 src/jscpucfg src/shell/js \
+       %{buildroot}%{_bindir}/
+rm -rf %{buildroot}%{_libdir}/*.a
+rm -rf %{buildroot}%{_libdir}/*.la
 
 # For compatibility
+# XXX do we really need libjs?!?!?!
 pushd %{buildroot}%{_libdir}
-%{__ln_s} libmozjs185.so.1.0 libmozjs.so.1 
-%{__ln_s} libmozjs185.so.1.0 libjs.so.1 
-%{__ln_s} libmozjs185.so libmozjs.so
-%{__ln_s} libmozjs185.so libjs.so
+ln -s libmozjs185.so.1.0 libmozjs.so.1
+ln -s libmozjs185.so.1.0 libjs.so.1
+ln -s libmozjs185.so libmozjs.so
+ln -s libmozjs185.so libjs.so
 popd
 
-%{__install} -m 0644 libjs.pc %{buildroot}%{_libdir}/pkgconfig/
+install -m 0644 libjs.pc %{buildroot}%{_libdir}/pkgconfig/
 
 %clean
-%{__rm} -rf %{buildroot}
+rm -rf %{buildroot}
 
 
 %post -p /sbin/ldconfig
@@ -123,14 +142,58 @@ popd
 %{_bindir}/jscpucfg
 %{_libdir}/pkgconfig/*.pc
 %{_libdir}/*.so
-%{_libdir}/*.a
 %{_includedir}/js
-%{_includedir}/js*.h
-%{_includedir}/*.tbl
-%{_includedir}/js.msg
-%{_includedir}/prmjtime.h
 
 %changelog
+* Thu May 24 2018 CouchDB Developers <dev@couchdb.apache.org> - 1:1.8.5-21
+- Remove libedit/readline dependency (we don't use it)
+- Disable methodjit (seems to result in runtime instability)
+
+* Thu Apr 06 2017 Yaakov Selkowitz <yselkowi@redhat.com> - 1:1.8.5-20
+- Fix for 48-bit VA on aarch64
+- Resolves: #1423015
+
+* Tue Aug 26 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 1:1.8.5-19
+- Rebase aarch64 patch
+- Resolves: #1134124
+
+* Tue Aug 16 2014 Colin Walters <walters@redhat.com> - 1:1.8.5-18
+- Backport ppc64le patch (Aldy Hernandez <aldyh@redhat.com>)
+- Resolves: #1125725
+
+* Mon Mar 17 2014 Colin Walters <walters@redhat.com> - 1:1.8.5-17
+- Fix multiarch conflicts in js-config.h
+- Resolves: #1076416
+
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 1:1.8.5-16
+- Mass rebuild 2014-01-24
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 1:1.8.5-15
+- Mass rebuild 2013-12-27
+
+* Wed Nov 06 2013 Colin Walters <walters@redhat.com> - 1:1.8.5-14
+- Patch to build on aarch64
+  Resolves: #1027493
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.8.5-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jan 18 2013 Dennis Gilmore <dennis@ausil.us> - 1:1.8.5-12
+- make sure -march=armv7-a is not hardcoded in arm builds
+
+* Sat Nov 17 2012 Pavel Alexeev <Pahan@Hubbitus.info> - 1:1.8.5-11
+- Thanks to Ville Skyttä (bz#875343) build against libedit instead of readline
+	what simplify licensing apparently without any loss of functionality
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.8.5-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jan 10 2012 Dennis Gilmore <dennis@ausil.us> - 1.8.5-9
+- add patch to enable js to build on both hard and soft floating point arm distros
+
+* Fri Dec 02 2011 Karsten Hopp <karsten@redhat.com> 1.8.5-8
+- add patch from bugzilla 749604, fixes PPC failures
+
 * Thu Jun 23 2011 Pavel Alexeev <Pahan@Hubbitus.info> - 1:1.8.5-7
 - Make build system more proper (bz#710837), thanks to Jasper St. Pierre.
 - Add missing header prmjtime.h (bz#709955), thanks to Jim Meyering.
@@ -277,3 +340,4 @@ popd
 
 * Tue Mar 02 2004 Dag Wieers <dag@wieers.com> - 1.5-0.rc6
 - Initial package. (using DAR)
+

@@ -112,18 +112,6 @@ build-rpm:
 	export HOME=$(HOME) && cd ../rpmbuild && rpmbuild --verbose -bb SPECS/couchdb.spec --define "erlang_version $(ERLANG_VERSION)" --define '_version $(VERSION)'
 
 # ######################################
-make-js185:
-	spectool -g -R rpm/SPECS/js-1.8.5.spec
-	cd ../rpmbuild && rpmbuild --verbose -bb SPECS/js-1.8.5.spec
-
-install-js185:
-	sudo rpm -i ../rpmbuild/RPMS/x86_64/js-1*
-	sudo rpm -i ../rpmbuild/RPMS/x86_64/js-devel*
-
-rm-js185-rpms:
-	rm -f ../rpmbuild/RPMS/x86_64/js*
-
-# ######################################
 copy-pkgs:
 	mkdir -p pkgs/$(PLATFORM)
 	-cp ../rpmbuild/RPMS/x86_64/*.rpm pkgs/$(PLATFORM)
@@ -135,10 +123,17 @@ clean:
 
 # ######################################
 couch-js-clean:
-	rm -rf js/build
+	rm -rf js/build ../rpmbuild
 
 couch-js-debs: couch-js-clean
 	mkdir js/build && cd js/build && tar xf ../src/js185-1.0.0.tar.gz --strip-components=1
 	cp -r js/debian js/build
 	cd js/build && dch -v $(JS_VERSION)~$(PLATFORM) $(JS_DEBCHANGELOG)
 	cd js/build && dpkg-buildpackage -b -us -uc	
+
+couch-js-rpms: couch-js-clean
+	mkdir -p ../rpmbuild
+	cp -R js/rpm/* ../rpmbuild
+	cp js/src/js185-1.0.0.tar.gz ../rpmbuild/SOURCES
+	cd ../rpmbuild && rpmbuild --verbose -bb SPECS/js.spec
+
