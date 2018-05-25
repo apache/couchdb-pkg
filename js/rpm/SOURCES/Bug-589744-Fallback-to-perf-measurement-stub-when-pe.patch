@@ -1,0 +1,29 @@
+From: Mike Hommey <mh+mozilla@glandium.org>
+Date: Mon, 21 Mar 2011 18:31:12 +0100
+Subject: Bug 589744 - Fallback to perf measurement stub when perf_event_open
+ syscall isn't supported. r=ted
+
+---
+ js/src/configure.in |   11 ++++++++++-
+ 1 files changed, 10 insertions(+), 1 deletions(-)
+
+--- a/js/src/configure.in
++++ b/js/src/configure.in
+@@ -3477,7 +3477,16 @@ case $target in
+ esac
+ 
+ dnl Performance measurement headers.
+-AC_CHECK_HEADER(linux/perf_event.h, HAVE_LINUX_PERF_EVENT_H=1)
++AC_CHECK_HEADER(linux/perf_event.h,
++    [AC_CACHE_CHECK(for perf_event_open system call,ac_cv_perf_event_open,
++        [AC_TRY_COMPILE([#include <sys/syscall.h>],[return sizeof(__NR_perf_event_open);],
++        ac_cv_perf_event_open=yes,
++        ac_cv_perf_event_open=no)])])
++if test "$ac_cv_perf_event_open" = "yes"; then
++    HAVE_LINUX_PERF_EVENT_H=1
++else
++    HAVE_LINUX_PERF_EVENT_H=
++fi
+ AC_SUBST(HAVE_LINUX_PERF_EVENT_H)
+ 
+ dnl Checks for libraries.

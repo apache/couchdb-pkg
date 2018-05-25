@@ -35,16 +35,3 @@ diff -Naur js-1.8.5.orig/js/src/configure.in js-1.8.5/js/src/configure.in
 +powerpc64 | ppc64 | powerpc64le | ppc64le)
      CPU_ARCH=ppc64
      ;;
- 
-diff -Naur js-1.8.5/js/src/Makefile.in.ori js-1.8.5/js/src/Makefile.in
---- js-1.8.5/js/src/Makefile.in.ori
-+++ js-1.8.5/js/src/Makefile.in
-@@ -382,7 +382,7 @@ CPPSRCS += 	checks.cc \
- # END enclude sources for V8 dtoa
- #############################################
- 
--ifeq (,$(filter-out powerpc powerpc64 sparc sparc64 s390 s390x,$(TARGET_CPU)))
-+ifeq (,$(filter-out powerpc powerpc64 powerpc64le sparc sparc64 s390 s390x,$(TARGET_CPU)))
- 
- VPATH +=	$(srcdir)/assembler \
- 		$(srcdir)/assembler/wtf \

@@ -1,25 +1,38 @@
 #% global hgdate 51702867d932
 
-Summary:		JavaScript interpreter and libraries
+Summary:	JavaScript interpreter and libraries
 Name:		couch-js
 Epoch:		1
-Version:		1.8.5
-Release:		21%{?hgdate:.hg%{hgdate}}%{?dist}
-License:		GPLv2+ or LGPLv2+ or MPLv1.1
+Version:	1.8.5
+Release:	21%{?hgdate:.hg%{hgdate}}%{?dist}
+License:	GPLv2+ or LGPLv2+ or MPLv1.1
 Group:		Development/Languages
-URL:			http://www.mozilla.org/js/
-Source0:		http://ftp.mozilla.org/pub/mozilla.org/js/js185-1.0.0.tar.gz
-Patch0:		js-1.8.5-64bit-big-endian.patch
-Patch1:		js-1.8.5-secondary-jit.patch
-Patch2:		js185-destdir.patch
-Patch3:		js-1.8.5-537701.patch
-Patch4:		js185-arm-nosoftfp.patch
-Patch7:         0001-Make-js-config.h-multiarch-compatible.patch
-Patch8:		ppc64le.patch
-Patch9:         bz1027492-aarch64.patch
-Patch10:        mozjs1.8.5-tag.patch
-Patch11:	Allow-to-build-against-system-libffi.patch
-Provides:		libjs = %{version}-%{release}
+URL:		http://www.mozilla.org/js/
+Source0:	http://ftp.mozilla.org/pub/mozilla.org/js/js185-1.0.0.tar.gz
+Patch0:		Allow-to-build-against-system-libffi.patch
+Patch1:		Force-NativeARM.o-to-have-arch-armv4t-in-its-.ARM.at.patch
+Patch2:		Bug-638056-Avoid-The-cacheFlush-support-is-missing-o.patch
+Patch3:		Bug-626035-Modify-the-way-arm-compiler-flags-are-set.patch
+Patch4:		Bug-589744-Fallback-to-perf-measurement-stub-when-pe.patch
+Patch5:		64bit-big-endian.patch
+Patch6:		destdir.patch
+Patch7:		fix-map-pages-on-ia64.patch
+Patch8:		disable-static-strings-on-ia64.patch
+Patch9:		autoconf.patch
+Patch10:	disable-nanojit-on-sparc64.patch
+Patch11:	fix-811665.patch
+Patch12:	M68k-alignment-fixes.patch
+Patch13:	disable-nanojit-on-x32.patch
+Patch14:	disable-yarrjit-on-x32.patch
+Patch15:	fix-cas-on-x32.patch
+Patch16:	0001-Make-js-config.h-multiarch-compatible.patch
+Patch17:	js185-libedit.patch
+Patch18:	mozjs1.8.5-tag.patch
+Patch19:	ppc64le.patch
+Provides:	libjs = %{version}-%{release}
+Provides:	js = %{version}-%{release}
+Obsoletes:	js
+Conflicts:	js <= 1.8.5
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 Buildrequires:	nspr-devel >= 4.7
 BuildRequires:	python
@@ -42,6 +55,9 @@ Requires: %{name} = %{epoch}:%{version}-%{release}
 Requires: pkgconfig
 Requires: ncurses-devel
 Provides: libjs-devel = %{version}-%{release}
+Provides: js-devel = %{version}-%{release}
+Obsoletes:	js-devel
+Conflicts:	js-devel <= 1.8.5
 
 %description devel
 This package contains the header files, static libraries and development
@@ -51,16 +67,26 @@ you will need to install %{name}-devel.
 
 %prep
 %setup -q -n js-1.8.5
-%patch0 -p2 -b .64bit-big-endian
-%patch1 -p2 -b .secondary-jit
-%patch2 -p0 -b .destdir
-%patch3 -p1 -b .537701
-%patch4 -p1 -b .armhfp
-%patch7 -p1 -b .multilib
-%patch8 -p1 -b .ppc64le
-%patch9 -p1 -b .aarch64
-%patch10 -p1 -b .tag
-%patch11 -p1 -b .system-libffi
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
 cd js
 
 # Rm parts with spurios licenses, binaries
@@ -148,6 +174,7 @@ rm -rf %{buildroot}
 * Thu May 24 2018 CouchDB Developers <dev@couchdb.apache.org> - 1:1.8.5-21
 - Remove libedit/readline dependency (we don't use it)
 - Disable methodjit (seems to result in runtime instability)
+- Merge in all patches from debian to ensure same builds
 
 * Thu Apr 06 2017 Yaakov Selkowitz <yselkowi@redhat.com> - 1:1.8.5-20
 - Fix for 48-bit VA on aarch64

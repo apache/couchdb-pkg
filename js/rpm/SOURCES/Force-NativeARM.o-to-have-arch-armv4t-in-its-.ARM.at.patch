@@ -1,0 +1,18 @@
+From: Mike Hommey <mh@glandium.org>
+Date: Wed, 27 Apr 2011 10:08:00 +0200
+Subject: Force NativeARM.o to have arch armv4t in its .ARM.attributes
+
+---
+ js/src/nanojit/NativeARM.cpp |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+--- a/js/src/nanojit/NativeARM.cpp
++++ b/js/src/nanojit/NativeARM.cpp
+@@ -138,6 +138,7 @@ Assembler::CountLeadingZeroes(uint32_t d
+         // with clz, and clz to be used when appropriate at runtime.
+             "   .arch armv5t\n"
+ #endif
++            "   .object_arch armv4t\n"
+             "   clz     %0, %1  \n"
+             :   "=r"    (leading_zeroes)
+             :   "r"     (data)

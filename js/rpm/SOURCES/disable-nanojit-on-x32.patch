@@ -1,0 +1,41 @@
+# DP: the JIT is not ported to x32
+
+--- a/js/src/Makefile.in
++++ b/js/src/Makefile.in
+@@ -383,6 +383,14 @@ CPPSRCS += 	checks.cc \
+ #############################################
+ 
+ ifeq (,$(filter arm %86 x86_64,$(TARGET_CPU)))
++DISABLE_JIT_ASSEMBLER:=1
++endif
++
++ifeq (x86_64-pc-linux-gnux32,$(target))
++DISABLE_JIT_ASSEMBLER:=1
++endif
++
++ifeq (1,$(DISABLE_JIT_ASSEMBLER))
+ 
+ VPATH +=	$(srcdir)/assembler \
+ 		$(srcdir)/assembler/wtf \
+--- a/js/src/configure
++++ b/js/src/configure
+@@ -7897,6 +7897,8 @@ EOF
+ EOF
+ 
+     ;;
++x86_64*-*gnux32)
++    ;;
+ x86_64*-*)
+     ENABLE_TRACEJIT=1
+     NANOJIT_ARCH=X64
+--- a/js/src/configure.in
++++ b/js/src/configure.in
+@@ -2937,6 +2937,8 @@ i?86-*)
+     AC_DEFINE(JS_CPU_X86)
+     AC_DEFINE(JS_NUNBOX32)
+     ;;
++x86_64*-*gnux32)
++    ;;
+ x86_64*-*)
+     ENABLE_TRACEJIT=1
+     NANOJIT_ARCH=X64

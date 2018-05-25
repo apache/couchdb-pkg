@@ -14,3 +14,7 @@ M68k-alignment-fixes.patch
 disable-nanojit-on-x32.patch
 disable-yarrjit-on-x32.patch
 fix-cas-on-x32.patch
+0001-Make-js-config.h-multiarch-compatible.patch
+js185-libedit.patch
+mozjs1.8.5-tag.patch
+ppc64le.patch

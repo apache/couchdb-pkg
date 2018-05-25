@@ -1,0 +1,13 @@
+# DP: YARR does not support x32
+
+--- a/js/src/assembler/wtf/Platform.h
++++ b/js/src/assembler/wtf/Platform.h
+@@ -919,7 +919,7 @@ on MinGW. See https://bugs.webkit.org/sh
+ 
+ /* YARR supports x86 & x86-64, and has been tested on Mac and Windows. */
+ #if (WTF_CPU_X86 \
+- || WTF_CPU_X86_64 \
++ || (WTF_CPU_X86_64 && !defined(__ILP32__)) \
+  || WTF_CPU_ARM_TRADITIONAL \
+  || WTF_CPU_ARM_THUMB2 \
+  || WTF_CPU_X86)
