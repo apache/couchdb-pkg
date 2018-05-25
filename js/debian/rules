@@ -35,6 +35,7 @@ override_dh_auto_configure:
 		--enable-system-ffi \
 		$(CONFIGURE_FLAGS)
 
+# These can be enabled if you want to run ~2h of JIT tests per platform...
 override_dh_auto_test:
-	make -C $(SRCDIR) -k check || true
+#	make -C $(SRCDIR) -k check
 

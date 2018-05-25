@@ -1,8 +1,8 @@
 # Why?
 
-First, Ubuntu and Debian dropped libmozjs185 as a supported package.
+First, Ubuntu and Debian [dropped libmozjs185 as a supported package](https://tracker.debian.org/news/944342/removed-185-100dfsg-8-from-unstable/).
 
-Then, RedHat/Fedora/CentOS broke our shipped, working package  by redefining a header in a patch release incompatibly, forcing a rebuild.
+Then, RedHat/Fedora/CentOS [broke our shipped, working package](https://github.com/apache/couchdb/issues/1293) by [redefining a header in a patch release incompatibly, forcing a rebuild](https://bugs.centos.org/view.php?id=14720).
 
 So, we're just building and shipping our own couch-libmozjs185 / couch-js packages now.
 
