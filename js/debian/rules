@@ -39,3 +39,6 @@ override_dh_auto_configure:
 override_dh_auto_test:
 #	make -C $(SRCDIR) -k check
 
+# bintray doesn't support xz uploads :(
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip
