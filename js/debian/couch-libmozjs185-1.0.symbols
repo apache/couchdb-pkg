@@ -529,7 +529,6 @@ libmozjs185.so.1.0 libmozjs185-1.0 #MINVER#
  (arch=armhf)JaegerThrowpoline@Base 1.8.5-1.0.0+dfsg
  (arch=armhf)JaegerTrampoline@Base 1.8.5-1.0.0+dfsg
  (arch=armhf)JaegerTrampolineReturn@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_Z12js_EnumerateP9JSContextP8JSObject11JSIterateOpPN2js5ValueEPi@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_Z12js_EnumerateP9JSContextP8JSObject11JSIterateOpPN2js5ValueEPl@Base 1.8.5-1.0.0+dfsg
  _Z14js_DateGetDateP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
  _Z14js_DateGetYearP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
@@ -537,7 +536,6 @@ libmozjs185.so.1.0 libmozjs185-1.0 #MINVER#
  _Z14js_IntervalNowv@Base 1.8.5-1.0.0+dfsg
  _Z15js_DateGetHoursP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
  _Z15js_DateGetMonthP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_Z15js_FindPropertyP9JSContextiPP8JSObjectS3_PP10JSProperty@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_Z15js_FindPropertyP9JSContextlPP8JSObjectS3_PP10JSProperty@Base 1.8.5-1.0.0+dfsg
  _Z15js_IsTypedArrayP8JSObject@Base 1.8.5-1.0.0+dfsg
  _Z16js_CloseIteratorP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
@@ -546,7 +544,6 @@ libmozjs185.so.1.0 libmozjs185-1.0 #MINVER#
  _Z16js_ValueToSourceP9JSContextRKN2js5ValueE@Base 1.8.5-1.0.0+dfsg
  _Z17js_DateGetMinutesP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
  _Z17js_DateGetSecondsP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_Z17js_LookupPropertyP9JSContextP8JSObjectiPS2_PP10JSProperty@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_Z17js_LookupPropertyP9JSContextP8JSObjectlPS2_PP10JSProperty@Base 1.8.5-1.0.0+dfsg
  _Z17js_ObjectIsRegExpP8JSObject@Base 1.8.5-1.0.0+dfsg
  (subst)_Z18JS_StructuredCloneP9JSContext{uint64_t}P{uint64_t}PFP8JSObjectS0_P23JSStructuredCloneReaderjjPvEPK26JSStructuredCloneCallbacksS6_@Base 1.8.5-1.0.0+dfsg
@@ -571,7 +568,6 @@ libmozjs185.so.1.0 libmozjs185-1.0 #MINVER#
  _Z24js_DateGetMsecSinceEpochP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
  (arch=!m68k !s390 !s390x !sh4 !x32)_Z24js_InitTypedArrayClassesP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
  _Z24js_IsDensePrimitiveArrayP8JSObject@Base 1.8.5-1.0.0+dfsg
- (subst|arch-bits=32)_Z25js_GetterOnlyPropertyStubP9JSContextP8JSObjectiiP{uint64_t}@Base 1.8.5-1.0.0+dfsg
  (subst|arch-bits=64)_Z25js_GetterOnlyPropertyStubP9JSContextP8JSObjectliP{uint64_t}@Base 1.8.5-1.0.0+dfsg
  _Z27js_CloneDensePrimitiveArrayP9JSContextP8JSObjectPS2_@Base 1.8.5-1.0.0+dfsg
  _Z27js_ReportAllocationOverflowP9JSContext@Base 1.8.5-1.0.0+dfsg
@@ -597,14 +593,11 @@ libmozjs185.so.1.0 libmozjs185-1.0 #MINVER#
  _ZN13JSCompartment4wrapEP9JSContextPN2js5ValueE@Base 1.8.5-1.0.0+dfsg
  _ZN13JSCompartment4wrapEP9JSContextPP8JSObject@Base 1.8.5-1.0.0+dfsg
  _ZN13JSCompartment4wrapEP9JSContextPP8JSString@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN13JSCompartment4wrapEP9JSContextPPFiS1_P8JSObjectiPN2js5ValueEE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN13JSCompartment4wrapEP9JSContextPPFiS1_P8JSObjectiiPN2js5ValueEE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN13JSCompartment4wrapEP9JSContextPPFiS1_P8JSObjectlPN2js5ValueEE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN13JSCompartment4wrapEP9JSContextPPFiS1_P8JSObjectliPN2js5ValueEE@Base 1.8.5-1.0.0+dfsg
  _ZN13JSCompartment4wrapEP9JSContextRN2js12AutoIdVectorE@Base 1.8.5-1.0.0+dfsg
  _ZN13JSCompartment5purgeEP9JSContext@Base 1.8.5-1.0.0+dfsg
  _ZN13JSCompartment5sweepEP9JSContextj@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN13JSCompartment6wrapIdEP9JSContextPi@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN13JSCompartment6wrapIdEP9JSContextPl@Base 1.8.5-1.0.0+dfsg
  _ZN13JSCompartmentC1EP9JSRuntime@Base 1.8.5-1.0.0+dfsg
  _ZN13JSCompartmentC2EP9JSRuntime@Base 1.8.5-1.0.0+dfsg
@@ -615,24 +608,16 @@ libmozjs185.so.1.0 libmozjs185-1.0 #MINVER#
  _ZN25JSCrossCompartmentWrapper11hasInstanceEP9JSContextP8JSObjectPKN2js5ValueEPb@Base 1.8.5-1.0.0+dfsg
  _ZN25JSCrossCompartmentWrapper12fun_toStringEP9JSContextP8JSObjectj@Base 1.8.5-1.0.0+dfsg
  _ZN25JSCrossCompartmentWrapper12obj_toStringEP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN25JSCrossCompartmentWrapper14definePropertyEP9JSContextP8JSObjectiPN2js18PropertyDescriptorE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN25JSCrossCompartmentWrapper14definePropertyEP9JSContextP8JSObjectlPN2js18PropertyDescriptorE@Base 1.8.5-1.0.0+dfsg
  _ZN25JSCrossCompartmentWrapper19getOwnPropertyNamesEP9JSContextP8JSObjectRN2js12AutoIdVectorE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN25JSCrossCompartmentWrapper21getPropertyDescriptorEP9JSContextP8JSObjectibPN2js18PropertyDescriptorE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN25JSCrossCompartmentWrapper21getPropertyDescriptorEP9JSContextP8JSObjectlbPN2js18PropertyDescriptorE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN25JSCrossCompartmentWrapper24getOwnPropertyDescriptorEP9JSContextP8JSObjectibPN2js18PropertyDescriptorE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN25JSCrossCompartmentWrapper24getOwnPropertyDescriptorEP9JSContextP8JSObjectlbPN2js18PropertyDescriptorE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN25JSCrossCompartmentWrapper3getEP9JSContextP8JSObjectS3_iPN2js5ValueE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN25JSCrossCompartmentWrapper3getEP9JSContextP8JSObjectS3_lPN2js5ValueE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN25JSCrossCompartmentWrapper3hasEP9JSContextP8JSObjectiPb@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN25JSCrossCompartmentWrapper3hasEP9JSContextP8JSObjectlPb@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN25JSCrossCompartmentWrapper3setEP9JSContextP8JSObjectS3_ibPN2js5ValueE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN25JSCrossCompartmentWrapper3setEP9JSContextP8JSObjectS3_lbPN2js5ValueE@Base 1.8.5-1.0.0+dfsg
  _ZN25JSCrossCompartmentWrapper4callEP9JSContextP8JSObjectjPN2js5ValueE@Base 1.8.5-1.0.0+dfsg
  _ZN25JSCrossCompartmentWrapper4keysEP9JSContextP8JSObjectRN2js12AutoIdVectorE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN25JSCrossCompartmentWrapper6hasOwnEP9JSContextP8JSObjectiPb@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN25JSCrossCompartmentWrapper6hasOwnEP9JSContextP8JSObjectlPb@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN25JSCrossCompartmentWrapper7delete_EP9JSContextP8JSObjectiPb@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN25JSCrossCompartmentWrapper7delete_EP9JSContextP8JSObjectlPb@Base 1.8.5-1.0.0+dfsg
  _ZN25JSCrossCompartmentWrapper7iterateEP9JSContextP8JSObjectjPN2js5ValueE@Base 1.8.5-1.0.0+dfsg
  _ZN25JSCrossCompartmentWrapper9constructEP9JSContextP8JSObjectjPN2js5ValueES6_@Base 1.8.5-1.0.0+dfsg
@@ -659,19 +644,12 @@ libmozjs185.so.1.0 libmozjs185-1.0 #MINVER#
  _ZN2js10TypedArray11fastClassesE@Base 1.8.5-1.0.0+dfsg
  _ZN2js10TypedArray11slowClassesE@Base 1.8.5-1.0.0+dfsg
  _ZN2js10TypedArray12fromJSObjectEP8JSObject@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN2js10TypedArray14prop_getBufferEP9JSContextP8JSObjectiPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN2js10TypedArray14prop_getBufferEP9JSContextP8JSObjectlPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN2js10TypedArray14prop_getLengthEP9JSContextP8JSObjectiPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN2js10TypedArray14prop_getLengthEP9JSContextP8JSObjectlPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN2js10TypedArray17obj_getAttributesEP9JSContextP8JSObjectiPj@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN2js10TypedArray17obj_getAttributesEP9JSContextP8JSObjectlPj@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN2js10TypedArray17obj_setAttributesEP9JSContextP8JSObjectiPj@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN2js10TypedArray17obj_setAttributesEP9JSContextP8JSObjectlPj@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN2js10TypedArray18obj_lookupPropertyEP9JSContextP8JSObjectiPS4_PP10JSProperty@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN2js10TypedArray18obj_lookupPropertyEP9JSContextP8JSObjectlPS4_PP10JSProperty@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN2js10TypedArray18prop_getByteLengthEP9JSContextP8JSObjectiPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN2js10TypedArray18prop_getByteLengthEP9JSContextP8JSObjectlPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN2js10TypedArray18prop_getByteOffsetEP9JSContextP8JSObjectiPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN2js10TypedArray18prop_getByteOffsetEP9JSContextP8JSObjectlPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
  _ZN2js10TypedArray7jspropsE@Base 1.8.5-1.0.0+dfsg
  _ZN2js10TypedArray9obj_traceEP8JSTracerP8JSObject@Base 1.8.5-1.0.0+dfsg
@@ -680,7 +658,6 @@ libmozjs185.so.1.0 libmozjs185-1.0 #MINVER#
  _ZN2js11ArrayBuffer14class_finalizeEP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
  _ZN2js11ArrayBuffer15allocateStorageEP9JSContextj@Base 1.8.5-1.0.0+dfsg
  _ZN2js11ArrayBuffer17class_constructorEP9JSContextjPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN2js11ArrayBuffer18prop_getByteLengthEP9JSContextP8JSObjectiPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN2js11ArrayBuffer18prop_getByteLengthEP9JSContextP8JSObjectlPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
  _ZN2js11ArrayBuffer6createEP9JSContexti@Base 1.8.5-1.0.0+dfsg
  _ZN2js11ArrayBuffer7jsclassE@Base 1.8.5-1.0.0+dfsg
@@ -695,16 +672,12 @@ libmozjs185.so.1.0 libmozjs185-1.0 #MINVER#
  _ZN2js14JSProxyHandler12fun_toStringEP9JSContextP8JSObjectj@Base 1.8.5-1.0.0+dfsg
  _ZN2js14JSProxyHandler12obj_toStringEP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
  _ZN2js14JSProxyHandler13isOuterWindowEv@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN2js14JSProxyHandler3getEP9JSContextP8JSObjectS4_iPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN2js14JSProxyHandler3getEP9JSContextP8JSObjectS4_lPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN2js14JSProxyHandler3hasEP9JSContextP8JSObjectiPb@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN2js14JSProxyHandler3hasEP9JSContextP8JSObjectlPb@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN2js14JSProxyHandler3setEP9JSContextP8JSObjectS4_ibPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN2js14JSProxyHandler3setEP9JSContextP8JSObjectS4_lbPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
  _ZN2js14JSProxyHandler4callEP9JSContextP8JSObjectjPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
  _ZN2js14JSProxyHandler4keysEP9JSContextP8JSObjectRNS_12AutoIdVectorE@Base 1.8.5-1.0.0+dfsg
  _ZN2js14JSProxyHandler5traceEP8JSTracerP8JSObject@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN2js14JSProxyHandler6hasOwnEP9JSContextP8JSObjectiPb@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN2js14JSProxyHandler6hasOwnEP9JSContextP8JSObjectlPb@Base 1.8.5-1.0.0+dfsg
  _ZN2js14JSProxyHandler6typeOfEP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
  _ZN2js14JSProxyHandler7iterateEP9JSContextP8JSObjectjPNS_5ValueE@Base 1.8.5-1.0.0+dfsg
@@ -734,32 +707,23 @@ libmozjs185.so.1.0 libmozjs185-1.0 #MINVER#
  _ZN9JSWrapper11hasInstanceEP9JSContextP8JSObjectPKN2js5ValueEPb@Base 1.8.5-1.0.0+dfsg
  _ZN9JSWrapper12fun_toStringEP9JSContextP8JSObjectj@Base 1.8.5-1.0.0+dfsg
  _ZN9JSWrapper12obj_toStringEP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN9JSWrapper14definePropertyEP9JSContextP8JSObjectiPN2js18PropertyDescriptorE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN9JSWrapper14definePropertyEP9JSContextP8JSObjectlPN2js18PropertyDescriptorE@Base 1.8.5-1.0.0+dfsg
  _ZN9JSWrapper16getWrapperFamilyEv@Base 1.8.5-1.0.0+dfsg
  _ZN9JSWrapper19getOwnPropertyNamesEP9JSContextP8JSObjectRN2js12AutoIdVectorE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN9JSWrapper21getPropertyDescriptorEP9JSContextP8JSObjectibPN2js18PropertyDescriptorE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN9JSWrapper21getPropertyDescriptorEP9JSContextP8JSObjectlbPN2js18PropertyDescriptorE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN9JSWrapper24getOwnPropertyDescriptorEP9JSContextP8JSObjectibPN2js18PropertyDescriptorE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN9JSWrapper24getOwnPropertyDescriptorEP9JSContextP8JSObjectlbPN2js18PropertyDescriptorE@Base 1.8.5-1.0.0+dfsg
  _ZN9JSWrapper3NewEP9JSContextP8JSObjectS3_S3_PS_@Base 1.8.5-1.0.0+dfsg
  _ZN9JSWrapper3fixEP9JSContextP8JSObjectPN2js5ValueE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN9JSWrapper3getEP9JSContextP8JSObjectS3_iPN2js5ValueE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN9JSWrapper3getEP9JSContextP8JSObjectS3_lPN2js5ValueE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN9JSWrapper3hasEP9JSContextP8JSObjectiPb@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN9JSWrapper3hasEP9JSContextP8JSObjectlPb@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN9JSWrapper3setEP9JSContextP8JSObjectS3_ibPN2js5ValueE@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN9JSWrapper3setEP9JSContextP8JSObjectS3_lbPN2js5ValueE@Base 1.8.5-1.0.0+dfsg
  _ZN9JSWrapper4callEP9JSContextP8JSObjectjPN2js5ValueE@Base 1.8.5-1.0.0+dfsg
  _ZN9JSWrapper4keysEP9JSContextP8JSObjectRN2js12AutoIdVectorE@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN9JSWrapper5enterEP9JSContextP8JSObjectiNS_6ActionEPb@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN9JSWrapper5enterEP9JSContextP8JSObjectlNS_6ActionEPb@Base 1.8.5-1.0.0+dfsg
  _ZN9JSWrapper5leaveEP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
  _ZN9JSWrapper5traceEP8JSTracerP8JSObject@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN9JSWrapper6hasOwnEP9JSContextP8JSObjectiPb@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN9JSWrapper6hasOwnEP9JSContextP8JSObjectlPb@Base 1.8.5-1.0.0+dfsg
  _ZN9JSWrapper6typeOfEP9JSContextP8JSObject@Base 1.8.5-1.0.0+dfsg
- (arch-bits=32)_ZN9JSWrapper7delete_EP9JSContextP8JSObjectiPb@Base 1.8.5-1.0.0+dfsg
  (arch-bits=64)_ZN9JSWrapper7delete_EP9JSContextP8JSObjectlPb@Base 1.8.5-1.0.0+dfsg
  _ZN9JSWrapper7iterateEP9JSContextP8JSObjectjPN2js5ValueE@Base 1.8.5-1.0.0+dfsg
  _ZN9JSWrapper9constructEP9JSContextP8JSObjectjPN2js5ValueES6_@Base 1.8.5-1.0.0+dfsg
