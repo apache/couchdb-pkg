@@ -37,7 +37,7 @@ BuildRequires: esl-erlang = %{erlang_version}
 BuildRequires: gcc
 BuildRequires: git
 BuildRequires: help2man
-#BuildRequires: js-devel = 1:1.8.5
+#BuildRequires: couch-js-devel = 1:1.8.5
 BuildRequires: libcurl-devel
 BuildRequires: libicu-devel
 BuildRequires: nodejs >= 6.10.1
@@ -49,7 +49,7 @@ BuildRequires: python >= 2.6
 Requires(pre): shadow-utils
 
 Requires(post): curl
-Requires(post): js = 1:1.8.5
+Requires(post): couch-js = 1:1.8.5
 Requires(post): libicu >= 4.2.1
 Requires(post): procps
 Requires(post): python-progressbar
