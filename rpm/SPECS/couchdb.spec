@@ -33,7 +33,7 @@ ExclusiveArch: x86_64
 Exclusiveos:   linux
 Packager:      CouchDB Developers <dev@couchdb.apache.org>
 
-BuildRequires: esl-erlang = %{erlang_version}
+BuildRequires: esl-erlang
 BuildRequires: gcc
 BuildRequires: git
 BuildRequires: help2man

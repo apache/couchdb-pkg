@@ -12,7 +12,6 @@
 
 COUCHDIR=../couchdb
 DEBCHANGELOG="Automatically generated package from upstream."
-ERLANG_VERSION=18.3
 
 JS_DEBCHANGELOG="Automatically generated package from couchdb-ci repository."
 JS_VERSION=1.8.5-1.0.0+couch-2
@@ -96,7 +95,7 @@ dpkg:
 	cd $(DISTDIR) && dpkg-buildpackage -b -us -uc
 
 lintian:
-	cd $(DISTDIR)/.. && lintian --profile couchdb couch*deb
+	cd $(DISTDIR)/.. && lintian --profile couchdb couch*.deb
 
 # ######################################
 link-couch-dist:
@@ -112,7 +111,7 @@ make-rpmbuild:
 # If we don't change $HOME it'll force building in ~/rpmbuild. Boo.
 build-rpm:
 	$(eval HOME := $(shell readlink -f ..))
-	export HOME=$(HOME) && cd ../rpmbuild && rpmbuild --verbose -bb SPECS/couchdb.spec --define "erlang_version $(ERLANG_VERSION)" --define '_version $(VERSION)'
+	export HOME=$(HOME) && cd ../rpmbuild && rpmbuild --verbose -bb SPECS/couchdb.spec --define '_version $(VERSION)'
 
 # ######################################
 copy-pkgs:
