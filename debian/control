@@ -23,8 +23,7 @@ Build-Depends: debhelper (>= 9),
                couch-libmozjs185-dev,
                lsb-release,
                po-debconf,
-               python-sphinx,
-               shunit2
+               python-sphinx
 Homepage: http://couchdb.apache.org/
 
 Package: couchdb

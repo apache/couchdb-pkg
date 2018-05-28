@@ -52,6 +52,9 @@ trusty-prep:
 # Ubuntu 16.04
 xenial: debian
 
+# Ubuntu 18.04
+bionic: debian
+
 # RPM default
 centos: find-couch-dist link-couch-dist build-rpm
 

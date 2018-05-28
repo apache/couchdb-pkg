@@ -44,7 +44,6 @@ BuildRequires: nodejs >= 6.10.1
 BuildRequires: python >= 2.6
 #BuildRequires: python-pip
 #BuildRequires: python-sphinx >= 1.5.3
-#BuildRequires: shunit2
 
 Requires(pre): shadow-utils
 
