@@ -59,7 +59,7 @@ centos: find-couch-dist link-couch-dist build-rpm
 
 centos6: make-rpmbuild centos
 
-centos7: make-rpmbuild centos rm-js185-rpms
+centos7: make-rpmbuild centos
 
 # ######################################
 get-couch:
