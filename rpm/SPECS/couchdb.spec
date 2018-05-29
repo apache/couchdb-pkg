@@ -128,7 +128,7 @@ if [ $1 -eq 0 ]; then
   /sbin/service %{name} stop >/dev/null 2>&1 || :
   /sbin/chkconfig --del %{name} || :
 fi
-killall -u couchdb epmd
+killall -u couchdb epmd || :
 %endif
 
 %postun
