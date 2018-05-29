@@ -91,8 +91,22 @@ createdb() {
   if curl -s "${url}/${db}" | grep -q "${db}"; then
     return 0
   fi
-  curl -s -X PUT "${url}/${db}" >/dev/null 2>&1
+  curl -s -X PUT "${url}/${db}" >/dev/null 2>&1 || warnfail
   return $?
+}
+
+warnfail() {
+  # print a warning and exit without error
+  cat <<EOF
+WARNING: Unable to create standalone system databases.
+CouchDB may not have started correctly (no init?)
+Once CouchDB has started correctly, run the following:
+
+  curl -X PUT http://<admin-user>:<admin-pass>@127.0.0.1:5984/_users
+  curl -X PUT http://<admin-user>:<admin-pass>@127.0.0.1:5984/_replicator
+
+EOF
+  exit 0
 }
 
 case $1 in
