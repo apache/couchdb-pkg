@@ -1,6 +1,6 @@
 /var/log/couchdb/couchdb.log {
-  weekly
-  rotate 10
+  daily
+  rotate 7
   copytruncate
   delaycompress
   compress
