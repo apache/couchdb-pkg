@@ -30,7 +30,7 @@ setadminpass() {
       /opt/couchdb/etc/default.d/*.ini \
       /opt/couchdb/etc/local.ini \
       /opt/couchdb/etc/local.d/*.ini; do
-    if grep -q '^admin = ' $i >/dev/null 2>&1; then
+    if grep -q '^admin \?= ' $i >/dev/null 2>&1; then
       return 0
     fi
   done
@@ -62,7 +62,7 @@ setbindaddress() {
   for i in /opt/couchdb/etc/default.d/*.ini \
       /opt/couchdb/etc/local.ini \
       /opt/couchdb/etc/local.d/*.ini; do
-    if grep -q '^bind_address = ' $i >/dev/null 2>&1; then
+    if grep -q '^bind_address \?= ' $i >/dev/null 2>&1; then
       return 0
     fi
   done
@@ -74,6 +74,25 @@ setbindaddress() {
 bind_address = '"${bindaddr}"'
 '
   echo "${bindinifile}" > /opt/couchdb/etc/default.d/10-bind-address.ini
+}
+
+setsinglenode() {
+  # don't overwrite an n value already in an ini file
+  # other than default.ini
+  for i in /opt/couchdb/etc/default.d/*.ini \
+      /opt/couchdb/etc/local.ini \
+      /opt/couchdb/etc/local.d/*.ini; do
+    if grep -q '^n \?= ' $i >/dev/null 2>&1; then
+      return 0
+    fi
+  done
+
+  singlenodeinifile='
+# Package-introduced single node file
+[cluster]
+n = 1
+'
+  echo "${singlenodeinifile}" > /opt/couchdb/etc/default.d/5-single-node.ini
 }
 
 createdb() {
@@ -142,6 +161,7 @@ case $1 in
       ;;
       standalone)
         setbindaddress
+        setsinglenode
         if ! setadminpass; then
           password_error="yes"
         fi
