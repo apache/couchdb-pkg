@@ -44,11 +44,11 @@ do_usage() {
 }
 
 do_start_cmd() {
-    start-stop-daemon --start --quiet ${PIDFILE:+--pidfile ${PIDFILE}} \
+    start-stop-daemon --start --quiet ${PIDFILE:+--pidfile ${PIDFILE} --make-pidfile} \
         $START_ARGS \
         --startas $DAEMON --name $NAME --exec $DAEMON --test > /dev/null \
         || return 1
-    start-stop-daemon --start --quiet ${PIDFILE:+--pidfile ${PIDFILE}} \
+    start-stop-daemon --start --quiet ${PIDFILE:+--pidfile ${PIDFILE} --make-pidfile} \
         $START_ARGS \
         --startas $DAEMON --name $NAME --exec $DAEMON -- $DAEMON_ARGS \
         || return 2
@@ -67,10 +67,11 @@ do_stop_cmd() {
     RETVAL=2
     if [ ! -z "$PID" ]; then
         start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 \
-            --pid $PID
+            --pid $PIDFILE
         RETVAL="$?"
         [ "$RETVAL" = 2 ] && return 2
     fi
+    rm -f ${PIDFILE}
     return $RETVAL
 }
 
