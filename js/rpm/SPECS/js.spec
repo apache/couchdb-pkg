@@ -36,6 +36,7 @@ Conflicts:	js <= 1.8.5
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 Buildrequires:	nspr-devel >= 4.7
 BuildRequires:	python
+BuildRequires:	perl
 BuildRequires:	zip
 BuildRequires:	ncurses-devel
 BuildRequires:	autoconf213
