@@ -39,6 +39,7 @@ BuildRequires:	python
 BuildRequires:	zip
 BuildRequires:	ncurses-devel
 BuildRequires:	autoconf213
+BuildRequires:	libffi-devel
 
 
 %description
