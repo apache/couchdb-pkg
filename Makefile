@@ -138,6 +138,7 @@ couch-js-clean:
 couch-js-debs: couch-js-clean
 	mkdir js/build && cd js/build && tar xf ../src/js185-1.0.0.tar.gz --strip-components=1
 	cp -r js/debian js/build
+	[ "$(shell arch)" = "armv7l" ] && rm js/build/debian/*symbols
 	cd js/build && dch -v $(JS_VERSION)~$(PLATFORM) $(JS_DEBCHANGELOG)
 	cd js/build && dpkg-buildpackage -b -us -uc	
 
