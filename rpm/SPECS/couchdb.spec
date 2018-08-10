@@ -47,12 +47,11 @@ BuildRequires: python >= 2.6
 
 Requires(pre): shadow-utils
 
+Requires(post): esl-erlang = 0:19.3.6
 Requires(post): curl
 Requires(post): couch-js = 1:1.8.5
 Requires(post): libicu >= 4.2.1
 Requires(post): procps
-Requires(post): python-progressbar
-Requires(post): python-requests
 
 %if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:		xfsprogs-devel
@@ -81,8 +80,8 @@ languages and environments.
 %define __os_install_post %{nil}
 
 %build
-./configure -c
-%{__make} release
+./configure --disable-docs --prefix=/opt/couchdb
+%{__make}
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -94,21 +93,13 @@ if ! /usr/bin/getent passwd couchdb > /dev/null; then /usr/sbin/adduser \
   --user-group couchdb; fi
 
 %install
-%{__install} -d -m0755 %{buildroot}/opt
-%{__cp} -r rel/couchdb %{buildroot}/opt
-%{__install} -d -m0750 %{buildroot}/var/log/%{name}
-%{__install} -d -m0750 %{buildroot}%{_sharedstatedir}/%{name}
-%{__install} -Dp -m0644 %{SOURCE3} %{buildroot}/opt/%{name}/etc/default.d/10-filelog.ini
-%{__install} -Dp -m0644 %{SOURCE5} %{buildroot}/etc/logrotate.d/%{name}
-/bin/find %{buildroot}/opt/%{name} -name *.ini -exec %{__chmod} 0640 {} \;
+%{__make} install DESTDIR=%{buildroot}
 
 %if 0%{?fedora} || 0%{?rhel} >= 7
 %{__install} -Dp -m0644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
 %else
 %{__install} -Dp -m0755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
 %endif
-%{__ln_s} -f -T %{_sharedstatedir}/%{name} %{buildroot}/opt/%{name}/data
-%{__ln_s} -f -T /var/log/%{name} %{buildroot}/opt/%{name}/var/log/%{name}
 
 %post
 %{__chown} -R couchdb:couchdb /opt/%{name}
@@ -143,10 +134,8 @@ fi
 
 %files
 %attr(0755, %{name}, %{name}) /opt/couchdb
-%attr(0755, %{name}, %{name}) %dir %{_sharedstatedir}/%{name}
-%attr(0755, %{name}, %{name}) %dir /var/log/%{name}
-%config(noreplace) /opt/couchdb/etc/local.ini
-%config /etc/logrotate.d/%{name}
+%config(noreplace) /opt/couchdb/etc/couchdb/local.ini
+%config /opt/couchdb/etc/logrotate.d/%{name}
 %if 0%{?fedora} || 0%{?rhel} >= 7
 %{_unitdir}/%{name}.service
 %else
@@ -155,7 +144,6 @@ fi
 
 
 %changelog
-* Tue May 2 2017 CouchDB Developers <dev@couchdb.apache.org> 2.0.0-1
+* Fri Aug 10 2018 CouchDB Developers <dev@couchdb.apache.org> 1.7.2-1
 - New upstream version
 - New sysvinit and systemd service files
-- New backported couchup script
