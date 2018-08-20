@@ -45,6 +45,18 @@ Packages will be placed in the `pkgs/` subdirectory.
 1. Edit `snap/snapcraft.yaml` to point to the correct tag (e.g. `2.1.0`)
 1. `snapcraft`
 
+# Installing snaps
+
+The self crafted snap will need to be installed in devmode
+
+    $ sudo snap install /somepath/couchdb_x.x.x_amd64.snap --devmode 
+
+The name of the erlang process and the security cookie used can be set through 
+the snap configuration. For example, when setting up a cluster over several 
+machines the convention is to set the erlang name to couchdb@your_ip_address.
+
+    $ sudo snap set couchdb name=couchdb@216.3.128.12 setcookie=cutter
+
 # Feedback, Issues, Contributing
 
 General feedback is welcome at our [user][1] or [developer][2] mailing lists.

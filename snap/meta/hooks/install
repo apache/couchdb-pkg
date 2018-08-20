@@ -1,0 +1,5 @@
+#!/bin/sh 
+
+mkdir -p ${SNAP_DATA}/etc ${SNAP_DATA}/log
+
+

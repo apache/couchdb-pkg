@@ -1,5 +1,5 @@
 name: couchdb
-version: 2.0
+version: 2.2.0
 summary: Document based database
 description: CouchDB is a database that completely embraces the web. Store your data with JSON documents. Access your documents and query your indexes with your web browser, via HTTP. Index, combine, and transform your documents with JavaScript. 
 confinement: strict
@@ -13,13 +13,19 @@ apps:
     couchdb:
         command: rel/couchdb/bin/snap_run
         plugs: [network-bind]
+hooks:
+    install:
+        plugs: [home]
+    configure:
+        plugs: [home]
 parts:
     couchdb: 
         plugin: make
+        source: /root/build/couchdb-pkg/apache-couchdb-2.2.0.tar.gz
         #source: http://www-us.apache.org/dist/couchdb/source/2.0.0/apache-couchdb-2.0.0.tar.gz
-        source: https://github.com/apache/couchdb.git
-        source-type: git
-        source-tag: 2.1.0
+        #source: https://github.com/apache/couchdb.git
+        #source-type: git
+        #source-tag: 2.2.0
         prepare: |
           ./configure --disable-docs
         build: |

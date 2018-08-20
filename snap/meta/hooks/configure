@@ -1,0 +1,33 @@
+#!/bin/sh 
+
+set -e
+
+CONFIG_FILE=$SNAP_DATA/etc/vm.args
+
+CONFIG_OPTIONS="name setcookie"
+
+## add or replace for the vm.arg file
+_modify_vm_args() {
+  opt=$1
+  value="$2"
+  replace_line="-$opt $value"
+  if $(grep -q "^-$opt " $CONFIG_FILE); then
+    sed "s/^-$opt .*/$replace_line/" $CONFIG_FILE 2>/dev/null >${CONFIG_FILE}.new
+    mv -f ${CONFIG_FILE}.new $CONFIG_FILE 2>/dev/null
+  else
+    echo $replace_line >> $CONFIG_FILE
+  fi
+}
+
+
+# vm.args file
+for key in $CONFIG_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_vm_args $key $val
+    sleep 1
+  fi
+done
+
+
