@@ -21,8 +21,7 @@ hooks:
 parts:
     couchdb: 
         plugin: make
-        source: /root/build/couchdb-pkg/apache-couchdb-2.2.0.tar.gz
-        #source: http://www-us.apache.org/dist/couchdb/source/2.0.0/apache-couchdb-2.0.0.tar.gz
+        source: http://www-us.apache.org/dist/couchdb/source/2.2.0/apache-couchdb-2.2.0.tar.gz
         #source: https://github.com/apache/couchdb.git
         #source-type: git
         #source-tag: 2.2.0
