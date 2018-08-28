@@ -64,7 +64,8 @@ parts:
         plugin: dump
         source: ./snap/
         organize:
-            snap.ini: rel/couchdb/etc/snap.ini
+            couchdb.ini: rel/couchdb/etc/local.d/couchdb.ini
+            log.ini: rel/couchdb/etc/local.d/log.ini
             snap_run: rel/couchdb/bin/snap_run
 
     erlang:

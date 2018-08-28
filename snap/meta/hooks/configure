@@ -2,31 +2,96 @@
 
 set -e
 
-CONFIG_FILE=$SNAP_DATA/etc/vm.args
+VM_ARGS=$SNAP_DATA/etc/vm.args
+LOCAL_DIR=$SNAP_DATA/etc/local.d
 
-CONFIG_OPTIONS="name setcookie"
 
 ## add or replace for the vm.arg file
 _modify_vm_args() {
   opt=$1
   value="$2"
   replace_line="-$opt $value"
-  if $(grep -q "^-$opt " $CONFIG_FILE); then
-    sed "s/^-$opt .*/$replace_line/" $CONFIG_FILE 2>/dev/null >${CONFIG_FILE}.new
-    mv -f ${CONFIG_FILE}.new $CONFIG_FILE 2>/dev/null
+  if $(grep -q "^-$opt " $VM_ARGS); then
+    sed "s/^-$opt .*/$replace_line/" $VM_ARGS 2>/dev/null >${VM_ARGS}.new
+    mv -f ${VM_ARGS}.new $VM_ARGS 2>/dev/null
   else
-    echo $replace_line >> $CONFIG_FILE
+    echo $replace_line >> $VM_ARGS
   fi
 }
 
+_modify_ini_file() {
+  section=$1
+  opt=`echo $2 | tr "-" "_"`
+  value="$3"
+  config_file=${LOCAL_DIR}/${section}.ini
+  if [ ! -e ${config_file} ]; then
+    echo "[${section}]" > $config_file
+  fi
+  replace_line="$opt=$value"
+  if $(grep -q "^$opt=" $config_file); then
+    sed "s/^$opt=.*/$replace_line/" $config_file 2>/dev/null >${config_file}.new
+    mv -f ${config_file}.new ${config_file} 2>/dev/null
+  else
+    echo $replace_line >> $config_file
+  fi
+}
 
-# vm.args file
-for key in $CONFIG_OPTIONS
+# The vm_args file can only be changed from the filesystem
+# configutaion vm.args file
+
+VM_ARGS_OPTIONS="name setcookie"
+for key in $VM_ARGS_OPTIONS
 do
   val=$(snapctl get $key)
   if [ ! -z "$val" ]; then
     _modify_vm_args $key $val
-    sleep 1
+    sleep 0.25
+  fi
+done
+
+# The following list is either those fields that are whitelisted but 
+# useful to modifiy before first run; or those fields blacklisted
+# The snap set command modifies the files in local.d; any changes 
+# via the URL are reflected in local.ini
+
+# configutaion local.d/admins.ini file
+passwd=$(snapctl get admin)
+if [ ! -z "$passwd" ]; then
+   _modify_ini_file admins admin $passwd
+   chmod 600 $SNAP_DATA/etc/local.d/admins.ini
+   sleep 0.25
+fi
+
+# configutaion local.d/log.ini file
+CLUSTER_OPTIONS="n q"
+for key in $CLUSTER_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_ini_file cluster $key $val
+    sleep 0.25
+  fi
+done
+
+# configutaion local.d/log.ini file
+LOG_OPTIONS="writer file level"
+for key in $LOG_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_ini_file log $key $val
+    sleep 0.25
+  fi
+done
+
+# configutaion local.d/chttpd.ini file
+CHTTPD_OPTIONS="port bind-address"
+for key in $CHTTPD_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_ini_file chttpd $key $val
+    sleep 0.25
   fi
 done
 

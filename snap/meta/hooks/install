@@ -1,5 +1,9 @@
 #!/bin/sh 
 
-mkdir -p ${SNAP_DATA}/etc ${SNAP_DATA}/log
+mkdir -p ${SNAP_DATA}/etc/local.d ${SNAP_DATA}/log
+
+cp ${SNAP}/rel/couchdb/etc/vm.args ${SNAP_DATA}/etc/vm.args
+
+cp ${SNAP}/rel/couchdb/etc/local.d/*.ini ${SNAP_DATA}/etc/local.d
 
 
