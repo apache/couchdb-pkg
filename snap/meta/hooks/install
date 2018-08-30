@@ -1,6 +1,6 @@
 #!/bin/sh 
 
-mkdir -p ${SNAP_DATA}/etc/local.d ${SNAP_DATA}/log
+mkdir -p ${SNAP_DATA}/etc/local.d 
 
 cp ${SNAP}/rel/couchdb/etc/vm.args ${SNAP_DATA}/etc/vm.args
 
