@@ -15,9 +15,9 @@ apps:
         plugs: [network-bind]
 hooks:
     install:
-        plugs: [home]
+        plugs: [nil]
     configure:
-        plugs: [home]
+        plugs: [nil]
 parts:
     couchdb: 
         plugin: make
