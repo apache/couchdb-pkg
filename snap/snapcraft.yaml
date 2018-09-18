@@ -9,15 +9,10 @@ apps:
     server:
         daemon: simple
         command: rel/couchdb/bin/snap_run
-        plugs: [network-bind, process-control, mount-observe, browser-support]
+        plugs: [network-bind, process-control, mount-observe]
     couchdb:
         command: rel/couchdb/bin/snap_run
-        plugs: [network-bind]
-hooks:
-    install:
-        plugs: []
-    configure:
-        plugs: []
+        plugs: [network-bind,browser-support]
 parts:
     couchdb: 
         plugin: make
