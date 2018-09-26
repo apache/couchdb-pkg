@@ -1,4 +1,4 @@
-name: couchdb
+name: couchdb-sklassen
 version: 2.2.0
 summary: Document based database
 description: CouchDB is a database that completely embraces the web. Store your data with JSON documents. Access your documents and query your indexes with your web browser, via HTTP. Index, combine, and transform your documents with JavaScript. 
