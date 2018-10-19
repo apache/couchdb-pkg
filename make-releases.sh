@@ -1,11 +1,12 @@
 #!/bin/bash
 IMAGES=(
-  centos-6-erlang-18.3 centos6 \
-  centos-7-erlang-18.3 centos7 \
-  debian-8-erlang-18.3 jessie \
-  debian-9-erlang-18.3 stretch \
-  ubuntu-14.04-erlang-18.3 trusty \
-  ubuntu-16.04-erlang-18.3 xenial
+  centos-6-erlang-19.3.6 centos6 \
+  centos-7-erlang-19.3.6 centos7 \
+  debian-jessie-erlang-19.3.6 jessie \
+  debian-stretch-erlang-19.3.6 stretch \
+  ubuntu-trusty-erlang-19.3.6 trusty \
+  ubuntu-xenial-erlang-19.3.6 xenial \
+  ubuntu-bionic-erlang-19.3.6 bionic
 )
 
 usage() {
