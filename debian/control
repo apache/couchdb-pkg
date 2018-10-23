@@ -5,7 +5,6 @@ Maintainer: CouchDB Developers <dev@couchdb.apache.org>
 Standards-Version: 3.9.6
 Build-Depends: debhelper (>= 9),
                dh-exec,
-               dh-python,
                dh-systemd (>= 1.5),
                erlang-dev (>= 1:16.b.3) | esl-erlang (>= 1:16.b.3),
                nodejs (>= 6.10.1),
@@ -24,6 +23,8 @@ Build-Depends: debhelper (>= 9),
                couch-libmozjs185-dev,
                lsb-release,
                po-debconf,
+               python,
+               python3,
                python-sphinx
 Homepage: http://couchdb.apache.org/
 
@@ -36,8 +37,8 @@ Depends: adduser,
          couch-libmozjs185-1.0,
          lsb-base,
          procps,
-         ${python:Depends},
-         ${python3:Depends},
+         python,
+         python3,
          python-requests,
          python3-requests,
          ${misc:Depends},
