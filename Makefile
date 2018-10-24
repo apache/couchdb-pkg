@@ -69,6 +69,21 @@ centos6: make-rpmbuild centos
 centos-7: centos7
 centos7: make-rpmbuild centos
 
+# Erlang is built from source on ARMv8
+# These packages are not installed, but the files are present
+drop-deb-deps-for-source-arch:
+	if [ "$(shell arch)" = "aarch64" ]; then                          \
+		sed -i '/erlang-dev/d' $(DISTDIR)/debian/control;         \
+		sed -i '/erlang-crypto/d' $(DISTDIR)/debian/control;      \
+		sed -i '/erlang-dialyzer/d' $(DISTDIR)/debian/control;    \
+		sed -i '/erlang-eunit/d' $(DISTDIR)/debian/control;       \
+		sed -i '/erlang-inets/d' $(DISTDIR)/debian/control;       \
+		sed -i '/erlang-xmerl/d' $(DISTDIR)/debian/control;       \
+		sed -i '/erlang-os-mon/d' $(DISTDIR)/debian/control;      \
+		sed -i '/erlang-reltool/d' $(DISTDIR)/debian/control;     \
+		sed -i '/erlang-syntax-tools/d' $(DISTDIR)/debian/control;\
+	fi
+
 # ######################################
 get-couch:
 	mkdir -p $(COUCHDIR)
@@ -96,7 +111,7 @@ copy-debian:
 	rm -rf $(DISTDIR)/debian
 	cp -R debian $(DISTDIR)
 
-update-changelog:
+update-changelog: drop-deb-deps-for-source-arch
 	cd $(DISTDIR) && dch -v $(VERSION)~$(PLATFORM) $(DEBCHANGELOG)
 
 dpkg:
