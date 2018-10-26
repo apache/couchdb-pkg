@@ -61,24 +61,3 @@ parts:
         organize:
             couchdb.ini: rel/couchdb/etc/local.d/couchdb.ini
             snap_run: rel/couchdb/bin/snap_run
-
-    erlang:
-        plugin: nil
-        stage-packages:
-            - erlang-base
-            - erlang-crypto
-            - erlang-eunit
-            - erlang-inets
-            - erlang-os-mon
-            - erlang-public-key
-            - erlang-ssl
-            - erlang-syntax-tools
-            - erlang-tools
-            - erlang-xmerl
-            - libc6
-            - libcurl3
-            - libgcc1
-            - libicu55
-            - libmozjs185-1.0
-            - libstdc++6
-        
