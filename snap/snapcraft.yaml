@@ -9,10 +9,10 @@ apps:
     server:
         daemon: simple
         command: rel/couchdb/bin/snap_run
-        plugs: [network-bind, process-control, mount-observe]
+        plugs: [network-bind, process-control]
     couchdb:
         command: rel/couchdb/bin/snap_run
-        plugs: [network-bind,browser-support]
+        plugs: [network-bind, mount-observe, browser-support]
 parts:
     couchdb: 
         plugin: make
@@ -60,3 +60,15 @@ parts:
         organize:
             couchdb.ini: rel/couchdb/etc/local.d/couchdb.ini
             snap_run: rel/couchdb/bin/snap_run
+
+    packages:
+        plugin: nil
+        stage-packages:
+            - libicu55
+            - libmozjs185-1.0
+        filesets:
+            exclusion:
+              - "-usr/share/doc/*"
+              - "-usr/share/man/*"
+        prime:
+            - "$exclusion"
