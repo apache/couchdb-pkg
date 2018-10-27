@@ -20,9 +20,8 @@ parts:
         #source: https://github.com/apache/couchdb.git
         #source-type: git
         #source-tag: 2.2.0
-        prepare: |
+        override-build: |
           ./configure --disable-docs
-        build: |
           make release
           cp -ra ./rel $SNAPCRAFT_PART_INSTALL
           cp -ra ./bin $SNAPCRAFT_PART_INSTALL
