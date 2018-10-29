@@ -54,3 +54,8 @@ writing to file. Wrap double quotes around any bracets and avoid spaces.
 Snap Native Configuration changes only come into effect after a restart
     
     $ sudo snap restart couchdb
+
+# Example Cluster
+
+See the HOWTO.md file to see an example of a three node cluster.
+
