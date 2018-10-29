@@ -25,7 +25,9 @@ lxc start cdb-backup
 # Configure CouchDB (using the snap tool)
 
 We are going to need the IP addresses. You can find them here.
-```lxc list to find out IP addresses```
+```
+lxc list
+```
 
 Now lets use the snap configuration tool to set the configuration files.
 ```
@@ -33,8 +35,10 @@ lxc exec couchdb-c1 snap set couchdb name=couchdb@10.210.199.199 setcookie=monst
 lxc exec couchdb-c2 snap set couchdb name=couchdb@10.210.199.254 setcookie=monster admin=password bind-address=0.0.0.0
 lxc exec couchdb-c3 snap set couchdb name=couchdb@10.210.199.24 setcookie=monster admin=password bind-address=0.0.0.0
 ```
-The backup machine we will leave as a single instance. 
-```lxc exec cdb-backup snap set couchdb name=couchdb@127.0.0.1 setcookie=monster admin=password bind-address=0.0.0.0 n=1 q=1```
+The backup machine we will leave as a single instance and no sharding. 
+```
+lxc exec cdb-backup snap set couchdb name=couchdb@127.0.0.1 setcookie=monster admin=password bind-address=0.0.0.0 n=1 q=1
+```
 
 The snap must be restarted for the new configurations to take affect. 
 ```
@@ -49,7 +53,9 @@ lxc exec cdb-backup cat /var/snap/couchdb/current/etc/vm.args
 lxc exec cdb-backup cat /var/snap/couchdb/current/etc/local.d/*
 ```
 Any changes to couchdb from the http configutation tool are made here
-```lxc exec cdb-backup cat /var/snap/couchdb/current/etc/local.d/local.ini```
+```
+lxc exec cdb-backup cat /var/snap/couchdb/current/etc/local.d/local.ini
+```
 
 # Configure CouchDB Cluster (using the http interface)
 
@@ -84,10 +90,14 @@ curl -X POST http://admin:password@10.210.199.242:5984/_replicate -d '{"source":
 curl -X GET http://admin:password@10.210.199.242:5984/example/_all_docs
 ```
 The data store for the clusters nodes are sharded 
-```lxc exec couchdb-c1 ls /var/snap/couchdb/common/2.x/data/shards/```
+```
+lxc exec couchdb-c1 ls /var/snap/couchdb/common/2.x/data/shards/
+```
 
 The backup database is a single file.
-```lxc exec cdb-backup ls /var/snap/couchdb/common/2.x/data/shards/00000000-ffffffff/```
+```
+lxc exec cdb-backup ls /var/snap/couchdb/common/2.x/data/shards/00000000-ffffffff/
+```
 
 # Monitoring CouchDB 
 
