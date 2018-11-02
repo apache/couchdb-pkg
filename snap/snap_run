@@ -15,9 +15,22 @@
 # configuration files so that couchdb will run inside a Snap package's confinement
 
 export HOME=$SNAP_DATA
-export ERL_FLAGS="-couch_ini ${SNAP}/rel/couchdb/etc/default.ini ${SNAP}/rel/couchdb/etc/snap.ini ${SNAP_DATA}/local.ini"
-if [ ! -e ${SNAP_DATA}/local.ini ]; then
-    touch ${SNAP_DATA}/local.ini
+export COUCHDB_ARGS_FILE=${SNAP_DATA}/etc/vm.args
+export ERL_FLAGS="-couch_ini ${SNAP}/rel/couchdb/etc/default.ini ${SNAP_DATA}/etc/local.d ${SNAP_DATA}/etc/local.ini"
+
+mkdir -p ${SNAP_DATA}/etc 
+
+if [ ! -e ${SNAP_DATA}/etc/vm.args ]; then
+    cp ${SNAP}/rel/couchdb/etc/vm.args ${SNAP_DATA}/etc/vm.args
+fi
+
+if [ ! -d ${SNAP_DATA}/etc/local.d ]; then
+    mkdir ${SNAP_DATA}/etc/local.d
+    cp ${SNAP}/rel/couchdb/etc/local.d/*.ini ${SNAP_DATA}/etc/local.d
+fi
+
+if [ ! -e ${SNAP_DATA}/etc/local.ini ]; then
+    touch ${SNAP_DATA}/etc/local.ini
 fi
 
 exec ${SNAP}/rel/couchdb/bin/couchdb

@@ -1,5 +1,5 @@
 name: couchdb
-version: 2.0
+version: 2.2.0
 summary: Document based database
 description: CouchDB is a database that completely embraces the web. Store your data with JSON documents. Access your documents and query your indexes with your web browser, via HTTP. Index, combine, and transform your documents with JavaScript. 
 confinement: strict
@@ -9,20 +9,19 @@ apps:
     server:
         daemon: simple
         command: rel/couchdb/bin/snap_run
-        plugs: [network-bind, process-control, mount-observe, browser-support]
+        plugs: [network-bind, process-control]
     couchdb:
         command: rel/couchdb/bin/snap_run
-        plugs: [network-bind]
+        plugs: [network-bind, mount-observe, browser-support]
 parts:
     couchdb: 
         plugin: make
-        #source: http://www-us.apache.org/dist/couchdb/source/2.0.0/apache-couchdb-2.0.0.tar.gz
-        source: https://github.com/apache/couchdb.git
-        source-type: git
-        source-tag: 2.1.0
-        prepare: |
+        source: http://www-us.apache.org/dist/couchdb/source/2.2.0/apache-couchdb-2.2.0.tar.gz
+        #source: https://github.com/apache/couchdb.git
+        #source-type: git
+        #source-tag: 2.2.0
+        override-build: |
           ./configure --disable-docs
-        build: |
           make release
           cp -ra ./rel $SNAPCRAFT_PART_INSTALL
           cp -ra ./bin $SNAPCRAFT_PART_INSTALL
@@ -59,26 +58,17 @@ parts:
         plugin: dump
         source: ./snap/
         organize:
-            snap.ini: rel/couchdb/etc/snap.ini
+            couchdb.ini: rel/couchdb/etc/local.d/couchdb.ini
             snap_run: rel/couchdb/bin/snap_run
 
-    erlang:
+    packages:
         plugin: nil
         stage-packages:
-            - erlang-base
-            - erlang-crypto
-            - erlang-eunit
-            - erlang-inets
-            - erlang-os-mon
-            - erlang-public-key
-            - erlang-ssl
-            - erlang-syntax-tools
-            - erlang-tools
-            - erlang-xmerl
-            - libc6
-            - libcurl3
-            - libgcc1
             - libicu55
             - libmozjs185-1.0
-            - libstdc++6
-        
+        filesets:
+            exclusion:
+              - "-usr/share/doc/*"
+              - "-usr/share/man/*"
+        prime:
+            - "$exclusion"

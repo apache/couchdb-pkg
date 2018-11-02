@@ -1,0 +1,178 @@
+#!/bin/sh 
+
+set -e
+
+VM_ARGS=$SNAP_DATA/etc/vm.args
+LOCAL_DIR=$SNAP_DATA/etc/local.d
+
+
+## add or replace for the vm.arg file
+_modify_vm_args() {
+  opt=$1
+  value="$2"
+  replace_line="-$opt $value"
+  if $(grep -q "^-$opt " $VM_ARGS); then
+    sed "s/^-$opt .*/$replace_line/" $VM_ARGS 2>/dev/null >${VM_ARGS}.new
+    mv -f ${VM_ARGS}.new $VM_ARGS 2>/dev/null
+  else
+    echo $replace_line >> $VM_ARGS
+  fi
+}
+
+_modify_ini_file() {
+  section=$1
+  opt=`echo $2 | tr "-" "_"`
+  value="$3"
+  config_file=${LOCAL_DIR}/${section}.ini
+  if [ ! -e ${config_file} ]; then
+    echo "[${section}]" > $config_file
+  fi
+  replace_line="$opt=$value"
+  if $(grep -q "^$opt=" $config_file); then
+    sed "s/^$opt=.*/$replace_line/" $config_file 2>/dev/null >${config_file}.new
+    mv -f ${config_file}.new ${config_file} 2>/dev/null
+  else
+    echo $replace_line >> $config_file
+  fi
+}
+
+# The vm_args file can only be changed from the filesystem
+# configutaion vm.args file
+
+VM_ARGS_OPTIONS="name setcookie"
+for key in $VM_ARGS_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_vm_args $key $val
+    sleep 0.125
+  fi
+done
+
+# The following list is either those fields that are whitelisted but 
+# useful to modifiy before first run; or those fields blacklisted
+# The snap set command modifies the files in local.d; any changes 
+# via the URL are reflected in local.ini
+
+# Special Cases
+
+# local.d/admins.ini
+passwd=$(snapctl get admin)
+if [ ! -z "$passwd" ]; then
+   _modify_ini_file admins admin $passwd
+   chmod 600 $SNAP_DATA/etc/local.d/admins.ini
+   sleep 0.125
+fi
+
+# local.d/ssl.ini
+port=$(snapctl get ssl-port)
+if [ ! -z "$port" ]; then
+   _modify_ini_file ssl port $port
+   sleep 0.125
+fi
+
+# local.d/httpd.ini
+port=$(snapctl get httpd-port)
+if [ ! -z "$port" ]; then
+   _modify_ini_file httpd port $port
+   sleep 0.125
+fi
+
+# local.d/chttpd.ini
+port=$(snapctl get chttpd-port)
+if [ ! -z "$port" ]; then
+   _modify_ini_file chttpd port $port
+   sleep 0.125
+fi
+
+# Generic Cases
+
+# local.d/chttpd.ini
+CHTTPD_OPTIONS="port bind-address require-valid-user"
+for key in $CHTTPD_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_ini_file chttpd $key $val
+    sleep 0.125
+  fi
+done
+
+# local.d/cluster.ini
+CLUSTER_OPTIONS="n q"
+for key in $CLUSTER_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_ini_file cluster $key $val
+    sleep 0.125
+  fi
+done
+
+# local.d/compaction_daemon.ini
+COMPACTION_DAEMON_OPTIONS="check-interval"
+for key in $COMPACTION_DAEMON_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_ini_file compaction_daemon $key $val
+    sleep 0.125
+  fi
+done
+
+# local.d/couchdb.ini
+COUCHDB_OPTIONS="database-dir view-index-dir delayed-commits"
+for key in $COUCHDB_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_ini_file couchdb $key $val
+    sleep 0.125
+  fi
+done
+
+# local.d/log.ini
+LOG_OPTIONS="writer file level"
+for key in $LOG_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_ini_file log $key $val
+    sleep 0.125
+  fi
+done
+
+# local.d/native_query_servers.ini
+NATIVE_QUERY_SERVERS_OPTIONS="query erlang"
+for key in $NATIVE_QUERY_SERVERS_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_ini_file native_query_servers $key $val
+    sleep 0.125
+  fi
+done
+
+# local.d/couch_peruser.ini
+COUCH_PERUSER_OPTIONS="database-prefix delete-dbs enable"
+for key in $COUCH_PERUSER_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_ini_file couch_peruser $key $val
+    sleep 0.125
+  fi
+done
+
+# local.d/uuids.ini
+UUIDS_OPTIONS="algorithm max-count"
+for key in $UUIDS_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_ini_file uuids $key $val
+    sleep 0.125
+  fi
+done
+
+

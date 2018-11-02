@@ -16,7 +16,7 @@ repo/dists
 repo/pool
 pkgs/
 couchdb/
-couchdb_2.0_amd64.snap
+couchdb_*.snap
 parts/
 prime/
 snap/.snapcraft/
