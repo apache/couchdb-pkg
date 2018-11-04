@@ -34,8 +34,13 @@ Provides:	js = %{version}-%{release}
 Obsoletes:	js
 Conflicts:	js <= 1.8.5
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
+%if 0%{?suse_version}
+Buildrequires:	mozilla-nspr-devel >= 4.7
+BuildRequires:	python3
+%else
 Buildrequires:	nspr-devel >= 4.7
 BuildRequires:	python
+%endif
 BuildRequires:	perl
 BuildRequires:	zip
 BuildRequires:	ncurses-devel
@@ -54,7 +59,11 @@ with only mild differences from the published standard.
 Summary: Header files, libraries and development documentation for %{name}
 Group: Development/Libraries
 Requires: %{name} = %{epoch}:%{version}-%{release}
+%if 0%{?suse_version}
+Requires: pkg-config
+%else
 Requires: pkgconfig
+%endif
 Requires: ncurses-devel
 Provides: libjs-devel = %{version}-%{release}
 Provides: js-devel = %{version}-%{release}
@@ -109,12 +118,15 @@ includedir=%{_includedir}
 
 Name: libjs
 Description: JS library
+%if 0%{?suse_version}
+Requires: mozilla-nspr >= 4.7
+%else
 Requires: nspr >= 4.7
+%endif
 Version: %{version}
 Libs: -L${libdir} -ljs
 Cflags: -DXP_UNIX=1 -DJS_THREADSAFE=1 -I${includedir}/js
 EOF
-
 
 %build
 cd js/src
