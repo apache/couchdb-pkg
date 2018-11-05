@@ -19,25 +19,28 @@ To connect the interfaces type:
 
 ## Snap configuration
 
-There are two levels of erlang and couchdb configuration hierarchy. 
+There are two levels of hierarchy within couchdb configuration. 
 
-The default layer is stored in /snap/couchdb/current/rel/couchdb/etc/ and is read only. 
-The user override layer, is stored in /var/snap/couchdb/current/etc/ and is writable. 
-Within this second layer, configurations are set with the local.d directory (one file 
-per section) or the local.ini (co-mingled). The "snap set" command works with the 
-former (local.d) and couchdb http configuration overwrites the latter (local.ini). 
-Entries in local.ini supersede those in the local.d directory.
+The default layer is stored in /snap/couchdb/current/rel/couchdb/etc/ with in the 
+directory default.d or the file default.ini and is read only. 
+
+The local override layer is stored in /var/snap/couchdb/current/etc/ and is writable. 
+Within this second layer, configurations are set local.ini (single file co-mingled sections) or 
+the local.d directory (one file per section). The "snap set" command works with the 
+latter (local.d) and couchdb http configuration overwrites the former (local.ini). 
+Entries in local.d supersede those in the local.ini directory.
 
 The name of the erlang process and the security cookie used is set in vm.args file.
-This can be set through the snap native configuration. For example, when setting up 
+This should be set through the snap native configuration. For example, when setting up 
 a cluster over several machines the convention is to set the erlang 
-name to couchdb@your.ip.address. Both erlang and couchdb configuration changes can be 
-made at the same time.
+name to couchdb@your.ip.address. 
+
+Both erlang and couchdb configuration changes can be made at the same time.
 
     $ sudo snap set couchdb name=couchdb@216.3.128.12 setcookie=cutter admin=Be1stDB bind-address=0.0.0.0
 
 Snap set variable can not contain underscore character, but any dashes are converted to underscore when
-writing to file. Wrap double quotes around any brackets or spaces.
+writing to file. Wrap double quotes around any brackets or spaces. 
 
     $ sudo snap set couchdb delayed-commits=true erlang="{couch_native_process,start_link,[]}"
 
@@ -45,7 +48,13 @@ Snap Native Configuration changes only come into effect after a restart
     
     $ sudo snap restart couchdb
 
-And RELAX.
+Snap Native Configuration have only been enable for a select few variables. Generally those essential to inital 
+installation or items that are not white-listed for configuration over HTTP. An example of configuration over HTTP is below.
+
+    `$ curl -X PUT http://admin:Be1stDB@216.3.128.12:5984/_node/_local/_config/ssl/port -d '"6984"'`
+    
+This has the advantage of not requiring restarting the application. You can aslo edit the /var/couchdb/current/etc files 
+by hand. Or using a configuration management tool (puppet, chef, ansible, salt) is also common.
 
 ## Example Cluster
 
