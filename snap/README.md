@@ -37,7 +37,7 @@ made at the same time.
     $ sudo snap set couchdb name=couchdb@216.3.128.12 setcookie=cutter admin=Be1stDB bind-address=0.0.0.0
 
 Snap set variable can not contain underscore character, but any dashes are converted to underscore when
-writing to file. Wrap double quotes around any bracets and avoid spaces.
+writing to file. Wrap double quotes around any brackets or spaces.
 
     $ sudo snap set couchdb delayed-commits=true erlang="{couch_native_process,start_link,[]}"
 
