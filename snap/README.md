@@ -53,7 +53,7 @@ See the [HOWTO][1] file to see an example of a three node cluster and further no
 
 ## Building a Private Snap
 
-If you want to build your own snap file from souce see the [BUILD][2] for instructions.
+If you want to build your own snap file from source see the [BUILD][2] for instructions.
 
 [1]: HOWTO.md
 [2]: BUILD.md
