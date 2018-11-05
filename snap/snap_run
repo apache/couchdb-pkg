@@ -26,7 +26,6 @@ fi
 
 if [ ! -d ${SNAP_DATA}/etc/local.d ]; then
     mkdir ${SNAP_DATA}/etc/local.d
-    cp ${SNAP}/rel/couchdb/etc/local.d/*.ini ${SNAP_DATA}/etc/local.d
 fi
 
 if [ ! -e ${SNAP_DATA}/etc/local.ini ]; then
