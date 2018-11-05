@@ -10,7 +10,7 @@ We launch a (single) new container, install couchdb via snap from the store and 
   1. localhost> lxc launch ubuntu:18.04 couchdb-c1
   1. localhost> lxc exec couchdb-c1 bash
   1. couchdb-c1> apt update
-  1. couchdb-c1> snap install couchdb
+  1. couchdb-c1> snap install couchdb --edge
   1. couchdb-c1> snap connect couchdb:mount-observe
   1. couchdb-c1> snap connect couchdb:process-control
   1. couchdb-c1> logout
@@ -57,7 +57,7 @@ The configuration files are stored here.
 ```
 Any changes to couchdb from the http configutation tool are made here
 ```bash
-  $ lxc exec cdb-backup cat /var/snap/couchdb/current/etc/local.d/local.ini
+  $ lxc exec cdb-backup cat /var/snap/couchdb/current/etc/local.ini
 ```
 ## Configure CouchDB Cluster (using the http interface)
 
