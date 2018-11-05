@@ -2,9 +2,9 @@
 
 ## Downloading from the snap store
 
-The snap can be installed from a file or directly from the snap store.
+The snap can be installed from a file or directly from the snap store. It is, for the moment, list in the edge channel.
 
-    $ sudo snap install couchdb 
+    $ sudo snap install couchdb --edge
     
 ## Enable snap permissions
 
