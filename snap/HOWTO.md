@@ -5,7 +5,6 @@
 In the example below, we are going to set up a three node CouchDB cluster. (Three is the minimum number needed to support clustering features.) We'll also set up a separate, single machine for making backups. In this example we will be using LXD.
 
 We launch a (single) new container, install couchdb via snap from the store and enable interfaces.
-
 ```bash
   1. localhost> lxc launch ubuntu:18.04 couchdb-c1
   1. localhost> lxc exec couchdb-c1 bash
@@ -15,7 +14,6 @@ We launch a (single) new container, install couchdb via snap from the store and 
   1. couchdb-c1> snap connect couchdb:process-control
   1. couchdb-c1> logout
 ```
-
 Back on localhost, we can then use the LXD copy function to speed up installation:
 ```bash
   $ lxc copy couchdb-c1 couchdb-c2
@@ -28,21 +26,20 @@ Back on localhost, we can then use the LXD copy function to speed up installatio
 ## Configure CouchDB using the snap tool
 
 We are going to need the IP addresses:
-
 ```bash
   $ lxc list
 ```
-
-Now, again from localhost, and using the `lxc exec` commond, we will use the snap configuration tool to set the various configuration files.
+Now, again from localhost, and using the `lxc exec` commond, we will use the snap configuration tool to set the 
+various configuration files.
 ```bash
   $ lxc exec couchdb-c1 snap set couchdb name=couchdb@10.210.199.199 setcookie=monster admin=Be1stDB bind-address=0.0.0.0
   $ lxc exec couchdb-c2 snap set couchdb name=couchdb@10.210.199.254 setcookie=monster admin=Be1stDB bind-address=0.0.0.0
   $ lxc exec couchdb-c3 snap set couchdb name=couchdb@10.210.199.24 setcookie=monster admin=Be1stDB bind-address=0.0.0.0 
 ```
 The backup machine we will leave as a single instance. 
-
-  $ `lxc exec cdb-backup snap set couchdb name=couchdb@127.0.0.1 setcookie=monster admin=Be1stDB bind-address=0.0.0.0 n=1 q=1`
-
+```bash
+  $ lxc exec cdb-backup snap set couchdb name=couchdb@127.0.0.1 setcookie=monster admin=Be1stDB bind-address=0.0.0.0 n=1 q=1
+```
 Each snap must be restarted for the new configurations to take affect. 
 ```bash
   $ lxc exec couchdb-c1 snap restart couchdb
@@ -59,9 +56,11 @@ Any changes to couchdb from the http configutation tool are made here
 ```bash
   $ lxc exec cdb-backup cat /var/snap/couchdb/current/etc/local.ini
 ```
+
 ## Configure CouchDB Cluster (using the http interface)
 
-Now we set up the cluster via the http front-end. This only needs to be run once on the first machine. The last command syncs with the other nodes and creates the standard databases.
+Now we set up the cluster via the http front-end. This only needs to be run once on the first machine. The last command 
+syncs with the other nodes and creates the standard databases.
 ```bash
   $ curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@10.210.199.199:5984/_cluster_setup -d '{"action": "add_node", "host":"10.210.199.254", "port": "5984", "username": "admin", "password":"Be1stDB"}'
   $ curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@10.210.199.199:5984/_cluster_setup -d '{"action": "add_node", "host":"10.210.199.24", "port": "5984", "username": "admin", "password":"Be1stDB"}'
