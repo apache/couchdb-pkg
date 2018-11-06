@@ -4,6 +4,6 @@ mkdir -p ${SNAP_DATA}/etc/local.d
 
 cp ${SNAP}/rel/couchdb/etc/vm.args ${SNAP_DATA}/etc/vm.args
 
-cp ${SNAP}/rel/couchdb/etc/local.d/*.ini ${SNAP_DATA}/etc/local.d
+touch ${SNAP_DATA}/etc/local.d/90-override.ini
 
 
