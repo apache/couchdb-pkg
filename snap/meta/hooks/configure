@@ -20,10 +20,11 @@ _modify_vm_args() {
 }
 
 _modify_ini_file() {
-  section=$1
-  opt=`echo $2 | tr "-" "_"`
-  value="$3"
-  config_file=${LOCAL_DIR}/${section}.ini
+  filename=$1
+  section=$2
+  opt=`echo $3 | tr "-" "_"`
+  value="$4"
+  config_file=${LOCAL_DIR}/${filename}.ini
   if [ ! -e ${config_file} ]; then
     echo "[${section}]" > $config_file
   fi
@@ -56,123 +57,57 @@ done
 
 # Special Cases
 
-# local.d/admins.ini
+# local.d/10-admins.ini
 passwd=$(snapctl get admin)
 if [ ! -z "$passwd" ]; then
-   _modify_ini_file admins admin $passwd
-   chmod 600 $SNAP_DATA/etc/local.d/admins.ini
-   sleep 0.125
-fi
-
-# local.d/ssl.ini
-port=$(snapctl get ssl-port)
-if [ ! -z "$port" ]; then
-   _modify_ini_file ssl port $port
-   sleep 0.125
-fi
-
-# local.d/httpd.ini
-port=$(snapctl get httpd-port)
-if [ ! -z "$port" ]; then
-   _modify_ini_file httpd port $port
-   sleep 0.125
-fi
-
-# local.d/chttpd.ini
-port=$(snapctl get chttpd-port)
-if [ ! -z "$port" ]; then
-   _modify_ini_file chttpd port $port
+   _modify_ini_file 10-admins admins admin $passwd
+   chmod 600 $SNAP_DATA/etc/local.d/10-admins.ini
    sleep 0.125
 fi
 
 # Generic Cases
 
-# local.d/chttpd.ini
-CHTTPD_OPTIONS="port bind-address require-valid-user"
+# local.d/20-chttpd.ini
+CHTTPD_OPTIONS="port bind-address"
 for key in $CHTTPD_OPTIONS
 do
   val=$(snapctl get $key)
   if [ ! -z "$val" ]; then
-    _modify_ini_file chttpd $key $val
+    _modify_ini_file 20-chttpd chttpd $key $val
     sleep 0.125
   fi
 done
 
-# local.d/cluster.ini
+# local.d/30-cluster.ini
 CLUSTER_OPTIONS="n q"
 for key in $CLUSTER_OPTIONS
 do
   val=$(snapctl get $key)
   if [ ! -z "$val" ]; then
-    _modify_ini_file cluster $key $val
+    _modify_ini_file 30-cluster cluster $key $val
     sleep 0.125
   fi
 done
 
-# local.d/compaction_daemon.ini
-COMPACTION_DAEMON_OPTIONS="check-interval"
-for key in $COMPACTION_DAEMON_OPTIONS
-do
-  val=$(snapctl get $key)
-  if [ ! -z "$val" ]; then
-    _modify_ini_file compaction_daemon $key $val
-    sleep 0.125
-  fi
-done
-
-# local.d/couchdb.ini
-COUCHDB_OPTIONS="database-dir view-index-dir delayed-commits"
-for key in $COUCHDB_OPTIONS
-do
-  val=$(snapctl get $key)
-  if [ ! -z "$val" ]; then
-    _modify_ini_file couchdb $key $val
-    sleep 0.125
-  fi
-done
-
-# local.d/log.ini
+# local.d/40-log.ini
 LOG_OPTIONS="writer file level"
 for key in $LOG_OPTIONS
 do
   val=$(snapctl get $key)
   if [ ! -z "$val" ]; then
-    _modify_ini_file log $key $val
+    _modify_ini_file 40-log log $key $val
     sleep 0.125
   fi
 done
 
-# local.d/native_query_servers.ini
+# local.d/50-native_query_servers.ini
 NATIVE_QUERY_SERVERS_OPTIONS="query erlang"
 for key in $NATIVE_QUERY_SERVERS_OPTIONS
 do
   val=$(snapctl get $key)
   if [ ! -z "$val" ]; then
-    _modify_ini_file native_query_servers $key $val
+    _modify_ini_file 50-native_query_servers native_query_servers $key $val
     sleep 0.125
   fi
 done
-
-# local.d/couch_peruser.ini
-COUCH_PERUSER_OPTIONS="database-prefix delete-dbs enable"
-for key in $COUCH_PERUSER_OPTIONS
-do
-  val=$(snapctl get $key)
-  if [ ! -z "$val" ]; then
-    _modify_ini_file couch_peruser $key $val
-    sleep 0.125
-  fi
-done
-
-# local.d/uuids.ini
-UUIDS_OPTIONS="algorithm max-count"
-for key in $UUIDS_OPTIONS
-do
-  val=$(snapctl get $key)
-  if [ ! -z "$val" ]; then
-    _modify_ini_file uuids $key $val
-    sleep 0.125
-  fi
-done
-
 
