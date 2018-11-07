@@ -36,9 +36,9 @@ various configuration files.
   $ lxc exec couchdb-c2 snap set couchdb name=couchdb@10.210.199.254 setcookie=monster admin=Be1stDB bind-address=0.0.0.0
   $ lxc exec couchdb-c3 snap set couchdb name=couchdb@10.210.199.24 setcookie=monster admin=Be1stDB bind-address=0.0.0.0 
 ```
-The backup machine we will configure as a single instance (n=1) and a single shard (q=1). 
+The backup machine we will configure as a single instance (n=1). 
 ```bash
-  $ lxc exec cdb-backup snap set couchdb name=couchdb@127.0.0.1 setcookie=monster admin=Be1stDB bind-address=0.0.0.0 n=1 q=1
+  $ lxc exec cdb-backup snap set couchdb name=couchdb@127.0.0.1 setcookie=monster admin=Be1stDB bind-address=0.0.0.0 n=1
 ```
 Each snap must be restarted for the new configurations to take affect. 
 ```bash
