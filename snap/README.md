@@ -2,21 +2,22 @@
 
 ## Downloading from the snap store
 
-The snap can be installed from a file or directly from the snap store. It is, for the moment, list in the edge channel.
+The snap can be installed from a file or directly from the snap store. It is, for the moment, listed in the edge channel.
 
-    `$ sudo snap install couchdb --edge`
+    ```$ sudo snap install couchdb --edge```
     
 ## Enable snap permissions
 
-The snap installation uses AppArmor to protect your system. CouchDB request access to two interfaces: mount-observe, which
-is used by the disk compactor to know when to initiate a cleanup; and, process-control, which is used by the indexer to set
-the priority of couchjs to 'nice'. These two interfaces are not required, but if they are not enabled, you will need to run 
-the compactor manually and the couchjs may weigh a heavy load on the system. 
+The snap installation uses AppArmor to protect your system. CouchDB requests access to two interfaces: mount-observe, which
+is used by the disk compactor to know when to initiate a cleanup; and process-control, which is used by the indexer to set
+the priority of couchjs to 'nice'. These two interfaces, while not required, are useful. If they are not enabled, CouchDB will
+still run, but you will need to run the compactor manually and couchjs may put a heavy load on the system when indexing. 
 
 To connect the interfaces type:
-
-    `$ sudo snap connect couchdb:mount-observe`
-    `$ sudo snap connect couchdb:process-control`
+   ```
+   $ sudo snap connect couchdb:mount-observe
+   $ sudo snap connect couchdb:process-control
+   ```
 
 ## Snap configuration
 
@@ -40,16 +41,16 @@ name to couchdb@your.ip.address.
 
 Both erlang and couchdb configuration changes can be made at the same time.
 
-    `$ sudo snap set couchdb name=couchdb@216.3.128.12 setcookie=cutter admin=Be1stDB bind-address=0.0.0.0`
+    ```$ sudo snap set couchdb name=couchdb@216.3.128.12 setcookie=cutter admin=Be1stDB bind-address=0.0.0.0```
 
 Snap set variable can not contain underscore character, but any dashes are converted to underscore when
 writing to file. Wrap double quotes around any brackets or spaces. 
 
-    `$ sudo snap set couchdb erlang="{couch_native_process,start_link,[]}"`
+   ```$ sudo snap set couchdb erlang="{couch_native_process,start_link,[]}"```
 
 Snap Native Configuration changes only come into effect after a restart
     
-    `$ sudo snap restart couchdb`
+    ```$ sudo snap restart couchdb```
 
 Snap Native Configuration has only been enabled for a few options essential to inital installation or items 
 that are not white-listed for configuration over HTTP.  Other options that can be set via snap are: CHTTPD's "port";
@@ -58,7 +59,7 @@ Options "query" and "erlang".
 
 Other options can be set via configuration over HTTP, as below.
 
-    `$ curl -X PUT http://admin:Be1stDB@216.3.128.12:5984/_node/_local/_config/couchdb/delayed-commits -d '"true"'`
+    ```$ curl -X PUT http://admin:Be1stDB@216.3.128.12:5984/_node/_local/_config/couchdb/delayed-commits -d '"true"'```
     
 Which has the advantage of not requiring restarting the application. 
 
