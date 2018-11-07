@@ -3,9 +3,9 @@
 ## Downloading from the snap store
 
 The snap can be installed from a file or directly from the snap store. It is, for the moment, listed in the edge channel.
-
-    ```$ sudo snap install couchdb --edge```
-    
+    ```
+    $ sudo snap install couchdb --edge
+    ```  
 ## Enable snap permissions
 
 The snap installation uses AppArmor to protect your system. CouchDB requests access to two interfaces: mount-observe, which
@@ -18,7 +18,6 @@ To connect the interfaces type:
    $ sudo snap connect couchdb:mount-observe
    $ sudo snap connect couchdb:process-control
    ```
-
 ## Snap configuration
 
 There are two levels of hierarchy within couchdb configuration. 
@@ -40,32 +39,32 @@ a cluster over several machines the convention is to set the erlang
 name to couchdb@your.ip.address. 
 
 Both erlang and couchdb configuration changes can be made at the same time.
-
-    ```$ sudo snap set couchdb name=couchdb@216.3.128.12 setcookie=cutter admin=Be1stDB bind-address=0.0.0.0```
+    ```
+    $ sudo snap set couchdb name=couchdb@216.3.128.12 setcookie=cutter admin=Be1stDB bind-address=0.0.0.0
+    ```
 
 Snap set variable can not contain underscore character, but any dashes are converted to underscore when
 writing to file. Wrap double quotes around any brackets or spaces. 
-
-   ```$ sudo snap set couchdb erlang="{couch_native_process,start_link,[]}"```
-
+   ```
+   $ sudo snap set couchdb erlang="{couch_native_process,start_link,[]}"
+   ```
 Snap Native Configuration changes only come into effect after a restart
-    
-    ```$ sudo snap restart couchdb```
-
+    ```
+    $ sudo snap restart couchdb
+    ```
 Snap Native Configuration has only been enabled for a few options essential to inital installation or items 
 that are not white-listed for configuration over HTTP.  Other options that can be set via snap are: CHTTPD's "port";
 Cluster options: "n", "q"; the log options "writer","file","level". And the Native Query Servers 
 Options "query" and "erlang". 
 
 Other options can be set via configuration over HTTP, as below.
-
-    ```$ curl -X PUT http://admin:Be1stDB@216.3.128.12:5984/_node/_local/_config/couchdb/delayed-commits -d '"true"'```
-    
+    ```
+    $ curl -X PUT http://admin:Be1stDB@216.3.128.12:5984/_node/_local/_config/couchdb/delayed-commits -d '"true"'
+    ```
 Which has the advantage of not requiring restarting the application. 
 
 For anything not covered by snap set or the configuration over http, you can edit 
 the /var/snap/couchdb/current/etc files by hand. 
-
 
 ## Example Cluster
 
