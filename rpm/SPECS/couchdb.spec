@@ -41,9 +41,9 @@ BuildRequires: erlang-epmd
 BuildRequires: gcc-c++
 BuildRequires: pkg-config
 Requires(pre): shadow
-BuildRequires: python3
-Requires(post): python3-progressbar
-Requires(post): python3-requests
+BuildRequires: python2
+Requires(post): python2-progressbar
+Requires(post): python2-requests
 %else
 BuildRequires: esl-erlang
 BuildRequires: gcc
@@ -66,9 +66,6 @@ Requires(post): curl
 Requires(post): couch-js = 1:1.8.5
 Requires(post): libicu >= 4.2.1
 Requires(post): procps
-%if 0%{?suse_version}
-Requires(post): erlang
-%endif
 
 %if 0%{?fedora} || 0%{?rhel} >= 7 || 0%{?suse_version}
 %if 0%{?suse_version}
@@ -102,7 +99,7 @@ languages and environments.
 
 %build
 ./configure -c
-%{__make} release %{?_smp_mflags}
+%{__make} release
 
 %clean
 %{__rm} -rf %{buildroot}
