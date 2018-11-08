@@ -58,7 +58,7 @@ parts:
         plugin: dump
         source: ./snap/
         organize:
-            couchdb.ini: rel/couchdb/etc/default.d/couchdb.ini
+            couchdb.ini: rel/couchdb/etc/default.d/00-couchdb.ini
             snap_run: rel/couchdb/bin/snap_run
 
     packages:
