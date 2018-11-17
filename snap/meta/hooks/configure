@@ -3,7 +3,6 @@
 set -e
 
 VM_ARGS=$SNAP_DATA/etc/vm.args
-LOCAL_DIR=$SNAP_DATA/etc/local.d
 
 
 ## add or replace for the vm.arg file
@@ -19,24 +18,6 @@ _modify_vm_args() {
   fi
 }
 
-_modify_ini_file() {
-  filename=$1
-  section=$2
-  opt=`echo $3 | tr "-" "_"`
-  value="$4"
-  config_file=${LOCAL_DIR}/${filename}.ini
-  if [ ! -e ${config_file} ]; then
-    echo "[${section}]" > $config_file
-  fi
-  replace_line="$opt=$value"
-  if $(grep -q "^$opt=" $config_file); then
-    sed "s/^$opt=.*/$replace_line/" $config_file 2>/dev/null >${config_file}.new
-    mv -f ${config_file}.new ${config_file} 2>/dev/null
-  else
-    echo $replace_line >> $config_file
-  fi
-}
-
 # The vm_args file can only be changed from the filesystem
 # configutaion vm.args file
 
@@ -46,67 +27,6 @@ do
   val=$(snapctl get $key)
   if [ ! -z "$val" ]; then
     _modify_vm_args $key $val
-    sleep 0.125
-  fi
-done
-
-# The following list is either those fields that are whitelisted but 
-# useful to modifiy before first run; or those fields blacklisted
-# The snap set command modifies the files in local.d; any changes 
-# via the URL are reflected in local.ini
-
-# Special Cases
-
-# local.d/10-admins.ini
-passwd=$(snapctl get admin)
-if [ ! -z "$passwd" ]; then
-   _modify_ini_file 10-admins admins admin $passwd
-   chmod 600 $SNAP_DATA/etc/local.d/10-admins.ini
-   sleep 0.125
-fi
-
-# Generic Cases
-
-# local.d/20-chttpd.ini
-CHTTPD_OPTIONS="port bind-address"
-for key in $CHTTPD_OPTIONS
-do
-  val=$(snapctl get $key)
-  if [ ! -z "$val" ]; then
-    _modify_ini_file 20-chttpd chttpd $key $val
-    sleep 0.125
-  fi
-done
-
-# local.d/30-cluster.ini
-CLUSTER_OPTIONS="n q"
-for key in $CLUSTER_OPTIONS
-do
-  val=$(snapctl get $key)
-  if [ ! -z "$val" ]; then
-    _modify_ini_file 30-cluster cluster $key $val
-    sleep 0.125
-  fi
-done
-
-# local.d/40-log.ini
-LOG_OPTIONS="writer file level"
-for key in $LOG_OPTIONS
-do
-  val=$(snapctl get $key)
-  if [ ! -z "$val" ]; then
-    _modify_ini_file 40-log log $key $val
-    sleep 0.125
-  fi
-done
-
-# local.d/50-native_query_servers.ini
-NATIVE_QUERY_SERVERS_OPTIONS="query erlang"
-for key in $NATIVE_QUERY_SERVERS_OPTIONS
-do
-  val=$(snapctl get $key)
-  if [ ! -z "$val" ]; then
-    _modify_ini_file 50-native_query_servers native_query_servers $key $val
     sleep 0.125
   fi
 done

@@ -10,6 +10,3 @@ if [ ! -f ${SNAP_DATA}/etc/local.ini ]; then
    cp ${SNAP}/rel/couchdb/etc/local.ini ${SNAP_DATA}/etc/local.ini
 fi
 
-touch ${SNAP_DATA}/etc/local.d/90-override.ini
-
-
