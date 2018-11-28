@@ -23,9 +23,8 @@ Build-Depends: debhelper (>= 9),
                couch-libmozjs185-dev,
                lsb-release,
                po-debconf,
-               python,
                python3,
-               python-sphinx
+               python3-sphinx
 Homepage: http://couchdb.apache.org/
 
 Package: couchdb
@@ -37,14 +36,12 @@ Depends: adduser,
          couch-libmozjs185-1.0,
          lsb-base,
          procps,
-         python,
          python3,
-         python-requests,
          python3-requests,
          ${misc:Depends},
          ${shlibs:Depends},
          ${misc:Depends}
-Recommends: python-progressbar, python3-progressbar
+Recommends: python3-progressbar
 Replaces: couchdb-bin,
           couchdb-common
 Breaks: couchdb-bin,
