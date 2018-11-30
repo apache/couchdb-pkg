@@ -33,29 +33,46 @@ ExclusiveArch: x86_64
 Exclusiveos:   linux
 Packager:      CouchDB Developers <dev@couchdb.apache.org>
 
+%if 0%{?suse_version}
+BuildRequires: erlang
+BuildRequires: erlang-rebar
+BuildRequires: erlang-reltool
+BuildRequires: erlang-epmd
+BuildRequires: gcc-c++
+BuildRequires: pkg-config
+Requires(pre): shadow
+BuildRequires: python3
+Requires(post): python3-progressbar
+Requires(post): python3-requests
+%else
 BuildRequires: esl-erlang
 BuildRequires: gcc
+Requires(pre): shadow-utils
+BuildRequires: python >= 2.6
+#BuildRequires: python-pip
+#BuildRequires: python-sphinx >= 1.5.3
+Requires(post): python-progressbar
+Requires(post): python-requests
+%endif
+
 BuildRequires: git
 BuildRequires: help2man
 #BuildRequires: couch-js-devel = 1:1.8.5
 BuildRequires: libcurl-devel
 BuildRequires: libicu-devel
 BuildRequires: nodejs >= 6.10.1
-BuildRequires: python >= 2.6
-#BuildRequires: python-pip
-#BuildRequires: python-sphinx >= 1.5.3
-
-Requires(pre): shadow-utils
 
 Requires(post): curl
 Requires(post): couch-js = 1:1.8.5
 Requires(post): libicu >= 4.2.1
 Requires(post): procps
-Requires(post): python-progressbar
-Requires(post): python-requests
 
-%if 0%{?fedora} || 0%{?rhel} >= 7
+%if 0%{?fedora} || 0%{?rhel} >= 7 || 0%{?suse_version}
+%if 0%{?suse_version}
+BuildRequires: 		systemd-rpm-macros
+%else
 BuildRequires:		xfsprogs-devel
+%endif 
 %{?systemd_requires}
 BuildRequires:		systemd
 %else
@@ -71,7 +88,7 @@ features, it provides robust, incremental replication with bi-directional
 conflict detection and resolution, and is queryable and indexable using a
 table-oriented view engine with JavaScript acting as the default view
 definition language.
-.
+
 CouchDB is written in Erlang, but can be easily accessed from any environment
 that provides means to make HTTP requests. There are a multitude of third-party
 client libraries that make this even easier for a variety of programming
@@ -88,26 +105,41 @@ languages and environments.
 %{__rm} -rf %{buildroot}
 
 %pre
+%if 0%{?suse_version}
+if ! /usr/bin/getent passwd couchdb > /dev/null; then /usr/sbin/useradd \
+  --system --home-dir /opt/couchdb --no-create-home \
+  --shell /bin/bash --comment "CouchDB Administrator" \
+  --user-group couchdb; fi
+%else
 if ! /usr/bin/getent passwd couchdb > /dev/null; then /usr/sbin/adduser \
   --system --home /opt/couchdb --no-create-home \
   --shell /bin/bash --comment "CouchDB Administrator" \
   --user-group couchdb; fi
+%endif
 
 %install
 %{__install} -d -m0755 %{buildroot}/opt
 %{__cp} -r rel/couchdb %{buildroot}/opt
 %{__install} -d -m0750 %{buildroot}/var/log/%{name}
+%if 0%{?suse_version}
+%{__install} -d -m0750 %{buildroot}%{_localstatedir}/lib/%{name}
+%else
 %{__install} -d -m0750 %{buildroot}%{_sharedstatedir}/%{name}
+%endif
 %{__install} -Dp -m0644 %{SOURCE3} %{buildroot}/opt/%{name}/etc/default.d/10-filelog.ini
 %{__install} -Dp -m0644 %{SOURCE5} %{buildroot}/etc/logrotate.d/%{name}
 /bin/find %{buildroot}/opt/%{name} -name *.ini -exec %{__chmod} 0640 {} \;
 
-%if 0%{?fedora} || 0%{?rhel} >= 7
+%if 0%{?fedora} || 0%{?rhel} >= 7 || 0%{?suse_version}
 %{__install} -Dp -m0644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
 %else
 %{__install} -Dp -m0755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
 %endif
+%if 0%{?suse_version}
+%{__ln_s} -f -T %{_localstatedir}/lib/%{name} %{buildroot}/opt/%{name}/data
+%else
 %{__ln_s} -f -T %{_sharedstatedir}/%{name} %{buildroot}/opt/%{name}/data
+%endif
 %{__ln_s} -f -T /var/log/%{name} %{buildroot}/opt/%{name}/var/log/%{name}
 
 %post
@@ -120,7 +152,7 @@ if ! /usr/bin/getent passwd couchdb > /dev/null; then /usr/sbin/adduser \
 %endif
 
 %preun
-%if 0%{?fedora} || 0%{?rhel} >= 7
+%if 0%{?fedora} || 0%{?rhel} >= 7 || 0%{?suse_version}
 %systemd_preun %{name}.service
 %else
 # stop couchdb only when uninstalling
@@ -132,7 +164,7 @@ killall -u couchdb epmd || :
 %endif
 
 %postun
-%if 0%{?fedora} || 0%{?rhel} >= 7
+%if 0%{?fedora} || 0%{?rhel} >= 7 || 0%{?suse_version}
 %systemd_postun_with_restart %{name}.service
 %else
 # restart couchdb only when upgrading
@@ -143,11 +175,15 @@ fi
 
 %files
 %attr(0755, %{name}, %{name}) /opt/couchdb
+%if 0%{?suse_version}
+%attr(0755, %{name}, %{name}) %dir %{_localstatedir}/lib/%{name}
+%else
 %attr(0755, %{name}, %{name}) %dir %{_sharedstatedir}/%{name}
+%endif
 %attr(0755, %{name}, %{name}) %dir /var/log/%{name}
 %config(noreplace) /opt/couchdb/etc/local.ini
 %config /etc/logrotate.d/%{name}
-%if 0%{?fedora} || 0%{?rhel} >= 7
+%if 0%{?fedora} || 0%{?rhel} >= 7 || 0%{?suse_version}
 %{_unitdir}/%{name}.service
 %else
 %{_initrddir}/%{name}

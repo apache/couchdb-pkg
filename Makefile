@@ -69,6 +69,8 @@ centos6: make-rpmbuild centos
 centos-7: centos7
 centos7: make-rpmbuild centos
 
+openSUSE: centos7
+
 # Erlang is built from source on ARMv8
 # These packages are not installed, but the files are present
 drop-deb-deps-for-source-arch:
