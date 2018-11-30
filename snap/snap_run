@@ -16,7 +16,7 @@
 
 export HOME=$SNAP_DATA
 export COUCHDB_ARGS_FILE=${SNAP_DATA}/etc/vm.args
-export ERL_FLAGS="-couch_ini ${SNAP}/rel/couchdb/etc/default.ini ${SNAP_DATA}/etc/local.d ${SNAP_DATA}/etc/local.ini"
+export ERL_FLAGS="-couch_ini ${SNAP}/rel/couchdb/etc/default.ini ${SNAP}/rel/couchdb/etc/default.d ${SNAP_DATA}/etc/local.ini ${SNAP_DATA}/etc/local.d"
 
 mkdir -p ${SNAP_DATA}/etc 
 
@@ -26,7 +26,6 @@ fi
 
 if [ ! -d ${SNAP_DATA}/etc/local.d ]; then
     mkdir ${SNAP_DATA}/etc/local.d
-    cp ${SNAP}/rel/couchdb/etc/local.d/*.ini ${SNAP_DATA}/etc/local.d
 fi
 
 if [ ! -e ${SNAP_DATA}/etc/local.ini ]; then

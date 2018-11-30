@@ -2,8 +2,11 @@
 
 mkdir -p ${SNAP_DATA}/etc/local.d 
 
-cp ${SNAP}/rel/couchdb/etc/vm.args ${SNAP_DATA}/etc/vm.args
+if [ ! -f ${SNAP_DATA}/etc/vm.args ]; then
+   cp ${SNAP}/rel/couchdb/etc/vm.args ${SNAP_DATA}/etc/vm.args
+fi
 
-cp ${SNAP}/rel/couchdb/etc/local.d/*.ini ${SNAP_DATA}/etc/local.d
-
+if [ ! -f ${SNAP_DATA}/etc/local.ini ]; then
+   cp ${SNAP}/rel/couchdb/etc/local.ini ${SNAP_DATA}/etc/local.ini
+fi
 
