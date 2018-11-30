@@ -41,9 +41,9 @@ BuildRequires: erlang-epmd
 BuildRequires: gcc-c++
 BuildRequires: pkg-config
 Requires(pre): shadow
-BuildRequires: python2
-Requires(post): python2-progressbar
-Requires(post): python2-requests
+BuildRequires: python3
+Requires(post): python3-progressbar
+Requires(post): python3-requests
 %else
 BuildRequires: esl-erlang
 BuildRequires: gcc
