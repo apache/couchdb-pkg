@@ -4,8 +4,6 @@ debian/*.substvars
 debian/files
 debian/couchdb
 debian/tmp
-js/couch-*
-js/couch-*
 js/build
 rpm/BUILD
 rpm/BUILDROOT
@@ -14,11 +12,9 @@ rpm/SRPMS
 repo/db
 repo/dists
 repo/pool
-pkgs/
-couchdb/
 couchdb_*.snap
 parts/
 prime/
 snap/.snapcraft/
 stage/
-apache-couchdb*.tar.gz
+*.tar.gz

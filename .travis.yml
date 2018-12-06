@@ -1,0 +1,41 @@
+dist: xenial
+
+language: minimal
+
+services:
+  - docker
+
+# Avoid double build on PRs (See https://github.com/travis-ci/travis-ci/issues/1147)
+branches:
+  only:
+    - master
+
+env:
+  global:
+    - ERLANGVER=19.3.6
+    - TARBALL_URL=https://dist.apache.org/repos/dist/release/couchdb/source/2.3.0/apache-couchdb-2.3.0.tar.gz
+    - TARBALL=apache-couchdb-2.3.0.tar.gz
+  matrix:
+    - TARGET="js debian-jessie"
+    - TARGET="couch debian-jessie ${TARBALL_URL}"
+    - TARGET="js debian-stretch"
+    - TARGET="couch debian-stretch ${TARBALL_URL}"
+    - TARGET="js ubuntu-trusty"
+    - TARGET="couch ubuntu-trusty ${TARBALL_URL}"
+    - TARGET="js ubuntu-xenial"
+    - TARGET="couch ubuntu-xenial ${TARBALL_URL}"
+    - TARGET="js ubuntu-bionic"
+    - TARGET="couch ubuntu-bionic ${TARBALL_URL}"
+    - TARGET="js centos-6"
+    - TARGET="couch centos-6 ${TARBALL_URL}"
+    - TARGET="js centos-7"
+    - TARGET="couch centos-7 ${TARBALL_URL}"
+
+before_install:
+  - docker --version
+
+script:
+  - ./build.sh ${TARGET}
+
+after_script:
+  - ls -laR pkgs/
