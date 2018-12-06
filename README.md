@@ -1,11 +1,75 @@
-# CouchDB Packaging support files
+# CouchDB Packaging support repo
 
-Quickstart:
+The main purpose of this repository is to provide packaging support files for Apache CouchDB and its SpiderMoneky 1.8.5 dependency, for a number of well-known and used packaging formats, namely:
+
+* `.deb` files, as used by Debian, Ubuntu, and derivatives
+* `.rpm` files, as used by CentOS, RedHat, and derivatives
+* `snapcraft` files, as used by the Ubuntu Snappy package manager
+
+# Usage
+
+## On a system with all necessary build-time dependencies:
+
+### SpiderMonkey 1.8.5
+
+#### rpms
 
 ```shell
-$ cd .. && git clone https://github.com/apache/couchdb
-$ cd couchdb-pkg && make build-couch $(lsb_release -cs) PLATFORM=$(lsb_release -cs)
+make couch-js-rpms
 ```
+
+#### debs
+
+```shell
+make couch-js-debs PLATFORM=$(lsb_release -cs)
+```
+
+### CouchDB
+
+#### rpms or debs from `master` branch:
+
+```shell
+cd .. && git clone https://github.com/apache/couchdb
+cd couchdb-pkg && make build-couch $(lsb_release -cs) PLATFORM=$(lsb_release -cs)
+```
+
+#### rpms or debs from a release tarball:
+
+```shell
+make copy-couch $(lsb_release -cs) COUCHTARBALL=path/to/couchdb-#.#.#.tar.gz PLATFORM=$(lsb_release -cs)
+```
+
+-----
+
+## Building inside the `couchdbdev` docker containers
+
+You must first pull down the image or images you need from Docker Hub, or build the images using the [apache/couchdb-ci](https://github.com/apache/couchdb-ci) repository. Example:
+
+```shell
+docker pull couchdbdev/<osname>-<codename>-erlang-<erlang-version>
+```
+
+A full list of supported environments is at https://hub.docker.com/u/couchdbdev/ .
+
+### SpiderMonkey 1.8.5
+
+```shell
+./build.sh js <os>-<codename>    # for example, debian-stretch, ubuntu-bionic or centos-7.
+```
+
+### CouchDB
+
+```shell
+./build.sh couch <os>-<codename> path/to/couchdb-#.#.#.tar.gz
+```
+
+or, if you want to build directly from the Apache distribution repository,
+
+```shell
+./build.sh couch <os>-<codename> https://dist.apache.org/repos/dist/release/couchdb/source/#.#.#/apache-couchdb-#.#.#.tar.gz
+```
+
+-----
 
 # Building packages for a release
 
@@ -25,13 +89,27 @@ will be derived from the filename of the CouchDB dist tarball.
 
 Run:
 
-    $ ./make-packages path/to/apache-couchdb-VERSION.tar.gz
+    $ ./build.sh couch-all path/to/apache-couchdb-VERSION.tar.gz
 
 or
 
-    $ ./make-packages http://url/to/apache-couchdb-VERSION.tar.gz
+    $ ./build.sh couch-all http://url/to/apache-couchdb-VERSION.tar.gz
 
-Packages will be placed in the `pkgs/` subdirectory.
+Packages will be placed in the `pkgs/couch` subdirectory.
+
+A similar `js-all` target exists, should the SpiderMonkey packages need to be regenerated.
+
+## Uploading the packages
+
+If you have Apache Bintray credentials (set your `BINTRAY_USER` and `BINTRAY_API_KEY` environment variables appropriately), after building all CouchDB packages above, simply run:
+
+    ./build.sh couch-upload-all
+
+Or, for the SpiderMonkey packages:
+
+    ./build.sh js-upload-all
+
+-----
 
 # Building snaps
 
@@ -42,7 +120,7 @@ Packages will be placed in the `pkgs/` subdirectory.
 
 ## How to do it
 
-1. Edit `snap/snapcraft.yaml` to point to the correct tag (e.g. `2.1.0`)
+1. Edit `snap/snapcraft.yaml` to point to the correct tag (e.g. `2.3.0`)
 1. `snapcraft`
 
 # Feedback, Issues, Contributing

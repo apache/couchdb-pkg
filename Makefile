@@ -20,19 +20,25 @@ export DEBFULLNAME="CouchDB Developers"
 export DEBEMAIL="dev@couchdb.apache.org"
 
 # Debian default
-debian: find-couch-dist copy-debian update-changelog dpkg lintian
+debian: find-couch-dist copy-debian update-changelog dpkg lintian copy-pkgs
 
 # Debian 8
+debian-jessie: PLATFORM=jessie
+debian-jessie: DIST=debian-jessie
 debian-jessie: jessie
 jessie: debian
 
 # Debian 9
+debian-stretch: PLATFORM=stretch
+debian-stretch: DIST=debian-stretch
 debian-stretch: stretch
 stretch: debian
 
 # Ubuntu 12.04
+ubuntu-precise: PLATFORM=precise
+ubuntu-precise: DIST=ubuntu-precise
 ubuntu-precise: precise
-precise: find-couch-dist copy-debian precise-prep update-changelog dpkg
+precise: find-couch-dist copy-debian precise-prep update-changelog dpkg copy-pkgs
 
 precise-prep:
 	sed -i '/dh-systemd/d' $(DISTDIR)/debian/control
@@ -44,8 +50,10 @@ precise-prep:
 # No lintian run because of bogus failure on
 # postrm-does-not-call-updaterc.d-for-init.d-script
 # See Ubuntu ufw changelog for why they disabled this check
+ubuntu-trusty: PLATFORM=trusty
+ubuntu-trusty: DIST=ubuntu-trusty
 ubuntu-trusty: trusty
-trusty: find-couch-dist copy-debian trusty-prep update-changelog dpkg
+trusty: find-couch-dist copy-debian trusty-prep update-changelog dpkg copy-pkgs
 
 # see changelog for ubuntu ufw package, this is safe
 trusty-prep:
@@ -53,19 +61,25 @@ trusty-prep:
 	sed -i '/erlang-*/d' $(DISTDIR)/debian/control
 
 # Ubuntu 16.04
+ubuntu-xenial: PLATFORM=xenial
+ubuntu-xenial: DIST=ubuntu-xenial
 ubuntu-xenial: xenial
 xenial: debian
 
 # Ubuntu 18.04
+ubuntu-bionic: PLATFORM=bionic
+ubuntu-bionic: DIST=ubuntu-bioniC
 ubuntu-bionic: bionic
 bionic: debian
 
 # RPM default
-centos: find-couch-dist link-couch-dist build-rpm
+centos: find-couch-dist link-couch-dist build-rpm copy-pkgs
 
+centos-6: DIST=centos-6
 centos-6: centos6
 centos6: make-rpmbuild centos
 
+centos-7: DIST=centos-7
 centos-7: centos7
 centos7: make-rpmbuild centos
 
@@ -140,13 +154,13 @@ build-rpm:
 
 # ######################################
 copy-pkgs:
-	mkdir -p pkgs/$(PLATFORM)
-	-cp ../rpmbuild/RPMS/x86_64/*.rpm pkgs/$(PLATFORM)
-	-cp ../couchdb/*deb pkgs/$(PLATFORM)
-	-chmod -R a+rwx pkgs/$(PLATFORM)
+	-chmod a+rwx ../rpmbuild/RPMS/x86_64/couchdb-* ../couchdb/couchdb_* 2>/dev/null
+	-mkdir -p pkgs/couch/$(DIST) && chmod 777 pkgs/couch/$(DIST)
+	-cp ../rpmbuild/RPMS/x86_64/couchdb-* pkgs/couch/$(DIST) 2>/dev/null
+	-cp ../couchdb/couchdb_* pkgs/couch/$(DIST) 2>/dev/null
 
 clean:
-	rm -rf couchdb_2.0_amd64.snap parts prime snap/.snapcraft stage js/build
+	rm -rf parts prime stage js/build
 
 # ######################################
 couch-js-clean:
