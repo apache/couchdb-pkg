@@ -77,7 +77,7 @@ xenial: debian
 
 # Ubuntu 18.04
 ubuntu-bionic: PLATFORM=bionic
-ubuntu-bionic: DIST=ubuntu-bioniC
+ubuntu-bionic: DIST=ubuntu-bionic
 ubuntu-bionic: bionic
 bionic: debian
 
