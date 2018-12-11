@@ -153,6 +153,8 @@ get-couch-tarball() {
 }
 
 build-couch() {
+  # We will be changing user to 'jenkins' - ensure it has write permissions
+  chmod a+rwx pkgs pkgs/couch pkgs/js
   # $1 is plat, $2 is the optional path to a dist tarball
   docker run \
       --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
