@@ -27,7 +27,6 @@ set -e
 # This works if we're not called through a symlink
 # otherwise, see https://stackoverflow.com/questions/59895/
 SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-ARCH=$(arch)
 
 # Check if running as root
 if [[ ${EUID} -ne 0 ]]; then
@@ -36,6 +35,7 @@ if [[ ${EUID} -ne 0 ]]; then
   exit 1
 fi
 
+. ${SCRIPTPATH}/detect-arch.sh
 . ${SCRIPTPATH}/detect-os.sh
 
 cd ${SCRIPTPATH}/..

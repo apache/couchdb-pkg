@@ -19,6 +19,15 @@ JS_VERSION=1.8.5-1.0.0+couch-2
 export DEBFULLNAME="CouchDB Developers"
 export DEBEMAIL="dev@couchdb.apache.org"
 
+# Default package directory (over-written for RPM based builds)
+PKGDIR=$(COUCHDIR)
+
+ifeq ($(shell arch),aarch64)
+PKGARCH=arm64
+else
+PKGARCH=$(shell arch)
+endif
+
 # Debian default
 debian: find-couch-dist copy-debian update-changelog dpkg lintian copy-pkgs
 
@@ -68,11 +77,12 @@ xenial: debian
 
 # Ubuntu 18.04
 ubuntu-bionic: PLATFORM=bionic
-ubuntu-bionic: DIST=ubuntu-bioniC
+ubuntu-bionic: DIST=ubuntu-bionic
 ubuntu-bionic: bionic
 bionic: debian
 
 # RPM default
+centos: PKGDIR=../rpmbuild/RPMS/$(PKGARCH)
 centos: find-couch-dist link-couch-dist build-rpm copy-pkgs
 
 centos-6: DIST=centos-6
@@ -153,11 +163,11 @@ build-rpm:
 	export HOME=$(HOME) && cd ../rpmbuild && rpmbuild --verbose -bb SPECS/couchdb.spec --define '_version $(VERSION)'
 
 # ######################################
+
 copy-pkgs:
-	-chmod a+rwx ../rpmbuild/RPMS/x86_64/couchdb-* ../couchdb/couchdb_* 2>/dev/null
-	-mkdir -p pkgs/couch/$(DIST) && chmod 777 pkgs/couch/$(DIST)
-	-cp ../rpmbuild/RPMS/x86_64/couchdb-* pkgs/couch/$(DIST) 2>/dev/null
-	-cp ../couchdb/couchdb_* pkgs/couch/$(DIST) 2>/dev/null
+	chmod a+rwx $(PKGDIR)/couchdb*
+	mkdir -p pkgs/couch/$(DIST) && chmod 777 pkgs/couch/$(DIST)
+	cp $(PKGDIR)/couchdb* pkgs/couch/$(DIST)
 
 clean:
 	rm -rf parts prime stage js/build
