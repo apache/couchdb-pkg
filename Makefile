@@ -30,6 +30,7 @@ endif
 
 # Debian default
 debian: find-couch-dist copy-debian update-changelog dpkg lintian copy-pkgs
+debian-no-lintian: find-couch-dist copy-debian update-changelog dpkg copy-pkgs
 
 # Debian 8
 debian-jessie: PLATFORM=jessie
@@ -41,7 +42,13 @@ jessie: debian
 debian-stretch: PLATFORM=stretch
 debian-stretch: DIST=debian-stretch
 debian-stretch: stretch
+# AArch64 Debian 9
+# Lintian doesn't install correctly into a cross-built Docker container ?!
+aarch64-debian-stretch: PLATFORM=stretch
+aarch64-debian-stretch: DIST=debian-stretch
+aarch64-debian-stretch: debian-no-lintian
 stretch: debian
+
 
 # Ubuntu 12.04
 ubuntu-precise: PLATFORM=precise

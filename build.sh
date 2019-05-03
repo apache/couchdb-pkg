@@ -29,9 +29,9 @@ SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # TODO derive these by interrogating the Docker repo rather tha
 # hard coding the list
-DEBIANS="debian-jessie debian-stretch"
+DEBIANS="debian-jessie debian-stretch aarch64-debian-stretch"
 UBUNTUS="ubuntu-trusty ubuntu-xenial ubuntu-bionic"
-debs="(debian-jessie|debian-stretch|ubuntu-trusty|ubuntu-xenial|ubuntu-bionic)"
+debs="(debian-jessie|debian-stretch|aarch64-debian-stretch|ubuntu-trusty|ubuntu-xenial|ubuntu-bionic)"
 
 CENTOSES="centos-6 centos-7"
 rpms="(centos-6|centos-7)"
@@ -43,10 +43,17 @@ ERLANGVERSION=${ERLANGVERSION:-19.3.6}
 build-js() {
   # TODO: check if image is built first, if not, complain
   # invoke as build-js <plat>
-  docker run \
-      --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
-      couchdbdev/$1-base \
-      sudo /home/jenkins/couchdb-pkg/bin/build-js.sh
+  if [[ ${TRAVIS} == "true" ]]; then
+    docker run \
+        --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
+        -u 0 couchdbdev/$1-base \
+        /home/jenkins/couchdb-pkg/bin/build-js.sh
+  else
+    docker run \
+        --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
+        couchdbdev/$1-base \
+        sudo /home/jenkins/couchdb-pkg/bin/build-js.sh
+  fi
 }
 
 build-all-js() {
