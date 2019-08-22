@@ -12,3 +12,6 @@ couchdb: script-not-executable opt/couchdb/lib/couch-2.0.0/priv/spawnkillable/co
 # And we want to be extra sure our license is not ignored
 couchdb: extra-license-file opt/couchdb/LICENSE
 
+# and our doc base won't move out of /opt, sorry
+couchdb: doc-base-file-references-wrong-path couchdb:8 /opt/couchdb/share/www/docs/index.html
+couchdb: doc-base-file-references-wrong-path couchdb:9 /opt/couchdb/share/www/docs/*

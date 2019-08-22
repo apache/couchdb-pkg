@@ -134,7 +134,8 @@ case $1 in
       # Hack to make the upgrade from the 1.0.1 Ubuntu package more correct:
       chown root:root /etc/couchdb
       chown root:root /etc/couchdb/default.ini
-      chown -R root:root /etc/couchdb/default.d
+      chown root:root /etc/couchdb/default.d
+      chown root:root /etc/couchdb/default.d/*
       chmod 755 /etc/couchdb
       chmod 644 /etc/couchdb/default.ini
       chmod 755 /etc/couchdb/default.d
@@ -186,9 +187,16 @@ case $1 in
     esac
 
     # These should be owned by the couchdb user and group:
-    chown -R couchdb:couchdb /opt/couchdb/etc
-    chown -R couchdb:couchdb /var/lib/couchdb
-    chown -R couchdb:couchdb /var/log/couchdb
+    chown couchdb:couchdb /opt/couchdb/etc
+    chown couchdb:couchdb /opt/couchdb/etc/* >/dev/null 2>&1 || true
+    chown couchdb:couchdb /var/lib/couchdb
+    chown couchdb:couchdb /var/lib/couchdb/* >/dev/null 2>&1 || true
+    chown couchdb:couchdb /var/lib/couchdb/shards/* >/dev/null 2>&1 || true
+    chown couchdb:couchdb /var/lib/couchdb/shards/*/* >/dev/null 2>&1 || true
+    chown couchdb:couchdb /var/lib/couchdb/.shards/* >/dev/null 2>&1 || true
+    chown couchdb:couchdb /var/lib/couchdb/.shards/*/* >/dev/null 2>&1 || true
+    chown couchdb:couchdb /var/log/couchdb
+    chown couchdb:couchdb /var/log/couchdb/* >/dev/null 2>&1 || true
     # These should also not be world readable or writable:
     find /opt/couchdb/etc -name *.ini -exec chmod 0640 {} \;
     chmod a+x /opt/couchdb/bin/couchup

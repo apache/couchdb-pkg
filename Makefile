@@ -49,6 +49,16 @@ aarch64-debian-stretch: DIST=debian-stretch
 aarch64-debian-stretch: debian-no-lintian
 stretch: debian
 
+# Debian 10
+debian-buster: PLATFORM=buster
+debian-buster: DIST=debian-buster
+debian-buster: buster
+# Lintian doesn't install correctly into a cross-built Docker container ?!
+aarch64-debian-buster: PLATFORM=buster
+aarch64-debian-buster: DIST=debian-buster
+aarch64-debian-buster: debian-no-lintian
+buster: debian
+
 
 # Ubuntu 12.04
 ubuntu-precise: PLATFORM=precise
