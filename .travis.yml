@@ -16,12 +16,12 @@ env:
     - TARBALL_URL=https://dist.apache.org/repos/dist/release/couchdb/source/2.3.1/apache-couchdb-2.3.1.tar.gz
     - TARBALL=apache-couchdb-2.3.1.tar.gz
   matrix:
-    - TARGET="js debian-jessie"
-    - TARGET="couch debian-jessie ${TARBALL_URL}"
     - TARGET="js debian-stretch"
     - TARGET="couch debian-stretch ${TARBALL_URL}"
     - ERLANGVERSION=20.3.8.20 TARGET="js aarch64-debian-stretch"
     - ERLANGVERSION=20.3.8.20 TARGET="couch aarch64-debian-stretch ${TARBALL_URL}"
+    - ERLANGVERSION=20.3.8.22-1 TARGET="js debian-buster"
+    - ERLANGVERSION=20.3.8.22-1 TARGET="couch debian-buster ${TARBALL_URL}"
     - TARGET="js ubuntu-xenial"
     - TARGET="couch ubuntu-xenial ${TARBALL_URL}"
     - TARGET="js ubuntu-bionic"

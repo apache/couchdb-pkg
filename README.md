@@ -43,29 +43,30 @@ make copy-couch $(lsb_release -cs) COUCHTARBALL=path/to/couchdb-#.#.#.tar.gz PLA
 
 ## Building inside the `couchdbdev` docker containers
 
-You must first pull down the image or images you need from Docker Hub, or build the images using the [apache/couchdb-ci](https://github.com/apache/couchdb-ci) repository. Example:
-
-```shell
-docker pull couchdbdev/<osname>-<codename>-erlang-<erlang-version>
-```
-
-A full list of supported environments is at https://hub.docker.com/u/couchdbdev/ .
+You must first pull down the image or images you need from Docker Hub, or build the images
+using the [apache/couchdb-ci](https://github.com/apache/couchdb-ci) repository. A full
+list of supported environments is at https://hub.docker.com/u/couchdbdev/ .
 
 ### SpiderMonkey 1.8.5
 
 ```shell
+docker pull couchdbdev/<os>-<codename>-base
 ./build.sh js <os>-<codename>    # for example, debian-stretch, ubuntu-bionic or centos-7.
 ```
 
 ### CouchDB
 
+From a downloaded CouchDB tarball:
+
 ```shell
-./build.sh couch <os>-<codename> path/to/couchdb-#.#.#.tar.gz
+docker pull couchdbdev/<osname>-<codename>-erlang-<erlang-version>
+ERLANGVERSION=<erlang-version> ./build.sh couch <os>-<codename> path/to/couchdb-#.#.#.tar.gz
 ```
 
-or, if you want to build directly from the Apache distribution repository,
+Directly from the Apache source CDN:
 
 ```shell
+docker pull couchdbdev/<osname>-<codename>-erlang-<erlang-version>
 ./build.sh couch <os>-<codename> https://dist.apache.org/repos/dist/release/couchdb/source/#.#.#/apache-couchdb-#.#.#.tar.gz
 ```
 
