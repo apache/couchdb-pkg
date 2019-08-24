@@ -112,17 +112,11 @@ Or, for the SpiderMonkey packages:
 
 -----
 
-# Building snaps
+# Snap packages
 
-## Prerequisites
+See [README-SNAP.md](README-SNAP.md).
 
-1. Ubuntu 16.04
-1. `sudo apt install snapd snapcraft`
-
-## How to do it
-
-1. Edit `snap/snapcraft.yaml` to point to the correct tag (e.g. `2.3.0`)
-1. `snapcraft`
+-----
 
 # Feedback, Issues, Contributing
 
