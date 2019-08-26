@@ -187,16 +187,22 @@ case $1 in
     esac
 
     # These should be owned by the couchdb user and group:
-    chown couchdb:couchdb /opt/couchdb/etc
-    chown couchdb:couchdb /opt/couchdb/etc/* >/dev/null 2>&1 || true
-    chown couchdb:couchdb /var/lib/couchdb
-    chown couchdb:couchdb /var/lib/couchdb/* >/dev/null 2>&1 || true
-    chown couchdb:couchdb /var/lib/couchdb/shards/* >/dev/null 2>&1 || true
-    chown couchdb:couchdb /var/lib/couchdb/shards/*/* >/dev/null 2>&1 || true
-    chown couchdb:couchdb /var/lib/couchdb/.shards/* >/dev/null 2>&1 || true
-    chown couchdb:couchdb /var/lib/couchdb/.shards/*/* >/dev/null 2>&1 || true
-    chown couchdb:couchdb /var/log/couchdb
-    chown couchdb:couchdb /var/log/couchdb/* >/dev/null 2>&1 || true
+    for i in "/opt/couchdb/etc
+      /opt/couchdb/etc/*
+      /opt/couchdb/etc/default.d/*
+      /opt/couchdb/etc/local.d/*
+      /var/lib/couchdb
+      /var/lib/couchdb/*
+      /var/lib/couchdb/shards/*
+      /var/lib/couchdb/shards/*/*
+      /var/lib/couchdb/.shards/*
+      /var/lib/couchdb/.shards/*/*
+      /var/log/couchdb
+      /var/log/couchdb/*"
+    do
+      chown couchdb:couchdb $i >/dev/null 2>&1 || true
+    done
+      
     # These should also not be world readable or writable:
     find /opt/couchdb/etc -name *.ini -exec chmod 0640 {} \;
     chmod a+x /opt/couchdb/bin/couchup
