@@ -94,3 +94,11 @@ _Description: CouchDB 1.x databases found
  /var/lib/couchdb directory. These need migration to be used in
  CouchDB 2.x and forward. Use the `couchup' utility to assist in
  the migration process.
+
+Template: couchdb/postrm_remove_databases
+Type: boolean
+Default: false
+_Description: Remove all CouchDB databases?
+ The /var/lib/couchdb directory containing all CouchDB databases will
+ be removed. This will also clear the stored node name for this machine,
+ and remove the couchdb user and group.

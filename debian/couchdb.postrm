@@ -19,21 +19,36 @@ case $1 in
         if test -d "/opt/couchdb/etc"; then
             rm -rf "/opt/couchdb/etc"
         fi
-        if test -d "/var/lib/couchdb"; then
-            rm -rf "/var/lib/couchdb"
-        fi
         if test -d "/var/log/couchdb"; then
             rm -rf "/var/log/couchdb"
         fi
+
+        db_input high couchdb/postrm_remove_databases || true
+        db_go || true
+        db_get couchdb/postrm_remove_databases || true
+
+        if [ "$RET" = "true" ]; then
+            if test -d "/var/lib/couchdb"; then
+                rm -rf "/var/lib/couchdb"
+            fi
+
+            # If we didn't delete the data, we should
+            # keep the uid and gid too.
+            if getent passwd couchdb > /dev/null; then
+                deluser couchdb >/dev/null 2>&1
+            fi
+            if getent group couchdb > /dev/null; then
+                delgroup couchdb >/dev/null 2>&1
+            fi
+
+            # The node name is embedded in the _dbs
+            # documents, so we must not reset it if
+            # we preserved the data.
+            db_reset couchdb/nodename
+        fi
+
         pkill -u couchdb >/dev/null 2>&1 || true
-        if getent passwd couchdb > /dev/null; then
-            deluser couchdb >/dev/null 2>&1
-        fi
-        if getent group couchdb > /dev/null; then
-            delgroup couchdb >/dev/null 2>&1
-        fi
         db_reset couchdb/mode
-        db_reset couchdb/nodename
         db_reset couchdb/cookie
         db_reset couchdb/adminpass
         db_reset couchdb/adminpass_again
