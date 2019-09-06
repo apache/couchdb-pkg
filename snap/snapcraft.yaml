@@ -82,9 +82,9 @@ parts:
 layout:
   # Database and log files are common across upgrades
   $SNAP/opt/couchdb/data:
-    bind: $SNAP_DATA/data
+    bind: $SNAP_COMMON/data
   $SNAP/opt/couchdb/var/log:
-    bind: $SNAP_DATA/log
+    bind: $SNAP_COMMON/log
   # Local configuration files may change across upgrades
   $SNAP/opt/couchdb/etc/vm.args:
     bind-file: $SNAP_DATA/etc/vm.args
@@ -93,6 +93,10 @@ layout:
   $SNAP/opt/couchdb/etc/local.ini:
     bind-file: $SNAP_DATA/etc/local.ini
   # We do not bind default.ini or default.d/ as these are intended to be immutable
+  
+environment:
+  COUCHDB_ARGS_FILE: ${SNAP_DATA}/etc/vm.args
+  ERL_FLAGS: "-couch_ini ${SNAP}/opt/couchdb/etc/default.ini ${SNAP}/opt/couchdb/etc/default.d ${SNAP_DATA}/etc/local.ini ${SNAP_DATA}/etc/local.d"
 
 apps:
   couchdb:
@@ -106,7 +110,10 @@ apps:
     plugs: [network, network-bind, process-control, mount-observe]
   remsh:
     command: opt/couchdb/bin/remsh
-    plugs: [network, network-bind, process-control]
+    plugs: [network, network-bind]
   couchup:
     command: opt/couchdb/bin/couchup
-    plugs: [network, network-bind, process-control]
+    plugs: [network, network-bind]
+  couchjs:
+    command: opt/couchdb/bin/couchjs
+    plugs: [network, network-bind]

@@ -12,15 +12,11 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-mkdir -p ${SNAP_COMMON}/data
+# If the data directory does not exisit in /var/couchdb/common; but does exisit in /var/couchdb/current; move it to common.
 
-mkdir -p ${SNAP_DATA}/etc/local.d
-
-if [ ! -s ${SNAP_DATA}/etc/vm.args ]; then
-   cat ${SNAP}/opt/couchdb/etc/vm.args.dist > ${SNAP_DATA}/etc/vm.args
-fi
-
-if [ ! -s ${SNAP_DATA}/etc/local.ini ]; then
-   cat ${SNAP}/opt/couchdb/etc/local.ini.dist > ${SNAP_DATA}/etc/local.ini
+if [ ! -d ${SNAP_COMMON}/data ]; then
+   if [ -d ${SNAP_DATA}/data ]; then
+       mv ${SNAP_DATA}/data ${SNAP_COMMON}/data
+   fi
 fi
 
