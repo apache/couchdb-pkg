@@ -61,10 +61,34 @@ $ sudo snap restart couchdb
 
 ## Monitoring CouchDB 
 
-The logs, by default, are captured by journald. View the logs with:
+The logs, by default, are captured by journald. View the logs with either command:
 
 ```bash
-$ journalctl -u snap.couchdb* -f`
+$ snap logs couchdb -f
+$ journalctl -u snap.couchdb* -f
+```
+
+## Removing CouchDB
+
+There are several difference between installation via 'apt' and 'snap'. One important 
+difference is when removing couchdb. When calling 'apt remove couchdb', the binaries 
+are removed but the configuration and the couch database files remain, leaving the 
+user to clean up any databases latter. 
+
+Calling 'snap remove couchdb' *will* remove binaries, configurations and the database.
+
+On newer versions of snapd (snapd 2.39+) a snapshot is made of the SNAP_DATA 
+and SNAP_COMMON directories and this is stored (subject to disc space) for about 30 days. 
+On these newer version a 'snap remove' followed by a 'snap install' may restore the 
+database; but you are best to make your own backup before removing couchdb.
+If you do not want to keep the configuration or database files you can delete the 
+snapshot by calling snap remove with the --purge parameter. 
+
+To remove your installation either:
+
+```bash
+$ sudo snap remove couchdb
+$ sudo snap remove couchdb --purge
 ```
 
 -----
@@ -89,7 +113,7 @@ couchdb-c1> apt update
 couchdb-c1> snap install couchdb --edge
 couchdb-c1> snap connect couchdb:mount-observe
 couchdb-c1> snap connect couchdb:process-control
-couchdb-c1> curl -X PUT http://localhost:5984/_node/_local/_config/httpd/bind_address -d '"0.0.0.0"'
+couchdb-c1> curl -X PUT http://localhost:5984/_node/_local/_config/chttpd/bind_address -d '"0.0.0.0"'
 couchdb-c1> curl -X PUT http://localhost:5984/_node/_local/_config/admins/admin -d '"Be1stDB"'
 couchdb-c1> exit
 ```
