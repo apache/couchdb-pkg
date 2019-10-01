@@ -39,7 +39,7 @@ Buildrequires:	mozilla-nspr-devel >= 4.7
 BuildRequires:	python3
 %else
 Buildrequires:	nspr-devel >= 4.7
-BuildRequires:	python
+BuildRequires:	python2
 %endif
 BuildRequires:	perl
 BuildRequires:	zip
