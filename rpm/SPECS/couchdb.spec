@@ -48,7 +48,6 @@ Requires(post): python3-requests
 BuildRequires: esl-erlang
 BuildRequires: gcc
 Requires(pre): shadow-utils
-BuildRequires: python >= 2.6
 #BuildRequires: python-pip
 #BuildRequires: python-sphinx >= 1.5.3
 Requires(post): python-progressbar
