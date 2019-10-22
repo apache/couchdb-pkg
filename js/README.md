@@ -65,8 +65,13 @@ On deb systems, use `apt install path/to/file.deb path/to/next.deb` to install l
   * https://fedoraproject.org/wiki/Changes/aarch64-48bitVA
 * https://docs-old.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html/RPM_Guide/index.html
 
+## Other distros
+
+* https://git.archlinux.org/svntogit/community.git/tree/trunk?h=packages/js185
+
 ## Other links we shouldn't lose track of
 
 * https://issues.apache.org/jira/browse/COUCHDB-1572
   * https://bugzilla.mozilla.org/show_bug.cgi?id=589735
   * https://bugzilla.mozilla.org/show_bug.cgi?id=577056
+* http://www.aegidian.org/bb/viewtopic.php?f=9&t=18796&start=15 (dead 2019-10-22)
