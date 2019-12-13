@@ -28,8 +28,8 @@ Prefix:        %{prefix}
 Group:         Applications/Databases
 URL:           https://couchdb.apache.org/
 Vendor:        The Apache Software Foundation
-BuildArch:     x86_64
-ExclusiveArch: x86_64
+BuildArch:     x86_64 ppc64le
+ExclusiveArch: x86_64 ppc64le
 Exclusiveos:   linux
 Packager:      CouchDB Developers <dev@couchdb.apache.org>
 
@@ -79,7 +79,7 @@ Requires(post): procps
 BuildRequires: 		systemd-rpm-macros
 %else
 BuildRequires:		xfsprogs-devel
-%endif 
+%endif
 %{?systemd_requires}
 BuildRequires:		systemd
 %else
