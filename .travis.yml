@@ -12,7 +12,7 @@ branches:
 
 env:
   global:
-    - ERLANGVERSION=20.3.8.24
+    - ERLANGVERSION=20.3.8.24-1
     - TARBALL_URL=https://dist.apache.org/repos/dist/release/couchdb/source/2.3.1/apache-couchdb-2.3.1.tar.gz
     - TARBALL=apache-couchdb-2.3.1.tar.gz
   matrix:
