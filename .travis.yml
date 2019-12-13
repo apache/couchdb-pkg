@@ -18,10 +18,10 @@ env:
   matrix:
     - TARGET="js debian-stretch"
     - TARGET="couch debian-stretch ${TARBALL_URL}"
-    - TARGET="js aarch64-debian-stretch"
-    - TARGET="couch aarch64-debian-stretch ${TARBALL_URL}"
     - TARGET="js debian-buster"
     - TARGET="couch debian-buster ${TARBALL_URL}"
+    - TARGET="js arm64v8-debian-buster"
+    - TARGET="couch arm64v8-debian-buster ${TARBALL_URL}"
     - TARGET="js ubuntu-xenial"
     - TARGET="couch ubuntu-xenial ${TARBALL_URL}"
     - TARGET="js ubuntu-bionic"

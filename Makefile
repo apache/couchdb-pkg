@@ -32,7 +32,6 @@ endif
 
 # Debian default
 debian: find-couch-dist copy-debian update-changelog dpkg lintian copy-pkgs
-debian-no-lintian: find-couch-dist copy-debian update-changelog dpkg copy-pkgs
 
 # Debian 8
 debian-jessie: PLATFORM=jessie
@@ -49,7 +48,7 @@ debian-stretch: stretch
 arm64v8-debian-stretch: aarch64-debian-stretch
 aarch64-debian-stretch: PLATFORM=stretch
 aarch64-debian-stretch: DIST=debian-stretch
-aarch64-debian-stretch: debian-no-lintian
+aarch64-debian-stretch: stretch
 ppc64le-debian-stretch: PLATFORM=stretch
 ppc64le-debian-stretch: DIST=debian-stretch
 ppc64le-debian-stretch: stretch
@@ -63,47 +62,22 @@ debian-buster: buster
 arm64v8-debian-buster: aarch64-debian-buster
 aarch64-debian-buster: PLATFORM=buster
 aarch64-debian-buster: DIST=debian-buster
-aarch64-debian-buster: debian-no-lintian
+aarch64-debian-buster: buster
 buster: debian
 
 
-# Ubuntu 12.04
-ubuntu-precise: PLATFORM=precise
-ubuntu-precise: DIST=ubuntu-precise
-ubuntu-precise: precise
-precise: find-couch-dist copy-debian precise-prep update-changelog dpkg copy-pkgs
-
-precise-prep:
-	sed -i '/dh-systemd/d' $(DISTDIR)/debian/control
-	sed -i '/init-system-helpers/d' $(DISTDIR)/debian/control
-	sed -i 's/ --with=systemd//' $(DISTDIR)/debian/rules
-
-# Ubuntu 14.04
-# Need to work around missing esl erlang-* pkgs for 1:18.3-1 :/
-# No lintian run because of bogus failure on
-# postrm-does-not-call-updaterc.d-for-init.d-script
-# See Ubuntu ufw changelog for why they disabled this check
-ubuntu-trusty: PLATFORM=trusty
-ubuntu-trusty: DIST=ubuntu-trusty
-ubuntu-trusty: trusty
-trusty: find-couch-dist copy-debian trusty-prep update-changelog dpkg copy-pkgs
-
-# see changelog for ubuntu ufw package, this is safe
-trusty-prep:
-	#sudo sed -i 's/conffile/conffile, postrm-does-not-call-updaterc.d-for-init.d-script/' /usr/share/lintian/profiles/couchdb/main.profile
-	sed -i '/erlang-*/d' $(DISTDIR)/debian/control
-
-# Ubuntu 16.04
+# Ubuntu 16.04 (Xenial)
 ubuntu-xenial: PLATFORM=xenial
 ubuntu-xenial: DIST=ubuntu-xenial
 ubuntu-xenial: xenial
 xenial: debian
 
-# Ubuntu 18.04
+# Ubuntu 18.04 (Bionic)
 ubuntu-bionic: PLATFORM=bionic
 ubuntu-bionic: DIST=ubuntu-bionic
 ubuntu-bionic: bionic
 bionic: debian
+
 
 # RPM default
 centos: PKGDIR=../rpmbuild/RPMS/$(PKGARCH)
@@ -157,7 +131,7 @@ dpkg:
 	cd $(DISTDIR) && dpkg-buildpackage -b -us -uc
 
 lintian:
-	cd $(DISTDIR)/.. && lintian --profile couchdb couch*.deb
+	cd $(DISTDIR)/.. && lintian --profile couchdb couch*.deb || true
 
 # ######################################
 link-couch-dist:
