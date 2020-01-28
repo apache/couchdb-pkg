@@ -50,18 +50,6 @@ Requires(pre): shadow-utils
 #BuildRequires: python-sphinx >= 1.5.3
 %endif
 
-%if 0%{?fedora} || 0%{?rhel} >= 8 || 0%{?suse_version}
-%if 0%{?suse_version} || 0%{?fedora}
-Requires(post): python3-progressbar
-%endif
-Requires(post): python3
-Requires(post): python3-requests
-%endif
-%if 0%{?rhel} <= 7
-Requires(post): python34-requests
-Requires(post): python34
-%endif
-
 BuildRequires: git
 BuildRequires: help2man
 #BuildRequires: couch-js-devel = 1:1.8.5

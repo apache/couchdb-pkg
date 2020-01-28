@@ -36,12 +36,9 @@ Depends: adduser,
          couch-libmozjs185-1.0,
          lsb-base,
          procps,
-         python3,
-         python3-requests,
          ${misc:Depends},
          ${shlibs:Depends},
          ${misc:Depends}
-Recommends: python3-progressbar
 Replaces: couchdb-bin,
           couchdb-common
 Breaks: couchdb-bin,
