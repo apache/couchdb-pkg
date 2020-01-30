@@ -205,7 +205,6 @@ case $1 in
       
     # These should also not be world readable or writable:
     find /opt/couchdb/etc -name *.ini -exec chmod 0640 {} \;
-    chmod a+x /opt/couchdb/bin/couchup
     chmod 0750 /var/log/couchdb
     chmod 0750 /var/lib/couchdb
 

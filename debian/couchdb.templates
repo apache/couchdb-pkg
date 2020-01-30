@@ -92,8 +92,10 @@ Type: note
 _Description: CouchDB 1.x databases found
  During installation, unsharded databases have been detected in the
  /var/lib/couchdb directory. These need migration to be used in
- CouchDB 2.x and forward. Use the `couchup' utility to assist in
- the migration process.
+ CouchDB 3.x. You must first install CouchDB 2.x and use the `couchup'
+ utility to assist in the migration process, then upgrade to 3.x. Or,
+ you can do a clean install of CouchDB 3.x and use replication to
+ migrate your databases directly.
 
 Template: couchdb/postrm_remove_databases
 Type: boolean

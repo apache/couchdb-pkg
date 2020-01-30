@@ -1,7 +1,7 @@
-CouchDB 2.0 for Debian
+CouchDB 3.0 for Debian
 ----------------------
 
-CouchDB 2.0 uses an erlang rebar release for installation. This is akin
+CouchDB 3.0 uses an erlang rebar release for installation. This is akin
 to a python virtualenv or a ruby rbenv setup. This relocatable CouchDB
 install contains the Erlang BEAM VM, all support libraries, the CouchDB
 libraries (including any natively-compiled code), couchjs, and so on.
@@ -9,7 +9,7 @@ libraries (including any natively-compiled code), couchjs, and so on.
 Because of this upstream architectural change, it has become impractical
 to install couchdb into the standard /usr hierarchy.
 
-This package installs CouchDB 2.0 into /opt/couchdb, with the following
+This package installs CouchDB 3.0 into /opt/couchdb, with the following
 exceptions:
 
   * Database files are stored and expected in /var/lib/couchdb
@@ -29,13 +29,13 @@ database:
 Logging
 -------
 
-CouchDB 2.0 changed default logging to be stderr only. Unfortunately,
+CouchDB 3.0 changed default logging to be stderr only. Unfortunately,
 currently for Debian and Ubuntu, systemd's journal is not persisted
 to disk, only to a ring buffer in /run. rsyslogd still maintains
 the contents of /var/log.
 
 This package overrides this behaviour and logs to /var/log/couchdb
-as in 1.x.
+as in 1.x and 2.x.
 
 If, in the future, Debian and Ubuntu enable systemd logging via the
 journal, this file will be removed.
@@ -47,7 +47,7 @@ new [log] stanza in local.ini or any local.d/*.ini file.
 Pre-seeding package configuration
 ---------------------------------
 
-The Debian and Ubuntu CouchDB 2.0 packages support pre-seeding answers
+The Debian and Ubuntu CouchDB 3.0 packages support pre-seeding answers
 to configuration questions via debconf-set-selections. This allows
 for unattended, non-interactive ("headless") installation of CouchDB
 while supporting configuration in standalone, clustered or "no-config"
@@ -98,10 +98,7 @@ Upgrading from CouchDB 1.x
 
 The installer attempts to detect if any CouchDB 1.x databases exist
 in /var/lib/couchdb. If so, the installer will warn that manual
-action is required to migrate these databases to CouchDB 2.0, and
-includes instructions on how to perform the migration step.
-
-Migration is accomplished via the /opt/couchdb/bin/couchup tool. Run
-this program to see the invocation parameters and display other help.
+action is required to migrate these databases to CouchDB 3.x. CouchDB
+2.x is required first, or HTTP replication can be performed instead.
 
  -- Joan Touzet <wohali@apache.org>, Thu, 06 Apr 2017 02:50:15 -0400
