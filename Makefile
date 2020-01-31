@@ -30,39 +30,53 @@ else
 PKGARCH=$(shell arch)
 endif
 
+# Overridden for targets with SM60 in per-target env vars below.
+SPIDERMONKEY=couch-libmozjs185-1.0
+SPIDERMONKEY_DEV=couch-libmozjs185-dev
+SM_VER=1.8.5
+
+
 # Debian default
-debian: find-couch-dist copy-debian update-changelog dpkg lintian copy-pkgs
+debian: sm-ver find-couch-dist copy-debian update-changelog dpkg lintian copy-pkgs
 
-# Debian 8
-debian-jessie: PLATFORM=jessie
-debian-jessie: DIST=debian-jessie
-debian-jessie: jessie
-jessie: debian
-
-# Debian 9
+# Debian 9 - stretch
 debian-stretch: PLATFORM=stretch
 debian-stretch: DIST=debian-stretch
 debian-stretch: stretch
-# AArch64 Debian 9
-# Lintian doesn't install correctly into a cross-built Docker container ?!
+
 arm64v8-debian-stretch: aarch64-debian-stretch
 aarch64-debian-stretch: PLATFORM=stretch
 aarch64-debian-stretch: DIST=debian-stretch
 aarch64-debian-stretch: stretch
+
 ppc64le-debian-stretch: PLATFORM=stretch
 ppc64le-debian-stretch: DIST=debian-stretch
 ppc64le-debian-stretch: stretch
+
 stretch: debian
 
-# Debian 10
+# Debian 10 - buster
 debian-buster: PLATFORM=buster
 debian-buster: DIST=debian-buster
+debian-buster: SPIDERMONKEY=libmozjs-60-0
+debian-buster: SPIDERMONKEY_DEV=libmozjs-60-dev
+debian-buster: SM_VER=60
 debian-buster: buster
-# Lintian doesn't install correctly into a cross-built Docker container ?!
+
+# Blacklist arm64 from SM60 for now.
+# See https://github.com/apache/couchdb/issues/2423 for details.
 arm64v8-debian-buster: aarch64-debian-buster
 aarch64-debian-buster: PLATFORM=buster
 aarch64-debian-buster: DIST=debian-buster
 aarch64-debian-buster: buster
+
+ppc64le-debian-buster: PLATFORM=buster
+ppc64le-debian-buster: DIST=debian-buster
+ppc64le-debian-buster: SPIDERMONKEY=libmozjs-60-0
+ppc64le-debian-buster: SPIDERMONKEY_DEV=libmozjs-60-dev
+ppc64le-debian-buster: SM_VER=60
+ppc64le-debian-buster: buster
+
 buster: debian
 
 
@@ -97,6 +111,7 @@ centos8: make-rpmbuild centos
 
 openSUSE: centos7
 
+
 # ######################################
 get-couch:
 	mkdir -p $(COUCHDIR)
@@ -115,6 +130,12 @@ build-couch:
 	cd $(COUCHDIR) && make dist
 
 # ######################################
+sm-ver:
+	cp debian/control debian/control.bak
+	sed -i 's/%SPIDERMONKEY%/$(SPIDERMONKEY)/g' debian/control
+	sed -i 's/%SPIDERMONKEY_DEV%/$(SPIDERMONKEY_DEV)/g' debian/control
+	echo 'SM_VER = $(SM_VER)' > debian/sm_ver.mk
+
 find-couch-dist:
 	$(eval SHORTDISTDIR := $(shell cd $(COUCHDIR) && find . -type d -name apache-couchdb-\*))
 	$(eval VERSION := $(shell echo $(SHORTDISTDIR) | sed 's/.\/apache-couchdb-//'))
@@ -150,14 +171,14 @@ build-rpm:
 	export HOME=$(HOME) && cd ../rpmbuild && rpmbuild --verbose -bb SPECS/couchdb.spec --define '_version $(VERSION)'
 
 # ######################################
-
 copy-pkgs:
 	chmod a+rwx $(PKGDIR)/couchdb*
 	mkdir -p pkgs/couch/$(DIST) && chmod 777 pkgs/couch/$(DIST)
 	cp $(PKGDIR)/couchdb* pkgs/couch/$(DIST)
 
 clean:
-	rm -rf parts prime stage js/build
+	if [ -f debian/control.bak ]; then mv -f debian/control.bak debian/control; fi
+	rm -rf parts prime stage js/build debian/sm_ver.mk
 
 # ######################################
 couch-js-clean:

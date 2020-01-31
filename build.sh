@@ -29,15 +29,15 @@ SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # TODO derive these by interrogating the Docker repo rather tha
 # hard coding the list
-DEBIANS="debian-stretch aarch64-debian-stretch debian-buster aarch64-debian-buster"
-UBUNTUS="ubuntu-trusty ubuntu-xenial ubuntu-bionic"
-debs="(debian-stretch|aarch64-debian-stretch|debian-buster|aarch64-debian-buster|ubuntu-trusty|ubuntu-xenial|ubuntu-bionic)"
+DEBIANS="debian-stretch debian-buster arm64v8-debian-buster ppc64le-debian-buster"
+UBUNTUS="ubuntu-xenial ubuntu-bionic"
+debs="(debian-stretch|debian-buster|arm64v8-debian-buster|ppc64le-debian-buster|ubuntu-xenial|ubuntu-bionic)"
 
-CENTOSES="centos-6 centos-7"
-rpms="(centos-6|centos-7)"
+CENTOSES="centos-6 centos-7 centos-8"
+rpms="(centos-6|centos-7|centos-8)"
 
 BINTRAY_API="https://api.bintray.com"
-ERLANGVERSION=${ERLANGVERSION:-19.3.6}
+ERLANGVERSION=${ERLANGVERSION:-20.3.8.25-1}
 
 
 build-js() {
@@ -165,9 +165,10 @@ build-couch() {
   # $1 is plat, $2 is the optional path to a dist tarball
   docker run \
       --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
-      -w /home/jenkins/couchdb-pkg \
+      -u 0 -w /home/jenkins/couchdb-pkg \
       couchdbdev/$1-erlang-${ERLANGVERSION} \
       make copy-couch $1 COUCHTARBALL=${COUCHTARBALL}
+  make clean
 }
 
 build-all-couch() {

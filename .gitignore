@@ -4,6 +4,7 @@ debian/*.substvars
 debian/files
 debian/couchdb
 debian/tmp
+debian/control.bak
 js/build
 rpm/BUILD
 rpm/BUILDROOT

@@ -11,6 +11,8 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
+include debian/sm_ver.mk
+
 %:
 	dh $@ --with=systemd
 
@@ -20,7 +22,7 @@ override_dh_auto_clean:
 	-mv src/mango/src/mango_cursor_text.nocompile src/mango/src/mango_cursor_text.erl
 
 override_dh_auto_configure:
-	./configure -c
+	./configure -c --spidermonkey-version $(SM_VER)
 
 override_dh_auto_build:
 	dh_auto_build -- release
