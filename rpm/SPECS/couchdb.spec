@@ -93,7 +93,7 @@ languages and environments.
 %define __os_install_post %{nil}
 
 %build
-./configure -c --spidermonkey-version=%SM_VER%
+./configure -c --spidermonkey-version=1.8.5
 %{__make} release
 
 %clean

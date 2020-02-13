@@ -98,22 +98,22 @@ centos: PKGDIR=../rpmbuild/RPMS/$(PKGARCH)
 centos: find-couch-dist link-couch-dist build-rpm copy-pkgs
 
 centos-6: DIST=centos-6
-centos-6: SPIDERMONKEY=couch-js = 1:1.8.5
-centos-6: SPIDERMONKEY_DEV=couch-js-devel = 1:1.8.5
 centos-6: centos6
+centos6: SPIDERMONKEY=couch-js = 1:1.8.5
+centos6: SPIDERMONKEY_DEV=couch-js-devel = 1:1.8.5
 centos6: sm-ver-rpm make-rpmbuild centos
 
 centos-7: DIST=centos-7
-centos-7: SPIDERMONKEY=couch-js = 1:1.8.5
-centos-7: SPIDERMONKEY_DEV=couch-js-devel = 1:1.8.5
 centos-7: centos7
+centos7: SPIDERMONKEY=couch-js = 1:1.8.5
+centos7: SPIDERMONKEY_DEV=couch-js-devel = 1:1.8.5
 centos7: sm-ver-rpm make-rpmbuild centos
 
 centos-8: DIST=centos-8
-centos-8: SPIDERMONKEY=mozjs60
-centos-8: SPIDERMONKEY_DEV=mozjs60-devel
-centos-8: SM_VER=60
 centos-8: centos8
+centos8: SPIDERMONKEY=mozjs60
+centos8: SPIDERMONKEY_DEV=mozjs60-devel
+centos8: SM_VER=60
 centos8: sm-ver-rpm make-rpmbuild centos
 
 openSUSE: centos7
