@@ -37,7 +37,7 @@ SM_VER=1.8.5
 
 
 # Debian default
-debian: sm-ver find-couch-dist copy-debian update-changelog dpkg lintian copy-pkgs
+debian: sm-ver-debian find-couch-dist copy-debian update-changelog dpkg lintian copy-pkgs
 
 # Debian 9 - stretch
 debian-stretch: PLATFORM=stretch
@@ -98,16 +98,23 @@ centos: PKGDIR=../rpmbuild/RPMS/$(PKGARCH)
 centos: find-couch-dist link-couch-dist build-rpm copy-pkgs
 
 centos-6: DIST=centos-6
+centos-6: SPIDERMONKEY=couch-js = 1:1.8.5
+centos-6: SPIDERMONKEY_DEV=couch-js-devel = 1:1.8.5
 centos-6: centos6
-centos6: make-rpmbuild centos
+centos6: sm-ver-rpm make-rpmbuild centos
 
 centos-7: DIST=centos-7
+centos-7: SPIDERMONKEY=couch-js = 1:1.8.5
+centos-7: SPIDERMONKEY_DEV=couch-js-devel = 1:1.8.5
 centos-7: centos7
-centos7: make-rpmbuild centos
+centos7: sm-ver-rpm make-rpmbuild centos
 
 centos-8: DIST=centos-8
+centos-8: SPIDERMONKEY=mozjs60
+centos-8: SPIDERMONKEY_DEV=mozjs60-devel
+centos-8: SM_VER=60
 centos-8: centos8
-centos8: make-rpmbuild centos
+centos8: sm-ver-rpm make-rpmbuild centos
 
 openSUSE: centos7
 
@@ -130,7 +137,7 @@ build-couch:
 	cd $(COUCHDIR) && make dist
 
 # ######################################
-sm-ver:
+sm-ver-debian:
 	cp debian/control debian/control.bak
 	sed -i 's/%SPIDERMONKEY%/$(SPIDERMONKEY)/g' debian/control
 	sed -i 's/%SPIDERMONKEY_DEV%/$(SPIDERMONKEY_DEV)/g' debian/control
@@ -160,6 +167,12 @@ link-couch-dist:
 	ln -s $(DISTDIR) ../rpmbuild/BUILD
 	$(eval VERSION := $(shell echo $(VERSION) | sed 's/-/\./'))
 
+sm-ver-rpm:
+	cp rpm/SPECS/couchdb.spec rpm/SPECS/couchdb.spec.bak
+	sed -i 's/%SPIDERMONKEY%/$(SPIDERMONKEY)/g' rpm/SPECS/couchdb.spec
+	sed -i 's/%SPIDERMONKEY_DEV%/$(SPIDERMONKEY_DEV)/g' rpm/SPECS/couchdb.spec
+	sed -i 's/%SM_VER%/$(SM_VER)/g' rpm/SPECS/couchdb.spec
+
 make-rpmbuild:
 	rm -rf ../rpmbuild
 	mkdir -p ../rpmbuild
@@ -178,6 +191,7 @@ copy-pkgs:
 
 clean:
 	if [ -f debian/control.bak ]; then mv -f debian/control.bak debian/control; fi
+	if [ -f rpm/SPECS/couchdb.spec.bak ]; then mv -f rpm/SPECS/couchdb.spec.bak rpm/SPECS/couchdb.spec; fi
 	rm -rf parts prime stage js/build debian/sm_ver.mk
 
 # ######################################

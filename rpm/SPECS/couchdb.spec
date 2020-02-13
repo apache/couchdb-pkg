@@ -52,13 +52,13 @@ Requires(pre): shadow-utils
 
 BuildRequires: git
 BuildRequires: help2man
-#BuildRequires: couch-js-devel = 1:1.8.5
+#BuildRequires: mozjs60-devel
 BuildRequires: libcurl-devel
 BuildRequires: libicu-devel
 BuildRequires: nodejs >= 6.10.1
 
 Requires(post): curl
-Requires(post): couch-js = 1:1.8.5
+Requires(post): mozjs60
 Requires(post): libicu >= 4.2.1
 Requires(post): procps
 
@@ -93,7 +93,7 @@ languages and environments.
 %define __os_install_post %{nil}
 
 %build
-./configure -c
+./configure -c --spidermonkey-version=%SM_VER%
 %{__make} release
 
 %clean
