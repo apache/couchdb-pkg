@@ -1,3 +1,4 @@
+debian/control
 debian/*.log
 debian/*.debhelper
 debian/*.substvars
@@ -10,6 +11,7 @@ rpm/BUILD
 rpm/BUILDROOT
 rpm/RPMS
 rpm/SRPMS
+rpm/SPECS/couchdb.spec
 repo/db
 repo/dists
 repo/pool

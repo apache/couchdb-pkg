@@ -52,13 +52,13 @@ Requires(pre): shadow-utils
 
 BuildRequires: git
 BuildRequires: help2man
-#BuildRequires: mozjs60-devel
+#BuildRequires: %SPIDERMONKEY_DEV%
 BuildRequires: libcurl-devel
 BuildRequires: libicu-devel
 BuildRequires: nodejs >= 6.10.1
 
 Requires(post): curl
-Requires(post): mozjs60
+Requires(post): %SPIDERMONKEY%
 Requires(post): libicu >= 4.2.1
 Requires(post): procps
 

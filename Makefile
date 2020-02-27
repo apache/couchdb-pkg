@@ -138,7 +138,7 @@ build-couch:
 
 # ######################################
 sm-ver-debian:
-	cp debian/control debian/control.bak
+	cp debian/control.in debian/control
 	sed -i 's/%SPIDERMONKEY%/$(SPIDERMONKEY)/g' debian/control
 	sed -i 's/%SPIDERMONKEY_DEV%/$(SPIDERMONKEY_DEV)/g' debian/control
 	echo 'SM_VER = $(SM_VER)' > debian/sm_ver.mk
@@ -168,7 +168,7 @@ link-couch-dist:
 	$(eval VERSION := $(shell echo $(VERSION) | sed 's/-/\./'))
 
 sm-ver-rpm:
-	cp rpm/SPECS/couchdb.spec rpm/SPECS/couchdb.spec.bak
+	cp rpm/SPECS/couchdb.spec.in rpm/SPECS/couchdb.spec
 	sed -i 's/%SPIDERMONKEY%/$(SPIDERMONKEY)/g' rpm/SPECS/couchdb.spec
 	sed -i 's/%SPIDERMONKEY_DEV%/$(SPIDERMONKEY_DEV)/g' rpm/SPECS/couchdb.spec
 	sed -i 's/%SM_VER%/$(SM_VER)/g' rpm/SPECS/couchdb.spec
