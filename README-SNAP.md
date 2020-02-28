@@ -253,15 +253,15 @@ upstream image is fully patched for `core18`, we'll move to it instead.)
 From an Ubuntu 18.04 machine with Docker installed:
 
 ```bash
-$ git clone https://github.com/couchdb/couchdb-pkg && cd couchdb-pkg`
-$ docker pull yakshaveinc/snapcraft:core18-edge`
-$ docker run -it -v "$PWD":/build:Z -w /build yakshaveinc/snapcraft:core18-edge snapcraft
+$ git clone https://github.com/couchdb/couchdb-pkg && cd couchdb-pkg
+$ docker pull yakshaveinc/snapcraft:core18
+$ docker run -it -v "$PWD":/build:Z -w /build yakshaveinc/snapcraft:core18 snapcraft
 ```
 
 The self-built snap will need to be installed using `--dangerous`:
 
 ```bash
-sudo snap install ./couchdb_2.3.1_amd64.snap --dangerous
+sudo snap install ./couchdb_3.0.0_amd64.snap --dangerous
 ```
 
 Clean up with:
