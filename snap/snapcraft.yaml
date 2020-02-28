@@ -1,5 +1,5 @@
 name: couchdb
-version: 2.3.1
+version: 3.0.0
 summary: Official Apache CouchDB snap - a clustering document oriented database
 description: |
   CouchDB is a database that completely embraces the web. Store your data with
@@ -28,7 +28,7 @@ parts:
   couchdb: 
     after: [add-repo]
     plugin: dump
-    source: https://apache.bintray.com/couchdb-deb/pool/C/CouchDB/couchdb_2.3.1~bionic_amd64.deb
+    source: https://apache.bintray.com/couchdb-deb/pool/C/CouchDB/couchdb_3.0.0~bionic_amd64.deb
     source-type: deb
     # because this doesn't use apt, we have to manually list all of our dependencies :(
     # the following are all in core18, and warning output can safely be ignored:
@@ -62,8 +62,6 @@ parts:
       - couch-libmozjs185-1.0
       - lsb-base
       - procps
-      - python3
-      - python3-requests
       - libcurl4
       - libgcc1
       - libicu60
@@ -110,9 +108,6 @@ apps:
     plugs: [network, network-bind, process-control, mount-observe]
   remsh:
     command: opt/couchdb/bin/remsh
-    plugs: [network, network-bind]
-  couchup:
-    command: opt/couchdb/bin/couchup
     plugs: [network, network-bind]
   couchjs:
     command: opt/couchdb/bin/couchjs
