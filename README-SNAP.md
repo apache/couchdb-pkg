@@ -18,6 +18,14 @@ The snap can be installed from a file or directly from the snap store:
 $ sudo snap install couchdb
 ```  
 
+If this is your first time installing couchdb then you will need to set an admin password
+and manually start CouchDB.
+
+```bash
+$ sudo snap set couchdb admin=[your-password-goes-here]
+$ sudo snap start couchdb 
+```
+
 ## Enable snap permissions
 
 The snap installation uses AppArmor to protect your system. CouchDB requests access to two
@@ -48,7 +56,7 @@ Erlang settings are stored in the `/var/snap/couchdb/current/etc/vm.args` file. 
 configuration tool can be used to quickly change the node name and security cookie:
 
 ```bash
-$ sudo snap set couchdb name=couchdb@1.2.3.4 setcookie=cutter
+$ sudo snap set couchdb name=couchdb@1.2.3.4 setcookie=cutter 
 ```
 
 Be sure to read `vm.args` to understand what these settings do before changing them.
