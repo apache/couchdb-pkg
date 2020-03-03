@@ -62,8 +62,6 @@ parts:
       - couch-libmozjs185-1.0
       - lsb-base
       - procps
-      - python3
-      - python3-requests
       - libcurl4
       - libgcc1
       - libicu60
