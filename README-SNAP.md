@@ -56,7 +56,7 @@ Erlang settings are stored in the `/var/snap/couchdb/current/etc/vm.args` file. 
 configuration tool can be used to quickly change the node name and security cookie:
 
 ```bash
-$ sudo snap set couchdb name=couchdb@1.2.3.4 setcookie=cutter 
+$ sudo snap set couchdb name=couchdb@1.2.3.4 setcookie=cutter
 ```
 
 Be sure to read `vm.args` to understand what these settings do before changing them.
