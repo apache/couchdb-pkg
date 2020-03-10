@@ -18,6 +18,14 @@ The snap can be installed from a file or directly from the snap store:
 $ sudo snap install couchdb
 ```  
 
+If this is your first time installing couchdb then you will need to set an admin password
+and manually start CouchDB.
+
+```bash
+$ sudo snap set couchdb admin=[your-password-goes-here]
+$ sudo snap start couchdb 
+```
+
 ## Enable snap permissions
 
 The snap installation uses AppArmor to protect your system. CouchDB requests access to two

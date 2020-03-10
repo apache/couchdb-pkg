@@ -15,7 +15,7 @@
 set -e
 
 VM_ARGS=$SNAP_DATA/etc/vm.args
-
+LOCAL_INI=$SNAP_DATA/etc/local.ini
 
 ## add or replace for the vm.arg file
 _modify_vm_args() {
@@ -30,6 +30,20 @@ _modify_vm_args() {
   fi
 }
 
+## add or replace for the vm.arg file
+_modify_ini_args() {
+  opt=$1
+  value="$2"
+  replace_line="$opt = $value"
+  if $(grep -q "^[;|[:space:]]*$opt[[:space:]]*=" $LOCAL_INI); then
+    sed "s/^[;|[:space:]]*$opt[[:space:]]*=.*/$replace_line/" $LOCAL_INI 2>/dev/null >${LOCAL_INI}.new
+    mv -f ${LOCAL_INI}.new $LOCAL_INI 2>/dev/null
+  else
+    echo $replace_line >> $LOCAL_INI
+  fi
+}
+
+
 # The vm_args file can only be changed from the filesystem
 # configutaion vm.args file
 
@@ -43,3 +57,12 @@ do
   fi
 done
 
+LOCAL_INI_OPTIONS="admin"
+for key in $LOCAL_INI_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_ini_args $key $val
+    sleep 0.125
+  fi
+done
