@@ -125,8 +125,8 @@ $> snap connect couchdb_1:process-control
 $> snap set couchdb_1 name=couchdb1@127.0.0.1 setcookie=cutter port=5981 admin=Be1stDB
 ```
 You will need to edit the local configuration file to manually set the data directories. 
-You can find the file here (/var/snap/couchdb_1/current/etc/local.ini) ensure
-that the couchdb stanza should look like this
+You can find the local.ini at ```/var/snap/couchdb_1/current/etc/local.ini``` ensure
+that the ```[couchdb]``` stanza should look like this
 ```
 [couchdb]
 ;max_document_size = 4294967296 ; bytes
@@ -134,20 +134,31 @@ that the couchdb stanza should look like this
 database_dir = /var/snap/couchdb_1/common/data
 view_index_dir = /var/snap/couchdb_1/common/data
 ```
-Start your engine and confirm couchdb is running.
-
+Start your engine ... and confirm that couchdb is running.
+```bash
 $> snap start couchdb_1
 
 $> curl -X GET http://localhost:5981
-
-Then repeat for couchdb_1, couchdb_2 and couchdb_bkup
+```
+Then repeat for couchdb_1, couchdb_2 and couchdb_bkup, editing the local.ini and changing
+the name, port number for each. They should all have the same admin password and cookie. 
+```bash
+$> snap install couchdb_2
+$> snap connect couchdb_2:mount-observe
+$> snap connect couchdb_2:process-control
+$> snap set couchdb_2 name=couchdb2@127.0.0.1 setcookie=cutter port=5982 admin=Be1stDB
+$> snap install couchdb_3
+$> snap connect couchdb_3:mount-observe
+$> snap connect couchdb_3:process-control
+$> snap set couchdb_3 name=couchdb3@127.0.0.1 setcookie=cutter port=5983 admin=Be1stDB
+```
 
 ## Enable CouchDB Cluster (using the http interface)
 
 Have the first node generate two uuids 
-
+```bash
 $> curl http://localhost:5981/_uuids?count=2
-
+```
 The each instances within a cluster needs to share the same uuid ... 
 
 ```bash
@@ -155,14 +166,14 @@ curl -X PUT http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_config/couchdb/uui
 curl -X PUT http://admin:Be1stDB@127.0.0.1:5982/_node/_local/_config/couchdb/uuid -d '"f6f22e2c664b49ba2c6dc88379002548"'
 curl -X PUT http://admin:Be1stDB@127.0.0.1:5983/_node/_local/_config/couchdb/uuid -d '"f6f22e2c664b49ba2c6dc88379002548"'
 ```
-... and common secret ...
+... and a (different) but common secret ...
 
 ```bash
 curl -X PUT http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_config/couch_httpd_auth/secret -d '"f6f22e2c664b49ba2c6dc88379002a80"'
 curl -X PUT http://admin:Be1stDB@127.0.0.1:5982/_node/_local/_config/couch_httpd_auth/secret -d '"f6f22e2c664b49ba2c6dc88379002a80"'
 curl -X PUT http://admin:Be1stDB@127.0.0.1:5983/_node/_local/_config/couch_httpd_auth/secret -d '"f6f22e2c664b49ba2c6dc88379002a80"'
 ```
-... before they can be enabled for clustering
+... after which they can be enabled for clustering
 ```bash
 curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"Be1stDB", "node_count":"3"}'
 curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5982/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"Be1stDB", "node_count":"3"}'
@@ -184,13 +195,12 @@ curl -X PUT "http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_nodes/couchdb3@12
 curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup -d '{"action": "finish_cluster"}'
 
 curl http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup
-
 ```
 If everthing as been successful, then the three notes can be seen here.
 ```bash
 $> curl -X GET "http://admin:Be1stDB@127.0.0.1:5981/_membership"
 ```
-Now we have a functioning three node cluster. 
+Now we have a functioning three node cluster. Next we will test it. 
 
 ## An Example Database
 Let's create an example database ...
@@ -238,9 +248,9 @@ The backup database has a single shard and single directory:
 In the very rare case you need to connect to the couchdb server, a remsh script is
 provided. You need to specify both the name of the server and the cookie, even if
 you are using the default. 
-
+```bash
 /snap/bin/couchdb.remsh -n couchdb@localhost -c monster
-
+```
 # Building this snap <a name="building"></a>
 
 This build requires Ubuntu 18.04, the `core18` core, and the `snapcraft` tool.  The
