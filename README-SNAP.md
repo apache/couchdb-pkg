@@ -113,32 +113,27 @@ single machine for making backups. In this example we will be using parallel ins
 snaps that is availble from version 2.36.
 
 First we need to enable parallel instances of snap.
-
+```bash
 $ snap set system experimental.parallel-instances=true
-
+```
 We install couchdb via snap from the store and enable interfaces, open up the bind address
 and set a admin password.
-
 ```bash
 $> snap install couchdb_1
 $> snap connect couchdb_1:mount-observe
 $> snap connect couchdb_1:process-control
 $> snap set couchdb_1 name=couchdb1@127.0.0.1 setcookie=cutter port=5981 admin=Be1stDB
 ```
-
 You will need to edit the local configuration file to manually set the data directories. 
 You can find the file here (/var/snap/couchdb_1/current/etc/local.ini) ensure
 that the couchdb stanza should look like this
-
 ```
 [couchdb]
 ;max_document_size = 4294967296 ; bytes
 ;os_process_timeout = 5000
-; uuid =
 database_dir = /var/snap/couchdb_1/common/data
 view_index_dir = /var/snap/couchdb_1/common/data
 ```
-
 Start your engine and confirm couchdb is running.
 
 $> snap start couchdb_1
@@ -147,95 +142,91 @@ $> curl -X GET http://localhost:5981
 
 Then repeat for couchdb_1, couchdb_2 and couchdb_bkup
 
-## Syncronize the uuid across a cluster
+## Enable CouchDB Cluster (using the http interface)
+
 Have the first node generate two uuids 
 
 $> curl http://localhost:5981/_uuids?count=2
 
-The first instances uuid needs to be shared across the cluster. Find the uuid
-via grep and use snap to configure across nodes. Restart the new nodes.
+The each instances within a cluster needs to share the same uuid ... 
 
 ```bash
 curl -X PUT http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_config/couchdb/uuid -d '"f6f22e2c664b49ba2c6dc88379002548"'
 curl -X PUT http://admin:Be1stDB@127.0.0.1:5982/_node/_local/_config/couchdb/uuid -d '"f6f22e2c664b49ba2c6dc88379002548"'
 curl -X PUT http://admin:Be1stDB@127.0.0.1:5983/_node/_local/_config/couchdb/uuid -d '"f6f22e2c664b49ba2c6dc88379002548"'
+```
+... and common secret ...
 
+```bash
 curl -X PUT http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_config/couch_httpd_auth/secret -d '"f6f22e2c664b49ba2c6dc88379002a80"'
 curl -X PUT http://admin:Be1stDB@127.0.0.1:5982/_node/_local/_config/couch_httpd_auth/secret -d '"f6f22e2c664b49ba2c6dc88379002a80"'
 curl -X PUT http://admin:Be1stDB@127.0.0.1:5983/_node/_local/_config/couch_httpd_auth/secret -d '"f6f22e2c664b49ba2c6dc88379002a80"'
 ```
-## Configure CouchDB Cluster (using the http interface)
-
+... before they can be enabled for clustering
 ```bash
 curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"Be1stDB", "node_count":"3"}'
 curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5982/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"Be1stDB", "node_count":"3"}'
 curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5983/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"Be1stDB", "node_count":"3"}'
+```
+You can check the status here.
+```bash
+curl http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup
+curl http://admin:Be1stDB@127.0.0.1:5982/_cluster_setup
+curl http://admin:Be1stDB@127.0.0.1:5983/_cluster_setup
+```
 
+## Configure CouchDB Cluster (using the http interface)
+Next we want to join the three nodes together. We do this through requests to the first node.
+```bash
 curl -X PUT "http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_nodes/couchdb2@127.0.0.1" -d '{"port":5982}'
 curl -X PUT "http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_nodes/couchdb3@127.0.0.1" -d '{"port":5983}'
 
 curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup -d '{"action": "finish_cluster"}'
 
-
 curl http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup
 
 ```
-
+If everthing as been successful, then the three notes can be seen here.
 ```bash
 $> curl -X GET "http://admin:Be1stDB@127.0.0.1:5981/_membership"
 ```
-
 Now we have a functioning three node cluster. 
 
-
-
 ## An Example Database
-
 Let's create an example database ...
-
 ```bash
 $ curl -X PUT http://admin:Be1stDB@localhost:5981/example
 $ curl -X PUT http://admin:Be1stDB@localhost:5981/example/aaa -d '{"test":1}' -H "Content-Type: application/json"
 $ curl -X PUT http://admin:Be1stDB@localhost:5981/example/aab -d '{"test":2}' -H "Content-Type: application/json"
 $ curl -X PUT http://admin:Be1stDB@localhost:5981/example/aac -d '{"test":3}' -H "Content-Type: application/json"
 ```
-
-... and verify that it is created on all three nodes:
-
+... and verify that it is created on all three nodes ...
 ```bash
 $ curl -X GET http://localhost:5981/example/_all_docs
 $ curl -X GET http://localhost:5982/example/_all_docs
 $ curl -X GET http://localhost:5983/example/_all_docs
 ```
+... and is separated into shards on the disk.
+```bash
+  $ ls /var/snap/couchdb_?/common/data/shards/
+```
 
 ## Backing Up CouchDB
-
 The backup machine we will configure as a single instance (`n=1, q=1`). 
-
 ```bash
 $> snap install couchdb_bkup
 $> snap set couchdb_bkup name=couchdb0@localhost setcookie=cutter port=5980 admin=Be1stDB
 $> curl -X PUT http://admin:Be1stDB@localhost:5980/_node/_local/_config/cluster/n -d '"1"'
 $> curl -X PUT http://admin:Be1stDB@localhost:5980/_node/_local/_config/cluster/q -d '"1"'
 ```
-
 We will manually replicate to this from one (can be any one) of the nodes.
-
 ```bash
 $ curl -X POST http://admin:Be1stDB@localhost:5980/_replicate \
     -d '{"source":"http://localhost:5981/example","target":"example","continuous":false,"create_target":true}' \
     -H "Content-Type: application/json"
 $ curl -X GET http://admin:Be1stDB@localhost:5980/example/_all_docs
 ```
-
-Whereas the data store for the clusters nodes is sharded:
-
-```bash
-  $ ls /var/snap/couchdb_1/common/data/shards/
-```
-
-The backup database is a single directory:
-
+The backup database has a single shard and single directory:
 ```bash
   $ ls /var/snap/couchdb_bkup/common/data/shards/
 ```
