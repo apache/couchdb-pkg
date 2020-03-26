@@ -1,4 +1,4 @@
-name: couchdb-sklassen
+name: couchdb
 version: 3.0.0
 summary: Official Apache CouchDB snap - a clustering document oriented database
 description: |
