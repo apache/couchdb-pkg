@@ -5,7 +5,7 @@ description: |
   CouchDB is a database that completely embraces the web. Store your data with
   JSON documents. Access your documents and query your indexes with your web
   browser, via HTTP. Index, combine, and transform your documents with
-  JavaScript. 
+  JavaScript.
 
 architectures:
   - build-on: amd64
@@ -21,16 +21,20 @@ parts:
     override-pull: |
       apt-get update
       apt-get upgrade -yy
-      apt-get install -y --no-install-recommends apt-transport-https gnupg ca-certificates
-      echo "deb https://apache.bintray.com/couchdb-deb bionic main" | tee /etc/apt/sources.list.d/custom.list
-      apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8756C4F765C9AC3CB6B85D62379CE192D401AB61
+      apt-get install -y --no-install-recommends apt-transport-https \
+                                                gnupg ca-certificates
+      echo "deb https://apache.bintray.com/couchdb-deb bionic main" | \
+           tee /etc/apt/sources.list.d/custom.list
+      apt-key adv --keyserver keyserver.ubuntu.com --recv-keys \
+                        8756C4F765C9AC3CB6B85D62379CE192D401AB61
       apt-get update
-  couchdb: 
+  couchdb:
     after: [add-repo]
     plugin: dump
     source: https://apache.bintray.com/couchdb-deb/pool/C/CouchDB/couchdb_3.0.0~bionic_amd64.deb
     source-type: deb
-    # because this doesn't use apt, we have to manually list all of our dependencies :(
+    # because this doesn't use apt, we have to manually list all of our
+    # dependencies :(
     # the following are all in core18, and warning output can safely be ignored:
     # lib/x86_64-linux-gnu/libbz2.so.1.0
     # lib/x86_64-linux-gnu/libc.so.6
@@ -53,17 +57,18 @@ parts:
     # usr/lib/x86_64-linux-gnu/liblz4.so.1
     # usr/lib/x86_64-linux-gnu/libpanelw.so.5
     # usr/lib/x86_64-linux-gnu/libstdc++.so.6
-    stage-packages:
-      - ca-certificates
+    build-packages:
       - adduser
-      - curl
       - debconf
+      - ca-certificates
       - init-system-helpers
-      - couch-libmozjs185-1.0
       - lsb-base
+      - curl
+      - libgcc1
+    stage-packages:
+      - couch-libmozjs185-1.0
       - procps
       - libcurl4
-      - libgcc1
       - libicu60
       - libssl1.0.0
       - libtinfo5
@@ -79,6 +84,8 @@ parts:
 
 layout:
   # Database and log files are common across upgrades
+  # We do not bind default.ini or default.d/ as these are
+  # intended to be immutable
   $SNAP/opt/couchdb/data:
     bind: $SNAP_COMMON/data
   $SNAP/opt/couchdb/var/log:
@@ -90,11 +97,13 @@ layout:
     bind: $SNAP_DATA/etc/local.d
   $SNAP/opt/couchdb/etc/local.ini:
     bind-file: $SNAP_DATA/etc/local.ini
-  # We do not bind default.ini or default.d/ as these are intended to be immutable
-  
+
 environment:
   COUCHDB_ARGS_FILE: ${SNAP_DATA}/etc/vm.args
-  ERL_FLAGS: "-couch_ini ${SNAP}/opt/couchdb/etc/default.ini ${SNAP}/opt/couchdb/etc/default.d ${SNAP_DATA}/etc/local.ini ${SNAP_DATA}/etc/local.d"
+  ERL_FLAGS: "-couch_ini ${SNAP}/opt/couchdb/etc/default.ini
+                         ${SNAP}/opt/couchdb/etc/default.d
+                         ${SNAP_DATA}/etc/local.ini
+                         ${SNAP_DATA}/etc/local.d"
 
 apps:
   couchdb:

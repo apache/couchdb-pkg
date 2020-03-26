@@ -30,7 +30,7 @@ _modify_vm_args() {
   fi
 }
 
-## add or replace for the vm.arg file
+## add or replace for the local.ini file
 _modify_ini_args() {
   opt=$1
   value="$2"
@@ -57,7 +57,7 @@ do
   fi
 done
 
-LOCAL_INI_OPTIONS="admin"
+LOCAL_INI_OPTIONS="admin port"
 for key in $LOCAL_INI_OPTIONS
 do
   val=$(snapctl get $key)
