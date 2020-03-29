@@ -1,5 +1,7 @@
 name: couchdb-sklassen
-version: 3.0.0
+version: 3.0.1
+base: core20
+build-base: core18
 summary: Official Apache CouchDB snap - a clustering document oriented database
 description: |
   CouchDB is a database that completely embraces the web. Store your data with
@@ -11,113 +13,71 @@ architectures:
   - build-on: amd64
     run-on: amd64
 assumes: [command-chain, common-data-dir]
-base: core18
 grade: stable
 confinement: strict
 
 parts:
-  add-repo:
-    plugin: nil
-    override-pull: |
-      apt-get update
-      apt-get upgrade -yy
-      apt-get install -y --no-install-recommends apt-transport-https \
-                                                gnupg ca-certificates
-      echo "deb https://apache.bintray.com/couchdb-deb bionic main" | \
-           tee /etc/apt/sources.list.d/custom.list
-      apt-key adv --keyserver keyserver.ubuntu.com --recv-keys \
-                        8756C4F765C9AC3CB6B85D62379CE192D401AB61
-      apt-get update
   couchdb:
-    after: [add-repo]
-    plugin: dump
-    source: https://apache.bintray.com/couchdb-deb/pool/C/CouchDB/couchdb_3.0.0~bionic_amd64.deb
-    source-type: deb
-    # because this doesn't use apt, we have to manually list all of our
-    # dependencies :(
-    # the following are all in core18, and warning output can safely be ignored:
-    # lib/x86_64-linux-gnu/libbz2.so.1.0
-    # lib/x86_64-linux-gnu/libc.so.6
-    # lib/x86_64-linux-gnu/libcrypt.so.1
-    # lib/x86_64-linux-gnu/libdl.so.2
-    # lib/x86_64-linux-gnu/libgcrypt.so.20
-    # lib/x86_64-linux-gnu/libgpg-error.so.0
-    # lib/x86_64-linux-gnu/liblzma.so.5
-    # lib/x86_64-linux-gnu/libm.so.6
-    # lib/x86_64-linux-gnu/libncurses.so.5
-    # lib/x86_64-linux-gnu/libncursesw.so.5
-    # lib/x86_64-linux-gnu/libnsl.so.1
-    # lib/x86_64-linux-gnu/libpthread.so.0
-    # lib/x86_64-linux-gnu/libresolv.so.2
-    # lib/x86_64-linux-gnu/librt.so.1
-    # lib/x86_64-linux-gnu/libsystemd.so.0
-    # lib/x86_64-linux-gnu/libutil.so.1
-    # lib/x86_64-linux-gnu/libz.so.1
-    # usr/lib/x86_64-linux-gnu/libdb-5.3.so
-    # usr/lib/x86_64-linux-gnu/liblz4.so.1
-    # usr/lib/x86_64-linux-gnu/libpanelw.so.5
-    # usr/lib/x86_64-linux-gnu/libstdc++.so.6
+    plugin: make
+    source: http://www-us.apache.org/dist/couchdb/source/3.0.0/apache-couchdb-3.0.0.tar.gz
+    source-type: tar
+    override-build: |
+        ./configure --disable-docs --spidermonkey-version 60
+        make release
+        cp -ra ./rel/couchdb/* $SNAPCRAFT_PART_INSTALL
     build-packages:
-      - adduser
-      - debconf
-      - ca-certificates
-      - init-system-helpers
-      - lsb-base
-      - curl
-      - libgcc1
+      - gcc
+      - g++
+      - libc6-dev
+      - libcurl4-openssl-dev
+      - libicu-dev
+      - icu-devtools
+      # For erlang/rebar processing
+      - erlang-dev
+      - erlang-base
+      - erlang-reltool
+      - erlang-nox
+      - erlang-eunit
+      - erlang-os-mon
+      - erlang-syntax-tools
+      # moz60
+      - libmozjs-60-dev
+      # For fauxton
+      - libnode-dev
+      - npm
     stage-packages:
-      - couch-libmozjs185-1.0
       - procps
       - libcurl4
-      - libicu60
-      - libssl1.0.0
+      - libicu66
+      - libmozjs-60-0
+      - libssl1.1
       - libtinfo5
+    stage:
+      - -usr/share/doc
+      - -usr/share/man
+      - -var
     override-pull: |
       snapcraftctl pull
-      rm -f opt/couchdb/data opt/couchdb/var/log opt/couchdb/etc/default.d/*
-      mkdir -p opt/couchdb/etc/default.d.dist/
-      mv opt/couchdb/etc/vm.args opt/couchdb/etc/vm.args.dist
-      mv opt/couchdb/etc/local.ini opt/couchdb/etc/local.ini.dist
-    override-build: |
-      echo "couchdb couchdb/mode select none" | debconf-set-selections
-      snapcraftctl build
-
-layout:
-  # Database and log files are common across upgrades
-  # We do not bind default.ini or default.d/ as these are
-  # intended to be immutable
-  $SNAP/opt/couchdb/data:
-    bind: $SNAP_COMMON/data
-  $SNAP/opt/couchdb/var/log:
-    bind: $SNAP_COMMON/log
-  # Local configuration files may change across upgrades
-  $SNAP/opt/couchdb/etc/vm.args:
-    bind-file: $SNAP_DATA/etc/vm.args
-  $SNAP/opt/couchdb/etc/local.d:
-    bind: $SNAP_DATA/etc/local.d
-  $SNAP/opt/couchdb/etc/local.ini:
-    bind-file: $SNAP_DATA/etc/local.ini
 
 environment:
   COUCHDB_ARGS_FILE: ${SNAP_DATA}/etc/vm.args
-  ERL_FLAGS: "-couch_ini ${SNAP}/opt/couchdb/etc/default.ini
-                         ${SNAP}/opt/couchdb/etc/default.d
+  ERL_FLAGS: "-couch_ini ${SNAP}/etc/default.ini
+                         ${SNAP}/etc/default.d
                          ${SNAP_DATA}/etc/local.ini
                          ${SNAP_DATA}/etc/local.d"
-
 apps:
   couchdb:
     adapter: full
-    command: opt/couchdb/bin/couchdb
+    command: bin/couchdb
     plugs: [network, network-bind, process-control, mount-observe]
   server:
     daemon: simple
     adapter: full
-    command: opt/couchdb/bin/couchdb
+    command: bin/couchdb
     plugs: [network, network-bind, process-control, mount-observe]
   remsh:
-    command: opt/couchdb/bin/remsh
+    command: bin/remsh
     plugs: [network, network-bind]
   couchjs:
-    command: opt/couchdb/bin/couchjs
+    command: bin/couchjs
     plugs: [network, network-bind]
