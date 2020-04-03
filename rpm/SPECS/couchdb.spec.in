@@ -177,6 +177,7 @@ fi
 %endif
 %attr(0755, %{name}, %{name}) %dir /var/log/%{name}
 %config(noreplace) /opt/couchdb/etc/local.ini
+%config(noreplace) /opt/couchdb/etc/vm.args
 %config /etc/logrotate.d/%{name}
 %if 0%{?fedora} || 0%{?rhel} >= 7 || 0%{?suse_version}
 %{_unitdir}/%{name}.service
