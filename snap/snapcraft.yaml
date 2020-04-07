@@ -58,6 +58,11 @@ parts:
       - -var
     override-pull: |
       snapcraftctl pull
+      
+layout:
+  # Database files are common across upgrades
+  $SNAP/data:
+      bind: $SNAP_DATA/common/data
 
 environment:
   COUCHDB_ARGS_FILE: ${SNAP_DATA}/etc/vm.args
