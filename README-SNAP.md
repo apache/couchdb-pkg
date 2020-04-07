@@ -44,6 +44,12 @@ $ sudo snap connect couchdb:process-control
 
 Be sure to read the [CouchDB documentation](http://docs.couchdb.org/en/stable/) first.
 
+Snaps enforce -- what was previous merely suggested -- the Unix philosophy that local 
+binaries or libraries sit in `/usr/local/...` and anything variable is stored separately
+in `/var/local/...`. With this in mind, if are you going to use snaps for your database, 
+the files will be stored in `/var/snap/couchdb/common` and your `/var` partition will need
+to be large enough for your database size. 
+
 CouchDB defaults are stored **read-only** in `/snap/couchdb/current/opt/couchdb/etc/`.
 This includes `default.ini` and any `default.d/*` files added in the snap build process.
 These are all read-only and should never be changed.
@@ -134,13 +140,15 @@ that the ```[couchdb]``` stanza should look like this
 database_dir = /var/snap/couchdb_1/common/data
 view_index_dir = /var/snap/couchdb_1/common/data
 ```
-Start your engine ... and confirm that couchdb is running.
+Start your engine(s) ... 
 ```bash
 $> snap start couchdb_1
-
+```
+... and confirm that couchdb is running
+```bash
 $> curl -X GET http://localhost:5981
 ```
-Then repeat for couchdb_1, couchdb_2 and couchdb_bkup, editing the local.ini and changing
+Then repeat for couchdb_2 and couchdb_3, editing the local.ini and changing
 the name, port number for each. They should all have the same admin password and cookie. 
 ```bash
 $> snap install couchdb_2
@@ -253,29 +261,24 @@ you are using the default.
 ```
 # Building this snap <a name="building"></a>
 
-This build requires Ubuntu 18.04, the `core18` core, and the `snapcraft` tool.  The
-CouchDB team builds this using the
-[`yakshaveinc/snapcraft`](https://hub.docker.com/r/yakshaveinc/snapcraft) image, which is
-the [official `snapcore/snapcraft` Docker
-image](https://snapcraft.io/docs/build-on-docker) patched for Ubuntu 18.04. (When the
-upstream image is fully patched for `core18`, we'll move to it instead.)
-
-From an Ubuntu 18.04 machine with Docker installed:
+Prior to the release of Unbuntu 20.04 (Focal), we can compile the tarball using LXD. You will 
+have to run it in destructive mode (within the LXD container) and not via multipass. 
 
 ```bash
-$ git clone https://github.com/couchdb/couchdb-pkg && cd couchdb-pkg
-$ docker pull yakshaveinc/snapcraft:core18
-$ docker run -it -v "$PWD":/build:Z -w /build yakshaveinc/snapcraft:core18 snapcraft
+> lxc launch ubuntu-daily:20.04 -c focal
+> lxc shell focal
+$ snapcraft --destructive-mode
+```
+This build was ran on a Ubuntu 19.10 base system, with the `core18` build-core and `core20` 
+core, and the `snapcraft` tool. The snapcraft tool from the store can be installed as 
+
+```bash
+snap install snapcraft
 ```
 
-The self-built snap will need to be installed using `--dangerous`:
+Once the snap has been built, the snap can be installed locally using `--dangerous`:
 
 ```bash
 sudo snap install ./couchdb_3.0.0_amd64.snap --dangerous
 ```
 
-Clean up with:
-
-```bash
-$docker run -it -v "$PWD":/build:Z -w /build yakshaveinc/snapcraft:core18-edge snapcraft clean
-```
