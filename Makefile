@@ -92,6 +92,15 @@ ubuntu-bionic: DIST=ubuntu-bionic
 ubuntu-bionic: bionic
 bionic: debian
 
+# Ubuntu 20.04 (Focal)
+ubuntu-focal: PLATFORM=focal
+ubuntu-focal: DIST=ubuntu-focal
+ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
+ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
+ubuntu-focal: SM_VER=68
+ubuntu-focal: focal
+focal: debian
+
 
 # RPM default
 centos: PKGDIR=../rpmbuild/RPMS/$(PKGARCH)
