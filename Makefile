@@ -36,6 +36,10 @@ SPIDERMONKEY_DEV=couch-libmozjs185-dev
 SM_VER=1.8.5
 
 
+# Try and guess the correct target...
+all:
+	make `bin/detect-target.sh`
+
 # Debian default
 debian: sm-ver-debian find-couch-dist copy-debian update-changelog dpkg lintian copy-pkgs
 
