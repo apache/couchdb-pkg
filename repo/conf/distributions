@@ -22,3 +22,8 @@ Codename: bionic
 Components: main
 Architectures: amd64 arm64 ppc64el
 Description: Official CouchDB Ubuntu 18.04 bionic repository
+
+Codename: focal
+Components: main
+Architectures: amd64 arm64 ppc64el
+Description: Official CouchDB Ubuntu 20.04 focal repository
