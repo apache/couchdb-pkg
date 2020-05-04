@@ -27,15 +27,10 @@ set -e
 # otherwise, see https://stackoverflow.com/questions/59895/
 SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# TODO derive these by interrogating the Docker repo rather tha
-# hard coding the list
+# TODO derive these by interrogating the repo rather than hard coding the list
 DEBIANS="debian-stretch debian-buster arm64v8-debian-buster ppc64le-debian-buster"
-UBUNTUS="ubuntu-xenial ubuntu-bionic"
-debs="(debian-stretch|debian-buster|arm64v8-debian-buster|ppc64le-debian-buster|ubuntu-xenial|ubuntu-bionic)"
-
+UBUNTUS="ubuntu-xenial ubuntu-bionic ubuntu-focal"
 CENTOSES="centos-6 centos-7 centos-8"
-rpms="(centos-6|centos-7|centos-8)"
-
 BINTRAY_API="https://api.bintray.com"
 ERLANGVERSION=${ERLANGVERSION:-20.3.8.25-1}
 
@@ -153,6 +148,7 @@ get-couch-tarball() {
       COUCHTARBALL=${ARG##*/}
     else
       usage
+      exit 1
     fi
   fi
   echo Using ${COUCHTARBALL} to build packages...
@@ -211,6 +207,31 @@ upload-couch() {
   done
 }
 
+usage() {
+  cat << EOF
+$0 <command> [OPTIONS]
+
+Recognized commands:
+  clean                 Remove all built package artefacts.
+
+  js <plat>             Builds the JS packages for <plat>.
+  js-all                Builds the JS packages for all platforms.
+  *js-upload <plat>     Uploads the JS packages for <plat> to bintray.
+  *js-upload-all        Uploads the JS packages for all platforms to bintray.
+
+  couch <plat> <src>    Builds CouchDB packages for <plat>.
+  couch-all <src>       Builds CouchDB packages for all platforms.
+  *couch-upload <plat>  Uploads the JS packages for <plat> to bintray.
+  *couch-upload-all     Uploads the JS packages for all platforms to bintray.
+
+  <src> is either
+    - a path/to/a/couchdb.tar.gz, or
+    - a URL to http(s)://domain.com/to/couchdb.tar.gz
+
+  Commands marked with * require BINTRAY_USER and BINTRAY_API_KEY env vars.
+EOF
+}
+
 
 case "$1" in
   clean)
@@ -265,28 +286,7 @@ case "$1" in
       echo "Unknown target $1."
       echo
     fi
-    cat << EOF
-$0 <command> [OPTIONS]
-
-Recognized commands:
-  clean                 Remove all built package artefacts.
-
-  js <plat>             Builds the JS packages for <plat>.
-  js-all                Builds the JS packages for all platforms.
-  *js-upload <plat>     Uploads the JS packages for <plat> to bintray.
-  *js-upload-all        Uploads the JS packages for all platforms to bintray.
-
-  couch <plat> <src>    Builds CouchDB packages for <plat>.
-  couch-all <src>       Builds CouchDB packages for all platforms.
-  *couch-upload <plat>  Uploads the JS packages for <plat> to bintray.
-  *couch-upload-all     Uploads the JS packages for all platforms to bintray.
-
-  <src> is either
-    - a path/to/a/couchdb.tar.gz, or
-    - a URL to http(s)://domain.com/to/couchdb.tar.gz
-
-  Commands marked with * require BINTRAY_USER and BINTRAY_API_KEY env vars.
-EOF
+    usage
     if [[ $1 ]]; then
       exit 1
     fi
