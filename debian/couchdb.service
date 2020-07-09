@@ -9,6 +9,7 @@ User=couchdb
 Group=couchdb
 ExecStart=/opt/couchdb/bin/couchdb
 Restart=always
+LimitNOFILE=65536
 
 [Install]
 WantedBy=multi-user.target
