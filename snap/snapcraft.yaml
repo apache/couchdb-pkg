@@ -58,6 +58,11 @@ parts:
       - -var
     override-pull: |
       snapcraftctl pull
+      
+layout:
+  # Database files are common across upgrades
+  $SNAP/data:
+      bind: $SNAP_DATA/common/data
 
 layout:
   # Database files are common across upgrades
