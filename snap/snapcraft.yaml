@@ -22,9 +22,10 @@ parts:
     source: http://www-us.apache.org/dist/couchdb/source/3.1.0/apache-couchdb-3.1.0.tar.gz
     source-type: tar
     override-build: |
-        ./configure --disable-docs --spidermonkey-version 60
-        make release
-        cp -ra ./rel/couchdb/* $SNAPCRAFT_PART_INSTALL
+            ./configure --disable-docs --spidermonkey-version 68
+            make release
+            cp -ra ./rel/couchdb/* $SNAPCRAFT_PART_INSTALL
+            ln -s $SNAPCRAFT_PART_INSTALL/lib/x86_64-linux-gnu/libmozjs-68.so.68 $SNAPCRAFT_PART_INSTALL/lib/x86_64-linux-gnu/libmozjs-68.0
     build-packages:
       - gcc
       - g++
@@ -40,8 +41,8 @@ parts:
       - erlang-eunit
       - erlang-os-mon
       - erlang-syntax-tools
-      # moz60
-      - libmozjs-60-dev
+      # moz68
+      - libmozjs-68-dev
       # For fauxton
       - libnode-dev
       - npm
@@ -49,7 +50,7 @@ parts:
       - procps
       - libcurl4
       - libicu66
-      - libmozjs-60-0
+      - libmozjs-68-0
       - libssl1.1
       - libtinfo5
     stage:
@@ -58,16 +59,11 @@ parts:
       - -var
     override-pull: |
       snapcraftctl pull
-      
-layout:
-  # Database files are common across upgrades
-  $SNAP/data:
-      bind: $SNAP_DATA/common/data
 
-layout:
-  # Database files are common across upgrades
-  $SNAP/data:
-    bind: $SNAP_COMMON/data
+# Don't think we should bind this.
+# layout:
+#  $SNAP/data:
+#    bind: $SNAP_DATA/common/data
 
 environment:
   COUCHDB_ARGS_FILE: ${SNAP_DATA}/etc/vm.args
@@ -75,6 +71,7 @@ environment:
                          ${SNAP}/etc/default.d
                          ${SNAP_DATA}/etc/local.ini
                          ${SNAP_DATA}/etc/local.d"
+
 apps:
   couchdb:
     adapter: full

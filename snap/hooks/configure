@@ -43,7 +43,6 @@ _modify_ini_args() {
   fi
 }
 
-
 # The vm_args file can only be changed from the filesystem
 # configutaion vm.args file
 

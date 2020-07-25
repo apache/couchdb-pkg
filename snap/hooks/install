@@ -12,28 +12,50 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-mkdir -p ${SNAP_COMMON}/data
 
-mkdir -p ${SNAP_DATA}/etc/local.d
-
-if [ ! -s ${SNAP_DATA}/etc/vm.args ]; then
-   cat ${SNAP}/etc/vm.args > ${SNAP_DATA}/etc/vm.args
+if [ -z ${SNAP_INSTANCE_KEY} ]
+then
+    SNAP_INSTANCE_DATA=${SNAP_DATA}
+    SNAP_INSTANCE_COMMON=${SNAP_COMMON}
+else
+    SNAP_INSTANCE_DATA=$(echo ${SNAP_DATA} | sed -e s/${SNAP_NAME}/${SNAP_INSTANCE_NAME}/)
+    SNAP_INSTANCE_COMMON=$(echo ${SNAP_COMMON} | sed -e s/${SNAP_NAME}/${SNAP_INSTANCE_NAME}/)
 fi
 
-LOCAL_INI=$SNAP_DATA/etc/local.ini
+LOG=${SNAP_INSTANCE_DATA}/snap-install.log
+
+echo "CouchDB snap install log" > ${LOG}
+
+echo "SNAP ${SNAP}" >> ${LOG}
+echo "SNAP_DATA ${SNAP_DATA}" >> ${LOG}
+echo "SNAP_COMMON ${SNAP_COMMON}" >> ${LOG}
+
+echo "SNAP_INSTANCE_DATA ${SNAP_INSTANCE_DATA}" >> ${LOG}
+echo "SNAP_INSTANCE_COMMON ${SNAP_INSTANCE_COMMON}" >> ${LOG}
+
+mkdir -p ${SNAP_INSTANCE_DATA}/etc
+mkdir -p ${SNAP_INSTANCE_COMMON}/data
+
+if [ ! -s ${SNAP_INSTANCE_DATA}/etc/vm.args ]; then
+   cat ${SNAP}/etc/vm.args > ${SNAP_INSTANCE_DATA}/etc/vm.args
+fi
+
+LOCAL_INI=$SNAP_INSTANCE_DATA/etc/local.ini
 if [ ! -s ${LOCAL_INI} ]; then
    cat ${SNAP}/etc/local.ini > ${LOCAL_INI}
 fi
 
 # Ensure that local.ini has the view_index_dir specified
 if ! $(grep -q "^view_index_dir" ${LOCAL_INI}); then
-    view_line=$(echo "view_index_dir = ${SNAP_COMMON}/data" | sed 's/\//\\\//g')
+    echo "ADDING view_index_dir" >> ${LOG}
+    view_line=$(echo "view_index_dir = ${SNAP_INSTANCE_COMMON}/data" | sed 's/\//\\\//g')
     sed --in-place "/^\[couchdb\].*$/a ${view_line}" ${LOCAL_INI} 2>/dev/null
 fi
 
 # Ensure that local.ini has the database_dir specified
 if ! $(grep -q "^database_dir" ${LOCAL_INI}); then
-    database_line=$(echo "database_dir = ${SNAP_COMMON}/data" | sed 's/\//\\\//g')
+    echo "ADDING database_dir" >> ${LOG}
+    database_line=$(echo "database_dir = ${SNAP_INSTANCE_COMMON}/data" | sed 's/\//\\\//g')
     sed --in-place "/^\[couchdb\].*$/a ${database_line}" ${LOCAL_INI} 2>/dev/null
 fi
 
