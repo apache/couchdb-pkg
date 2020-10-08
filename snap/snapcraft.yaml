@@ -68,7 +68,6 @@ parts:
     stage-packages:
       - couch-libmozjs185-1.0
       - procps
-      - libcurl4
       - libicu60
       - libssl1.0.0
       - libtinfo5

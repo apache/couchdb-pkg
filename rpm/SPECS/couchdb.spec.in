@@ -51,9 +51,7 @@ Requires(pre): shadow-utils
 %endif
 
 BuildRequires: git
-BuildRequires: help2man
 #BuildRequires: %SPIDERMONKEY_DEV%
-BuildRequires: libcurl-devel
 BuildRequires: libicu-devel
 BuildRequires: nodejs >= 6.10.1
 
@@ -93,7 +91,7 @@ languages and environments.
 %define __os_install_post %{nil}
 
 %build
-./configure -c --spidermonkey-version=%SM_VER%
+./configure --spidermonkey-version=%SM_VER%
 %{__make} release
 
 %clean

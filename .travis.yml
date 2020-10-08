@@ -13,8 +13,8 @@ branches:
 env:
   global:
     - ERLANGVERSION=20.3.8.25-1
-    - TARBALL_URL=https://dist.apache.org/repos/dist/release/couchdb/source/3.1.0/apache-couchdb-3.1.0.tar.gz
-    - TARBALL=apache-couchdb-3.1.0.tar.gz
+    - TARBALL_URL=https://dist.apache.org/repos/dist/release/couchdb/source/3.1.1/apache-couchdb-3.1.1.tar.gz
+    - TARBALL=apache-couchdb-3.1.1.tar.gz
   matrix:
     - TARGET="js debian-stretch"
     - TARGET="couch debian-stretch ${TARBALL_URL}"
