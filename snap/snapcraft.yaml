@@ -1,5 +1,5 @@
 name: couchdb
-version: 3.0.0
+version: 3.1.1
 summary: Official Apache CouchDB snap - a clustering document oriented database
 description: |
   CouchDB is a database that completely embraces the web. Store your data with
@@ -11,7 +11,7 @@ architectures:
   - build-on: amd64
     run-on: amd64
 assumes: [command-chain, common-data-dir]
-base: core18
+base: core20
 grade: stable
 confinement: strict
 
@@ -23,7 +23,7 @@ parts:
       apt-get upgrade -yy
       apt-get install -y --no-install-recommends apt-transport-https \
                                                 gnupg ca-certificates
-      echo "deb https://apache.bintray.com/couchdb-deb bionic main" | \
+      echo "deb https://apache.bintray.com/couchdb-deb focal main" | \
            tee /etc/apt/sources.list.d/custom.list
       apt-key adv --keyserver keyserver.ubuntu.com --recv-keys \
                         8756C4F765C9AC3CB6B85D62379CE192D401AB61
@@ -31,47 +31,24 @@ parts:
   couchdb:
     after: [add-repo]
     plugin: dump
-    source: https://apache.bintray.com/couchdb-deb/pool/C/CouchDB/couchdb_3.0.0~bionic_amd64.deb
+    source: https://apache.bintray.com/couchdb-deb/pool/C/CouchDB/couchdb_3.1.1~focal_amd64.deb
     source-type: deb
     # because this doesn't use apt, we have to manually list all of our
     # dependencies :(
-    # the following are all in core18, and warning output can safely be ignored:
-    # lib/x86_64-linux-gnu/libbz2.so.1.0
-    # lib/x86_64-linux-gnu/libc.so.6
-    # lib/x86_64-linux-gnu/libcrypt.so.1
-    # lib/x86_64-linux-gnu/libdl.so.2
-    # lib/x86_64-linux-gnu/libgcrypt.so.20
-    # lib/x86_64-linux-gnu/libgpg-error.so.0
-    # lib/x86_64-linux-gnu/liblzma.so.5
-    # lib/x86_64-linux-gnu/libm.so.6
-    # lib/x86_64-linux-gnu/libncurses.so.5
-    # lib/x86_64-linux-gnu/libncursesw.so.5
-    # lib/x86_64-linux-gnu/libnsl.so.1
-    # lib/x86_64-linux-gnu/libpthread.so.0
-    # lib/x86_64-linux-gnu/libresolv.so.2
-    # lib/x86_64-linux-gnu/librt.so.1
-    # lib/x86_64-linux-gnu/libsystemd.so.0
-    # lib/x86_64-linux-gnu/libutil.so.1
-    # lib/x86_64-linux-gnu/libz.so.1
-    # usr/lib/x86_64-linux-gnu/libdb-5.3.so
-    # usr/lib/x86_64-linux-gnu/liblz4.so.1
-    # usr/lib/x86_64-linux-gnu/libpanelw.so.5
-    # usr/lib/x86_64-linux-gnu/libstdc++.so.6
     build-packages:
       - adduser
       - debconf
       - ca-certificates
       - init-system-helpers
       - lsb-base
-      - curl
       - libgcc1
     stage-packages:
-      - couch-libmozjs185-1.0
+      - libmozjs-68-0
       - procps
       - libcurl4
-      - libicu60
-      - libssl1.0.0
-      - libtinfo5
+      - libicu66
+      - libssl1.1
+      - libtinfo6
     override-pull: |
       snapcraftctl pull
       rm -f opt/couchdb/data opt/couchdb/var/log opt/couchdb/etc/default.d/*
@@ -81,6 +58,12 @@ parts:
     override-build: |
       echo "couchdb couchdb/mode select none" | debconf-set-selections
       snapcraftctl build
+    override-stage: |
+      # focal libmozjs is busted...
+      ln -s libmozjs-68.so.68.6.0 /root/parts/couchdb/install/usr/lib/x86_64-linux-gnu/libmozjs-68.so.0
+      snapcraftctl stage
+    override-prime: |
+      snapcraftctl prime
 
 layout:
   # Database and log files are common across upgrades

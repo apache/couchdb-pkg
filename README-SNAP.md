@@ -253,19 +253,18 @@ you are using the default.
 ```
 # Building this snap <a name="building"></a>
 
-This build requires Ubuntu 18.04, the `core18` core, and the `snapcraft` tool.  The
-CouchDB team builds this using the
-[`yakshaveinc/snapcraft`](https://hub.docker.com/r/yakshaveinc/snapcraft) image, which is
-the [official `snapcore/snapcraft` Docker
-image](https://snapcraft.io/docs/build-on-docker) patched for Ubuntu 18.04. (When the
-upstream image is fully patched for `core18`, we'll move to it instead.)
+This build requires `core20`. On Ubuntu 18.04, you will need to do the following:
 
-From an Ubuntu 18.04 machine with Docker installed:
+```
+sudo apt remove snapcraft
+sudo snap remove snapcraft
+sudo snap install snapcraft --classic
+```
+
+Then building is easy:
 
 ```bash
-$ git clone https://github.com/couchdb/couchdb-pkg && cd couchdb-pkg
-$ docker pull yakshaveinc/snapcraft:core18
-$ docker run -it -v "$PWD":/build:Z -w /build yakshaveinc/snapcraft:core18 snapcraft
+$ snapcraft
 ```
 
 The self-built snap will need to be installed using `--dangerous`:
@@ -277,5 +276,5 @@ sudo snap install ./couchdb_3.0.0_amd64.snap --dangerous
 Clean up with:
 
 ```bash
-$docker run -it -v "$PWD":/build:Z -w /build yakshaveinc/snapcraft:core18-edge snapcraft clean
+$ sudo snapcraft clean          # sudo may not be required but is safe
 ```
