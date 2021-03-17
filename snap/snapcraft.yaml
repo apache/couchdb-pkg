@@ -1,5 +1,5 @@
 name: couchdb-sklassen
-version: 3.1.0
+version: 3.1.1
 base: core20
 build-base: core18
 summary: Official Apache CouchDB snap - a clustering document oriented database
@@ -19,13 +19,11 @@ confinement: strict
 parts:
   couchdb:
     plugin: make
-    source: http://www-us.apache.org/dist/couchdb/source/3.1.0/apache-couchdb-3.1.0.tar.gz
+    source: http://www-us.apache.org/dist/couchdb/source/3.1.1/apache-couchdb-3.1.1.tar.gz
     source-type: tar
     override-build: |
-            ./configure --disable-docs --spidermonkey-version 68
+            ./configure --prefix=$SNAPCRAFT_PART_INSTALL --disable-docs --spidermonkey-version 68
             make release
-            cp -ra ./rel/couchdb/* $SNAPCRAFT_PART_INSTALL
-            ln -s $SNAPCRAFT_PART_INSTALL/lib/x86_64-linux-gnu/libmozjs-68.so.68 $SNAPCRAFT_PART_INSTALL/lib/x86_64-linux-gnu/libmozjs-68.0
     build-packages:
       - gcc
       - g++
@@ -60,11 +58,6 @@ parts:
     override-pull: |
       snapcraftctl pull
 
-# Don't think we should bind this.
-# layout:
-#  $SNAP/data:
-#    bind: $SNAP_DATA/common/data
-
 environment:
   COUCHDB_ARGS_FILE: ${SNAP_DATA}/etc/vm.args
   ERL_FLAGS: "-couch_ini ${SNAP}/etc/default.ini
@@ -76,12 +69,12 @@ apps:
   couchdb:
     adapter: full
     command: bin/couchdb
-    plugs: [network, network-bind, process-control, mount-observe]
+    plugs: [network, network-bind, mount-observe]
   server:
     daemon: simple
     adapter: full
     command: bin/couchdb
-    plugs: [network, network-bind, process-control, mount-observe]
+    plugs: [network, network-bind, mount-observe]
   remsh:
     command: bin/remsh
     plugs: [network, network-bind]

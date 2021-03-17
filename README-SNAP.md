@@ -18,6 +18,13 @@ The snap can be installed from a file or directly from the snap store:
 $ sudo snap install couchdb
 ```  
 
+If you are installing on ChromeOS you will need to install snapd, and its prerequisites, first.
+
+```bash
+sudo apt install libsquashfuse0 squashfuse fuse
+sudo apt install snapd
+```
+
 If this is your first time installing couchdb then you will need to set an admin password
 and manually start CouchDB.
 
@@ -28,16 +35,14 @@ $ sudo snap start couchdb
 
 ## Enable snap permissions
 
-The snap installation uses AppArmor to protect your system. CouchDB requests access to two
-interfaces: mount-observe, which is used by the disk compactor to know when to initiate a
-cleanup; and process-control, which is used by the indexer to set the priority of couchjs
-to 'nice'. These two interfaces are required for CouchDB to run correctly.
+The snap installation uses AppArmor to protect your system. CouchDB requests access to 
+mount-observe, which is used by the disk compactor to know when to initiate a
+cleanup.
 
-To connect the interfaces type:
+To connect the interface type:
 
 ```bash
 $ sudo snap connect couchdb:mount-observe
-$ sudo snap connect couchdb:process-control
 ```
 
 # Configuration <a name="configuration"></a>
