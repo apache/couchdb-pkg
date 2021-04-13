@@ -27,26 +27,36 @@ set -e
 # otherwise, see https://stackoverflow.com/questions/59895/
 SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# TODO derive these by interrogating the repo rather than hard coding the list
-DEBIANS="debian-stretch debian-buster arm64v8-debian-buster ppc64le-debian-buster"
+# TODO derive these by interrogating the couchdb-ci repo rather than hard coding the list...
+DEBIANS="debian-stretch debian-buster"
 UBUNTUS="ubuntu-xenial ubuntu-bionic ubuntu-focal"
-CENTOSES="centos-6 centos-7 centos-8"
+CENTOSES="centos-7 centos-8"
+XPLAT_BASE="debian-buster"
+XPLAT_ARCHES="arm64v8 ppc64le"
 BINTRAY_API="https://api.bintray.com"
-ERLANGVERSION=${ERLANGVERSION:-20.3.8.25-1}
+ERLANGVERSION=${ERLANGVERSION:-20.3.8.26-1}
 
+split-os-ver() {
+  OLDIFS=$IFS
+  IFS='-' tokens=( $1 )
+  IFS=$OLDIFS
+  os=${tokens[0]}
+  version=${tokens[1]}
+}
 
 build-js() {
   # TODO: check if image is built first, if not, complain
   # invoke as build-js <plat>
+  split-os-ver $1
   if [[ ${TRAVIS} == "true" ]]; then
     docker run \
         --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
-        -u 0 couchdbdev/$1-base \
+        -u 0 apache/couchdbci-${os}:${CONTAINERARCH}${version}-base \
         /home/jenkins/couchdb-pkg/bin/build-js.sh
   else
     docker run \
         --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
-        couchdbdev/$1-base \
+        apache/couchdbci-${os}:${CONTAINERARCH}${version}-base \
         sudo /home/jenkins/couchdb-pkg/bin/build-js.sh
   fi
 }
@@ -55,6 +65,9 @@ build-all-js() {
   rm -rf ${SCRIPTPATH}/pkgs/js/*
   for plat in $DEBIANS $UBUNTUS $CENTOSES; do
     build-js $plat
+  done
+  for arch in $XPLAT_ARCHES; do
+    CONTAINERARCH="${arch}-" build-js $XPLAT_BASE
   done
 }
 
@@ -156,13 +169,14 @@ get-couch-tarball() {
 }
 
 build-couch() {
+  split-os-ver $1
   # We will be changing user to 'jenkins' - ensure it has write permissions
   chmod a+rwx pkgs pkgs/couch pkgs/js
   # $1 is plat, $2 is the optional path to a dist tarball
   docker run \
       --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
       -u 0 -w /home/jenkins/couchdb-pkg \
-      couchdbdev/$1-erlang-${ERLANGVERSION} \
+      apache/couchdbci-${os}:${CONTAINERARCH}${version}-erlang-${ERLANGVERSION} \
       make copy-couch $1 COUCHTARBALL=${COUCHTARBALL}
   make clean
 }
@@ -171,6 +185,9 @@ build-all-couch() {
   rm -rf ${SCRIPTPATH}/pkgs/couch/*
   for plat in $DEBIANS $UBUNTUS $CENTOSES; do
     build-couch $plat $*
+  done
+  for arch in $XPLAT_ARCHES; do
+    CONTAINERARCH="${arch}-" build-couch $XPLAT_BASE
   done
 }
 

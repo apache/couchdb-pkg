@@ -23,3 +23,5 @@ prime/
 snap/.snapcraft/
 stage/
 *.tar.gz
+*.bak
+*~
