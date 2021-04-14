@@ -68,7 +68,7 @@ case "${OSTYPE}" in
     # and finally some rough heuristics
     if [[ -f /etc/redhat-release ]]; then
       # /etc/redhat-release is so inconsistent, we use rpm instead
-      rhelish=$(rpm -qa '(redhat|sl|slf|centos|oraclelinux)-release(|-server|-workstation|-client|-computenode)' 2>/dev/null | head -1)
+      rhelish=$(rpm -qa '(redhat|sl|slf|centos|centos-linux|oraclelinux)-release(|-server|-workstation|-client|-computenode)' 2>/dev/null | head -1)
       if [[ $rhelish ]]; then
         ID=${ID:-$(echo ${rhelish} | awk -F'-' '{print tolower($1)}')}
         VERSION_ID=${VERSION_ID:-$(echo ${rhelish} | sed -E 's/([^[:digit:]]+)([[:digit:]]+)(.*)/\2/' )}
