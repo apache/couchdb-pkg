@@ -83,6 +83,31 @@ ppc64le-debian-buster: buster
 
 buster: debian
 
+# Debian 11 - bullseye
+debian-bullseye: PLATFORM=bullseye
+debian-bullseye: DIST=debian-bullseye
+debian-bullseye: SPIDERMONKEY=libmozjs-78-0
+debian-bullseye: SPIDERMONKEY_DEV=libmozjs-78-dev
+debian-bullseye: SM_VER=78
+debian-bullseye: bullseye
+
+arm64v8-debian-bullseye: aarch64-debian-bullseye
+aarch64-debian-bullseye: PLATFORM=bullseye
+aarch64-debian-bullseye: DIST=debian-bullseye
+aarch64-debian-bullseye: SPIDERMONKEY=libmozjs-78-0
+aarch64-debian-bullseye: SPIDERMONKEY_DEV=libmozjs-78-dev
+aarch64-debian-bullseye: SM_VER=78
+aarch64-debian-bullseye: bullseye
+
+ppc64le-debian-bullseye: PLATFORM=bullseye
+ppc64le-debian-bullseye: DIST=debian-bullseye
+ppc64le-debian-bullseye: SPIDERMONKEY=libmozjs-78-0
+ppc64le-debian-bullseye: SPIDERMONKEY_DEV=libmozjs-78-dev
+ppc64le-debian-bullseye: SM_VER=78
+ppc64le-debian-bullseye: bullseye
+
+bullseye: debian
+
 
 # Ubuntu 16.04 (Xenial)
 ubuntu-xenial: PLATFORM=xenial

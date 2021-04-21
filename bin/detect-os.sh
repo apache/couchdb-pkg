@@ -82,10 +82,13 @@ case "${OSTYPE}" in
       if [[ ${PRETTY_NAME} =~ "Ubuntu" ]]; then
         # Ubuntu keeps changing the format of /etc/os-release's VERSION, and
         # the codename is buried. Boo. Let's use a fancy regex.
+        VERSION_ID=${VERSION_ID:-$(dpkg --status tzdata|grep Provides|cut -f2 -d'-')}
         VERSION_CODENAME=${VERSION_CODENAME:-$(echo ${VERSION} | sed -E 's/([0-9.]+)\W+([A-Za-z\,]+)\W+\(?(\w+)(.*)/\L\3/')}
         DISTRIB_CODENAME=${DISTRIB_CODENAME:-${VERSION_CODENAME}}
       elif [[ ${PRETTY_NAME} =~ "Debian" ]]; then
-        VERSION_CODENAME=${VERSION_CODENAME:-$(echo ${VERSION} | sed -E 's/(.*)\(([^\]+)\)/\2/')}
+        VERSION_ID=${VERSION_ID:-$(dpkg --status tzdata|grep Provides|cut -f2 -d'-')}
+        VERSION=${VERSION:-${VERSION_ID}}
+        VERSION_CODENAME=${VERSION_CODENAME:-$(echo ${VERSION} | sed -E 's/(.*)\(([^\]+)\)/\2/' | sed -E 's/(.*)\/.*/\1/')}
         DISTRIB_CODENAME=${DISTRIB_CODENAME:-${VERSION_CODENAME}}
       else
         echo "Unknown Debian-like OS ${PRETTY_NAME}, aborting..."
@@ -96,6 +99,7 @@ case "${OSTYPE}" in
       echo "Detected distribution: ${ID}, version ${VERSION_ID} (${VERSION_CODENAME})"
     else
       echo "Unable to determine Linux distribution! Aborting."
+      echo "Detected: ID=${ID}, VERSION_ID=${VERSION_ID}, VERSION_CODENAME=(${VERSION_CODENAME})"
       exit 1
     fi
     ;;
