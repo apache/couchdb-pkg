@@ -1,0 +1,17 @@
+github:
+  description: "Apache CouchDB Packaging support files"
+  homepage: https://github.com/apache/couchdb-pkg
+  labels:
+    - apache
+    - couchdb
+    - erlang
+    - network-client
+    - http
+    - cplusplus
+    - big-data
+    - cloud
+    - database
+    - network-server
+    - javascript
+  protected_branches:
+    main
