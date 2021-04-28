@@ -24,6 +24,7 @@ parts:
     override-build: |
             ./configure --prefix=$SNAPCRAFT_PART_INSTALL --disable-docs --spidermonkey-version 68
             make release
+            cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
     build-packages:
       - gcc
       - g++
