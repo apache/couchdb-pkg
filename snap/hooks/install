@@ -34,6 +34,7 @@ echo "SNAP_INSTANCE_DATA ${SNAP_INSTANCE_DATA}" >> ${LOG}
 echo "SNAP_INSTANCE_COMMON ${SNAP_INSTANCE_COMMON}" >> ${LOG}
 
 mkdir -p ${SNAP_INSTANCE_DATA}/etc
+mkdir -p ${SNAP_INSTANCE_DATA}/etc/local.d
 mkdir -p ${SNAP_INSTANCE_COMMON}/data
 
 if [ ! -s ${SNAP_INSTANCE_DATA}/etc/vm.args ]; then
