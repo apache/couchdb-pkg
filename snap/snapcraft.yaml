@@ -1,106 +1,84 @@
 name: couchdb
 version: 3.1.1
+base: core20
+build-base: core18
 summary: Official Apache CouchDB snap - a clustering document oriented database
 description: |
   CouchDB is a database that completely embraces the web. Store your data with
   JSON documents. Access your documents and query your indexes with your web
   browser, via HTTP. Index, combine, and transform your documents with
   JavaScript.
-
 architectures:
   - build-on: amd64
     run-on: amd64
 assumes: [command-chain, common-data-dir]
-base: core20
 grade: stable
 confinement: strict
 
 parts:
-  add-repo:
-    plugin: nil
-    override-pull: |
-      apt-get update
-      apt-get upgrade -yy
-      apt-get install -y --no-install-recommends apt-transport-https \
-                                                gnupg ca-certificates
-      echo "deb https://apache.bintray.com/couchdb-deb focal main" | \
-           tee /etc/apt/sources.list.d/custom.list
-      apt-key adv --keyserver keyserver.ubuntu.com --recv-keys \
-                        8756C4F765C9AC3CB6B85D62379CE192D401AB61
-      apt-get update
   couchdb:
-    after: [add-repo]
-    plugin: dump
-    source: https://apache.bintray.com/couchdb-deb/pool/C/CouchDB/couchdb_3.1.1~focal_amd64.deb
-    source-type: deb
-    # because this doesn't use apt, we have to manually list all of our
-    # dependencies :(
+    plugin: make
+    source: http://www-us.apache.org/dist/couchdb/source/3.1.1/apache-couchdb-3.1.1.tar.gz
+    source-type: tar
+    override-build: |
+            ./configure --prefix=$SNAPCRAFT_PART_INSTALL --disable-docs --spidermonkey-version 68
+            make release
+            cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
     build-packages:
-      - adduser
-      - debconf
-      - ca-certificates
-      - init-system-helpers
-      - lsb-base
-      - libgcc1
+      - gcc
+      - g++
+      - libc6-dev
+      - libcurl4-openssl-dev
+      - libicu-dev
+      - icu-devtools
+      # For erlang/rebar processing
+      - erlang-dev
+      - erlang-base
+      - erlang-reltool
+      - erlang-nox
+      - erlang-eunit
+      - erlang-os-mon
+      - erlang-syntax-tools
+      # moz68
+      - libmozjs-68-dev
+      # For fauxton
+      - libnode-dev
+      - npm
     stage-packages:
-      - libmozjs-68-0
       - procps
       - libcurl4
       - libicu66
+      - libmozjs-68-0
       - libssl1.1
-      - libtinfo6
-    override-pull: |
-      snapcraftctl pull
-      rm -f opt/couchdb/data opt/couchdb/var/log opt/couchdb/etc/default.d/*
-      mkdir -p opt/couchdb/etc/default.d.dist/
-      mv opt/couchdb/etc/vm.args opt/couchdb/etc/vm.args.dist
-      mv opt/couchdb/etc/local.ini opt/couchdb/etc/local.ini.dist
-    override-build: |
-      echo "couchdb couchdb/mode select none" | debconf-set-selections
-      snapcraftctl build
+      - libtinfo5
+    stage:
+      - -usr/share/doc
+      - -usr/share/man
+      - -var
     override-stage: |
       # focal libmozjs is busted...
-      ln -s libmozjs-68.so.68.6.0 /root/parts/couchdb/install/usr/lib/x86_64-linux-gnu/libmozjs-68.so.0
+      ln -s ${SNAPCRAFT_PART_INSTALL}/usr/lib/x86_64-linux-gnu/libmozjs-68.so.68.6.0 ${SNAPCRAFT_PART_INSTALL}/usr/lib/x86_64-linux-gnu/libmozjs-68.so.0
       snapcraftctl stage
-    override-prime: |
-      snapcraftctl prime
-
-layout:
-  # Database and log files are common across upgrades
-  # We do not bind default.ini or default.d/ as these are
-  # intended to be immutable
-  $SNAP/opt/couchdb/data:
-    bind: $SNAP_COMMON/data
-  $SNAP/opt/couchdb/var/log:
-    bind: $SNAP_COMMON/log
-  # Local configuration files may change across upgrades
-  $SNAP/opt/couchdb/etc/vm.args:
-    bind-file: $SNAP_DATA/etc/vm.args
-  $SNAP/opt/couchdb/etc/local.d:
-    bind: $SNAP_DATA/etc/local.d
-  $SNAP/opt/couchdb/etc/local.ini:
-    bind-file: $SNAP_DATA/etc/local.ini
-
 environment:
   COUCHDB_ARGS_FILE: ${SNAP_DATA}/etc/vm.args
-  ERL_FLAGS: "-couch_ini ${SNAP}/opt/couchdb/etc/default.ini
-                         ${SNAP}/opt/couchdb/etc/default.d
+  ERL_FLAGS: "-couch_ini ${SNAP}/etc/default.ini
+                         ${SNAP}/etc/default.d
                          ${SNAP_DATA}/etc/local.ini
                          ${SNAP_DATA}/etc/local.d"
 
 apps:
   couchdb:
     adapter: full
-    command: opt/couchdb/bin/couchdb
-    plugs: [network, network-bind, process-control, mount-observe]
+    command: bin/couchdb
+    plugs: [network, network-bind, mount-observe]
   server:
     daemon: simple
     adapter: full
-    command: opt/couchdb/bin/couchdb
-    plugs: [network, network-bind, process-control, mount-observe]
+    command: bin/couchdb
+    plugs: [network, network-bind, mount-observe]
   remsh:
-    command: opt/couchdb/bin/remsh
+    command: bin/remsh
     plugs: [network, network-bind]
   couchjs:
-    command: opt/couchdb/bin/couchjs
+    command: bin/couchjs
     plugs: [network, network-bind]
