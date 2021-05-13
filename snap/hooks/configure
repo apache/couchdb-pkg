@@ -23,8 +23,7 @@ _modify_vm_args() {
   value="$2"
   replace_line="-$opt $value"
   if $(grep -q "^-$opt " $VM_ARGS); then
-    sed "s/^-$opt .*/$replace_line/" $VM_ARGS 2>/dev/null >${VM_ARGS}.new
-    mv -f ${VM_ARGS}.new $VM_ARGS 2>/dev/null
+    sed --in-place "s/^-$opt .*/$replace_line/" $VM_ARGS 
   else
     echo $replace_line >> $VM_ARGS
   fi
@@ -36,13 +35,11 @@ _modify_ini_args() {
   value="$2"
   replace_line="$opt = $value"
   if $(grep -q "^[;|[:space:]]*$opt[[:space:]]*=" $LOCAL_INI); then
-    sed "s/^[;|[:space:]]*$opt[[:space:]]*=.*/$replace_line/" $LOCAL_INI 2>/dev/null >${LOCAL_INI}.new
-    mv -f ${LOCAL_INI}.new $LOCAL_INI 2>/dev/null
+    sed --in-place "s/^[;|[:space:]]*$opt[[:space:]]*=.*/$replace_line/" $LOCAL_INI 
   else
     echo $replace_line >> $LOCAL_INI
   fi
 }
-
 
 # The vm_args file can only be changed from the filesystem
 # configutaion vm.args file
