@@ -16,35 +16,58 @@ The snap can be installed from a file or directly from the snap store:
 
 ```bash
 $ sudo snap install couchdb
-```  
+```
+There are three tracks (2.x, 3.x and latest) and each track has several risk levels (stable, 
+candidate and beta). If you don't specify then the default is latest/stable.
+
+If you are on the latest/stable and your software will automatically update to the latest 
+version.
+
+To fix your track or risk level you can execute following.
+
+```bash
+$ sudo snap install couchdb --channel=3.x/stable
+```
+## Snap on ChromeOS
+
+If you are installing on ChromeOS you will need to install snapd, and its prerequisites, first.
+
+```bash
+sudo apt install libsquashfuse0 squashfuse fuse
+sudo apt install snapd
+```
+## First time SetUp
 
 If this is your first time installing couchdb then you will need to set an admin password
 and manually start CouchDB.
 
 ```bash
 $ sudo snap set couchdb admin=[your-password-goes-here]
-$ sudo snap start couchdb 
+$ sudo snap start couchdb
 ```
 
 ## Enable snap permissions
 
-The snap installation uses AppArmor to protect your system. CouchDB requests access to two
-interfaces: mount-observe, which is used by the disk compactor to know when to initiate a
-cleanup; and process-control, which is used by the indexer to set the priority of couchjs
-to 'nice'. These two interfaces are required for CouchDB to run correctly.
+The snap installation uses AppArmor to protect your system. CouchDB requests access to
+mount-observe, which is used by the disk compactor to know when to initiate a
+cleanup.
 
-To connect the interfaces type:
+To connect the interface type:
 
 ```bash
 $ sudo snap connect couchdb:mount-observe
-$ sudo snap connect couchdb:process-control
 ```
-
 # Configuration <a name="configuration"></a>
 
 Be sure to read the [CouchDB documentation](http://docs.couchdb.org/en/stable/) first.
 
-CouchDB defaults are stored **read-only** in `/snap/couchdb/current/opt/couchdb/etc/`.
+Snaps enforce -- what was previous merely suggested -- the Unix philosophy that local
+binaries or libraries sit in `/usr/local/...` and anything variable is stored separately
+in `/var/local/...`. With this in mind, if are you going to use snaps for your database,
+the files will be stored in `/var/snap/couchdb/common` and your `/var` partition will need
+to be large enough for your database size.
+
+CouchDB defaults are stored **read-only** in `/snap/couchdb/current/etc/`.
 This includes `default.ini` and any `default.d/*` files added in the snap build process.
 These are all read-only and should never be changed.
 
@@ -78,19 +101,19 @@ $ journalctl -u snap.couchdb* -f
 
 ## Removing CouchDB
 
-There are several difference between installation via 'apt' and 'snap'. One important 
-difference is when removing couchdb. When calling 'apt remove couchdb', the binaries 
-are removed but the configuration and the couch database files remain, leaving the 
-user to clean up any databases latter. 
+There are several difference between installation via 'apt' and 'snap'. One important
+difference is when removing couchdb. When calling 'apt remove couchdb', the binaries
+are removed but the configuration and the couch database files remain, leaving the
+user to clean up any databases latter.
 
 Calling 'snap remove couchdb' *will* remove binaries, configurations and the database.
 
-On newer versions of snapd (snapd 2.39+) a snapshot is made of the SNAP_DATA 
-and SNAP_COMMON directories and this is stored (subject to disc space) for about 30 days. 
-On these newer version a 'snap remove' followed by a 'snap install' may restore the 
+On newer versions of snapd (snapd 2.39+) a snapshot is made of the SNAP_DATA
+and SNAP_COMMON directories and this is stored (subject to disc space) for about 30 days.
+On these newer version a 'snap remove' followed by a 'snap install' may restore the
 database; but you are best to make your own backup before removing couchdb.
-If you do not want to keep the configuration or database files you can delete the 
-snapshot by calling snap remove with the --purge parameter. 
+If you do not want to keep the configuration or database files you can delete the
+snapshot by calling snap remove with the --purge parameter.
 
 To remove your installation either:
 
@@ -109,7 +132,7 @@ You can set up a snap-based cluster on your desktop in no time using the couchdb
 
 In the example below, we are going to set up a three node CouchDB cluster. (Three is the
 minimum number needed to support clustering features.) We'll also set up a separate,
-single machine for making backups. In this example we will be using parallel instance of 
+single machine for making backups. In this example we will be using parallel instance of
 snaps that is availble from version 2.36.
 
 First we need to enable parallel instances of snap.
@@ -124,7 +147,7 @@ $> snap connect couchdb_1:mount-observe
 $> snap connect couchdb_1:process-control
 $> snap set couchdb_1 name=couchdb1@127.0.0.1 setcookie=cutter port=5981 admin=Be1stDB
 ```
-You will need to edit the local configuration file to manually set the data directories. 
+You will need to edit the local configuration file to manually set the data directories.
 You can find the local.ini at ```/var/snap/couchdb_1/current/etc/local.ini``` ensure
 that the ```[couchdb]``` stanza should look like this
 ```
@@ -134,32 +157,31 @@ that the ```[couchdb]``` stanza should look like this
 database_dir = /var/snap/couchdb_1/common/data
 view_index_dir = /var/snap/couchdb_1/common/data
 ```
-Start your engine ... and confirm that couchdb is running.
+Start your engine(s) ...
 ```bash
 $> snap start couchdb_1
-
+```
+... and confirm that couchdb is running
+```bash
 $> curl -X GET http://localhost:5981
 ```
-Then repeat for couchdb_1, couchdb_2 and couchdb_bkup, editing the local.ini and changing
-the name, port number for each. They should all have the same admin password and cookie. 
+Then repeat for couchdb_2 and couchdb_3, editing the local.ini and changing
+the name, port number for each. They should all have the same admin password and cookie.
 ```bash
 $> snap install couchdb_2
 $> snap connect couchdb_2:mount-observe
-$> snap connect couchdb_2:process-control
 $> snap set couchdb_2 name=couchdb2@127.0.0.1 setcookie=cutter port=5982 admin=Be1stDB
 $> snap install couchdb_3
 $> snap connect couchdb_3:mount-observe
-$> snap connect couchdb_3:process-control
 $> snap set couchdb_3 name=couchdb3@127.0.0.1 setcookie=cutter port=5983 admin=Be1stDB
 ```
-
 ## Enable CouchDB Cluster (using the http interface)
 
-Have the first node generate two uuids 
+Have the first node generate two uuids
 ```bash
 $> curl http://localhost:5981/_uuids?count=2
 ```
-The each instances within a cluster needs to share the same uuid ... 
+The each instances within a cluster needs to share the same uuid ...
 
 ```bash
 curl -X PUT http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_config/couchdb/uuid -d '"f6f22e2c664b49ba2c6dc88379002548"'
@@ -200,7 +222,7 @@ If everthing as been successful, then the three notes can be seen here.
 ```bash
 $> curl -X GET "http://admin:Be1stDB@127.0.0.1:5981/_membership"
 ```
-Now we have a functioning three node cluster. Next we will test it. 
+Now we have a functioning three node cluster. Next we will test it.
 
 ## An Example Database
 Let's create an example database ...
@@ -222,7 +244,7 @@ $ curl -X GET http://localhost:5983/example/_all_docs
 ```
 
 ## Backing Up CouchDB
-The backup machine we will configure as a single instance (`n=1, q=1`). 
+The backup machine we will configure as a single instance (`n=1, q=1`).
 ```bash
 $> snap install couchdb_bkup
 $> snap set couchdb_bkup name=couchdb0@localhost setcookie=cutter port=5980 admin=Be1stDB
@@ -240,41 +262,36 @@ The backup database has a single shard and single directory:
 ```bash
   $ ls /var/snap/couchdb_bkup/common/data/shards/
 ```
-
 -----
 
 # Remote Shell into CouchDB
 
 In the very rare case you need to connect to the couchdb server, a remsh script is
 provided. You need to specify both the name of the server and the cookie, even if
-you are using the default. 
+you are using the default.
 ```bash
 /snap/bin/couchdb.remsh -n couchdb@localhost -c monster
 ```
 # Building this snap <a name="building"></a>
 
-This build requires `core20`. On Ubuntu 18.04, you will need to do the following:
-
-```
-sudo apt remove snapcraft
-sudo snap remove snapcraft
-sudo snap install snapcraft --classic
-```
-
-Then building is easy:
+Prior to the release of Unbuntu 20.04 (Focal), we can compile the tarball using LXD. You will
+have to run it in destructive mode (within the LXD container) and not via multipass.
 
 ```bash
-$ snapcraft
+> lxc launch ubuntu-daily:20.04 -c focal
+> lxc shell focal
+$ snapcraft --destructive-mode
 ```
-
-The self-built snap will need to be installed using `--dangerous`:
+This build was ran on a Ubuntu 19.10 base system, with the `core18` build-core and `core20`
+core, and the `snapcraft` tool. The snapcraft tool from the store can be installed as
 
 ```bash
-sudo snap install ./couchdb_3.0.0_amd64.snap --dangerous
+snap install snapcraft
 ```
 
-Clean up with:
+Once the snap has been built, the snap can be installed locally using `--dangerous`:
 
 ```bash
-$ sudo snapcraft clean          # sudo may not be required but is safe
+sudo snap install ./couchdb_3.1.1_amd64.snap --dangerous
 ```
+
