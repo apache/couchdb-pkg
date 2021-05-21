@@ -24,15 +24,6 @@ fi
 
 LOG=${SNAP_INSTANCE_DATA}/snap-install.log
 
-echo "CouchDB snap install log" > ${LOG}
-
-echo "SNAP ${SNAP}" >> ${LOG}
-echo "SNAP_DATA ${SNAP_DATA}" >> ${LOG}
-echo "SNAP_COMMON ${SNAP_COMMON}" >> ${LOG}
-
-echo "SNAP_INSTANCE_DATA ${SNAP_INSTANCE_DATA}" >> ${LOG}
-echo "SNAP_INSTANCE_COMMON ${SNAP_INSTANCE_COMMON}" >> ${LOG}
-
 mkdir -p ${SNAP_INSTANCE_DATA}/etc
 mkdir -p ${SNAP_INSTANCE_DATA}/etc/local.d
 mkdir -p ${SNAP_INSTANCE_COMMON}/data
@@ -48,19 +39,13 @@ fi
 
 # Ensure that local.ini has the view_index_dir specified
 if ! $(grep -q "^view_index_dir" ${LOCAL_INI}); then
-    echo "ADDING view_index_dir" >> ${LOG}
     view_line=$(echo "view_index_dir = ${SNAP_INSTANCE_COMMON}/data" | sed 's/\//\\\//g')
     sed --in-place "/^\[couchdb\].*$/a ${view_line}" ${LOCAL_INI} 
-else
-    echo "CHECKED index_dir" >> ${LOG}
 fi
 
 # Ensure that local.ini has the database_dir specified
 if ! $(grep -q "^database_dir" ${LOCAL_INI}); then
-    echo "ADDING database_dir" >> ${LOG}
     database_line=$(echo "database_dir = ${SNAP_INSTANCE_COMMON}/data" | sed 's/\//\\\//g')
     sed --in-place "/^\[couchdb\].*$/a ${database_line}" ${LOCAL_INI} 
-else
-    echo "CHECKED database_dir" >> ${LOG}
 fi
 
