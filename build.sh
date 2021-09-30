@@ -27,13 +27,13 @@ set -e
 # otherwise, see https://stackoverflow.com/questions/59895/
 SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# TODO derive these by interrogating the couchdb-ci repo rather than hard coding the list...
+# TODO derive these by interrogating the couchdb-ci repo rather than hard coding the list
 DEBIANS="debian-stretch debian-buster debian-bullseye"
 UBUNTUS="ubuntu-xenial ubuntu-bionic ubuntu-focal"
 CENTOSES="centos-7 centos-8"
 XPLAT_BASE="debian-buster"
 XPLAT_ARCHES="arm64v8 ppc64le"
-BINTRAY_API="https://api.bintray.com"
+BINARY_API="https://apache.jfrog.io/artifactory"
 ERLANGVERSION=${ERLANGVERSION:-20.3.8.26-1}
 
 split-os-ver() {
@@ -42,95 +42,6 @@ split-os-ver() {
   IFS=$OLDIFS
   os=${tokens[0]}
   version=${tokens[1]}
-}
-
-build-js() {
-  # TODO: check if image is built first, if not, complain
-  # invoke as build-js <plat>
-  split-os-ver $1
-  if [[ ${TRAVIS} == "true" ]]; then
-    docker run \
-        --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
-        -u 0 apache/couchdbci-${os}:${CONTAINERARCH}${version}-base \
-        /home/jenkins/couchdb-pkg/bin/build-js.sh
-  else
-    docker run \
-        --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
-        apache/couchdbci-${os}:${CONTAINERARCH}${version}-base \
-        sudo /home/jenkins/couchdb-pkg/bin/build-js.sh
-  fi
-}
-
-build-all-js() {
-  rm -rf ${SCRIPTPATH}/pkgs/js/*
-  for plat in $DEBIANS $UBUNTUS $CENTOSES; do
-    build-js $plat
-  done
-  for arch in $XPLAT_ARCHES; do
-    CONTAINERARCH="${arch}-" build-js $XPLAT_BASE
-  done
-}
-
-bintray-check-credentials() {
-  if [[ ! ${BINTRAY_USER} || ! ${BINTRAY_API_KEY} ]]; then
-    echo "Please set your Bintray credentials before using this command:"
-    echo "  export BINTRAY_USER=<username>"
-    echo "  export BINTRAY_API_KEY=<key>"
-    exit 1
-  fi
-}
-
-bintray-upload() {
-  echo "Uploading ${PKG}..."
-  local ret="$(curl \
-      --request PUT \
-      --upload-file $PKG \
-      --user ${BINTRAY_USER}:${BINTRAY_API_KEY} \
-      --header "X-Bintray-Package: ${PKGNAME}" \
-      --header "X-Bintray-Version: ${PKGVERSION}" \
-      --header "X-Bintray-Publish: 1" \
-      --header "X-Bintray-Override: 1" \
-      --header "X-Bintray-Explode: 0" \
-      "${HEADERS[@]}" \
-      "${BINTRAY_API}/content/apache/${REPO}/${RELPATH}")"
-  if [[ ${ret} == '{"message":"success"}' ]]; then
-    echo "Uploaded successfully."
-  else
-    echo "Failed to upload $PKG, ${ret}"
-    exit 1
-  fi
-}
-
-upload-js() {
-  # invoke with $1 as plat, expect to find the binaries under pkgs/js/$plat/*
-  bintray-check-credentials
-  # Debian packages first
-  PKGNAME="spidermonkey"
-  PKGVERSION="1.8.5"
-  for PKG in $(ls pkgs/js/$1/*.deb 2>/dev/null); do
-    # Example filename: couch-libmozjs185-1.0_1.8.5-1.0.0+couch-2~bionic_amd64.deb
-    # TODO: pull this stuff from buildinfo / changes files, perhaps? Not sure it matters.
-    REPO="couchdb-deb"
-    fname=${PKG##*/}
-    DIST=$(echo $fname | cut -d~ -f 2 | cut -d_ -f 1)
-    PKGARCH=$(echo $fname | cut -d_ -f 3 | cut -d. -f 1)
-    RELPATH="pool/s/spidermonkey/${fname}"
-    HEADERS=("--header" "X-Bintray-Debian-Distribution: ${DIST}")
-    HEADERS+=("--header" "X-Bintray-Debian-Component: main")
-    HEADERS+=("--header" "X-Bintray-Debian-Architecture: ${PKGARCH}")
-    bintray-upload
-  done
-  for PKG in $(ls pkgs/js/$1/*.rpm 2>/dev/null); do
-    # Example filename: couch-js-1.8.5-21.el7.x86_64.rpm
-    REPO="couchdb-rpm"
-    fname=${PKG##*/}
-    # better not put any extra . in the filename...
-    DIST=$(echo $fname | cut -d. -f 4)
-    PKGARCH=$(echo $fname | cut -d. -f 5)
-    RELPATH="${DIST}/${PKGARCH}/${fname}"
-    HEADERS=()
-    bintray-upload
-  done
 }
 
 cannot-find-tarball() {
@@ -173,11 +84,19 @@ build-couch() {
   # We will be changing user to 'jenkins' - ensure it has write permissions
   chmod a+rwx pkgs pkgs/couch pkgs/js
   # $1 is plat, $2 is the optional path to a dist tarball
-  docker run \
-      --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
-      -u 0 -w /home/jenkins/couchdb-pkg \
-      apache/couchdbci-${os}:${CONTAINERARCH}${version}-erlang-${ERLANGVERSION} \
-      make copy-couch $1 COUCHTARBALL=${COUCHTARBALL}
+  if [ -z ${CONTAINERARCH+x} ]; then
+    docker run \
+        --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
+        -u 0 -w /home/jenkins/couchdb-pkg \
+        apache/couchdbci-${os}:${version}-erlang-${ERLANGVERSION} \
+        make copy-couch $1 COUCHTARBALL=${COUCHTARBALL}
+  else
+    docker run \
+        --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
+        -u 0 -w /home/jenkins/couchdb-pkg \
+        apache/couchdbci-${os}:${CONTAINERARCH}-${version}-erlang-${ERLANGVERSION} \
+        make copy-couch ${CONTAINERARCH}-$1 COUCHTARBALL=${COUCHTARBALL}
+  fi
   make clean
 }
 
@@ -191,24 +110,41 @@ build-all-couch() {
   done
 }
 
+
+binary-upload() {
+  echo "Uploading ${PKG}..."
+  local ret="$(curl \
+      --request PUT \
+      --upload-file $PKG \
+      --user ${BINARY_CREDS} \
+      "${BINARY_API}/${REPO}/${RELPATH}${SUFFIX}")"
+  if [[ ${ret} =~ '"created" :' ]]; then
+    echo "Uploaded successfully."
+  else
+    echo "Failed to upload $PKG, ${ret}"
+    exit 1
+  fi
+}
+
 upload-couch() {
   # invoke with $1 as plat, expect to find the binaries under pkgs/couch/$plat/*
-  bintray-check-credentials
-  # Debian packages first
-  PKGNAME="CouchDB"
+  if [ -z ${BINARY_CREDS+x} ]; then
+    echo "Please set your upload credentials before using this command:"
+    echo "  export BINARY_CREDS=<user@domain:KEYGOESHERE>"
+    exit 1
+  fi
   for PKG in $(ls pkgs/couch/$1/*.deb 2>/dev/null); do
     # Example filename: couchdb_2.3.0~jessie_amd64.deb
-    # TODO: pull this stuff from buildinfo / changes files, perhaps? Not sure it matters.
     fname=${PKG##*/}
     REPO="couchdb-deb"
+    RELPATH="pool/C/CouchDB/${fname}"
     DIST=$(echo $fname | cut -d~ -f 2 | cut -d_ -f 1)
     PKGARCH=$(echo $fname | cut -d_ -f 3 | cut -d. -f 1)
     PKGVERSION=$(echo $fname | cut -d_ -f 2 | cut -d~ -f 1)
-    RELPATH="pool/C/CouchDB/${fname}"
-    HEADERS=("--header" "X-Bintray-Debian-Distribution: ${DIST}")
-    HEADERS+=("--header" "X-Bintray-Debian-Component: main")
-    HEADERS+=("--header" "X-Bintray-Debian-Architecture: ${PKGARCH}")
-    bintray-upload
+    SUFFIX=";deb.distribution=${DIST}"
+    SUFFIX+=";deb.component=main"
+    SUFFIX+=";deb.architecture=${PKGARCH}"
+    binary-upload
   done
   for PKG in $(ls pkgs/couch/$1/*.rpm 2>/dev/null); do
     # Example filename: couchdb-2.3.0-1.el7.x86_64.rpm.asc
@@ -219,9 +155,15 @@ upload-couch() {
     PKGARCH=$(echo $fname | cut -d. -f 5)
     PKGVERSION=$(echo $fname | cut -d- -f 2)
     RELPATH="${DIST}/${PKGARCH}/${fname}"
-    HEADERS=()
-    bintray-upload
+    SUFFIX=""
+    binary-upload
   done
+  echo "Recalculating Debian repo metadata..."
+  local ret="$(curl \
+    --request POST \
+    --user ${BINARY_CREDS} \
+    "${BINARY_API}/api/deb/reindex/couchdb-deb")"
+  echo "${ret}"
 }
 
 usage() {
@@ -230,22 +172,16 @@ $0 <command> [OPTIONS]
 
 Recognized commands:
   clean                 Remove all built package artefacts.
-
-  js <plat>             Builds the JS packages for <plat>.
-  js-all                Builds the JS packages for all platforms.
-  *js-upload <plat>     Uploads the JS packages for <plat> to bintray.
-  *js-upload-all        Uploads the JS packages for all platforms to bintray.
-
   couch <plat> <src>    Builds CouchDB packages for <plat>.
   couch-all <src>       Builds CouchDB packages for all platforms.
-  *couch-upload <plat>  Uploads the JS packages for <plat> to bintray.
-  *couch-upload-all     Uploads the JS packages for all platforms to bintray.
+  *couch-upload <plat>  Uploads the JS packages for <plat> to binary.
+  *couch-upload-all     Uploads the JS packages for all platforms to binary.
 
   <src> is either
     - a path/to/a/couchdb.tar.gz, or
     - a URL to http(s)://domain.com/to/couchdb.tar.gz
 
-  Commands marked with * require BINTRAY_USER and BINTRAY_API_KEY env vars.
+  Commands marked with * require BINARY_CREDS env var.
 EOF
 }
 
@@ -255,26 +191,6 @@ case "$1" in
     # removes built pkgs for all platforms
     shift
     rm -rf ${SCRIPTPATH}/pkgs/js/* ${SCRIPTPATH}/pkgs/couch/*
-    ;;
-  js)
-    # Build js packages for a given platform
-    shift
-    build-js $1
-    ;;
-  js-all)
-    # build all supported JS packages
-    shift
-    build-all-js
-    ;;
-  js-upload)
-    shift
-    upload-js $1
-    ;;
-  js-upload-all)
-    shift
-    for dir in $(ls pkgs/js); do
-      upload-js $dir
-    done
     ;;
   couch)
     # build CouchDB pkgs for <plat>
