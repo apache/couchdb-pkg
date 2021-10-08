@@ -102,7 +102,7 @@ A similar `js-all` target exists, should the SpiderMonkey packages need to be re
 
 ## Uploading the packages
 
-If you have Apache Bintray credentials (set your `BINTRAY_USER` and `BINTRAY_API_KEY` environment variables appropriately), after building all CouchDB packages above, simply run:
+If you have Apache credentials (set your `BINARY_CREDS` environment variable appropriately), after building all CouchDB packages above, **and signing the rpms with the appropriate GPG key using the `rpmsign --addsign <file.rpm>` command**, simply run:
 
     ./build.sh couch-upload-all
 
