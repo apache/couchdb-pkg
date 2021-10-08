@@ -106,7 +106,7 @@ build-all-couch() {
     build-couch $plat $*
   done
   for arch in $XPLAT_ARCHES; do
-    CONTAINERARCH="${arch}-" build-couch $XPLAT_BASE
+    CONTAINERARCH="${arch}" build-couch $XPLAT_BASE
   done
 }
 
