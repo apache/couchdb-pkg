@@ -1,5 +1,5 @@
-name: couchdb
-version: 3.1.1
+name: couchdb-sklassen
+version: 3.1.2
 base: core20
 build-base: core18
 summary: Official Apache CouchDB snap - a clustering document oriented database
@@ -19,7 +19,7 @@ confinement: strict
 parts:
   couchdb:
     plugin: make
-    source: http://www-us.apache.org/dist/couchdb/source/3.1.1/apache-couchdb-3.1.1.tar.gz
+    source: https://dlcdn.apache.org/couchdb/source/3.1.2/apache-couchdb-3.1.2.tar.gz
     source-type: tar
     override-build: |
             ./configure --prefix=$SNAPCRAFT_PART_INSTALL --disable-docs --spidermonkey-version 68
@@ -64,6 +64,9 @@ parts:
 
 environment:
   COUCHDB_ARGS_FILE: ${SNAP_DATA}/etc/vm.args
+  COUCHDB_FAUXTON_DOCROOT: ${SNAP}/share/www
+  COUCHDB_QUERY_SERVER_JAVASCRIPT: ${SNAP}/bin/couchjs ${SNAP}/share/server/main.js
+  COUCHDB_QUERY_SERVER_COFFEESCRIPT: ${SNAP}/bin/couchjs ${SNAP}/share/server/main-coffee.js
   ERL_FLAGS: "-couch_ini ${SNAP}/etc/default.ini
                          ${SNAP}/etc/default.d
                          ${SNAP_DATA}/etc/local.ini
