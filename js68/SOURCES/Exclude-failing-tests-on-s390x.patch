@@ -1,0 +1,29 @@
+From b9e1976edca1af828a219d5ac35d07202170e5ba Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Franti=C5=A1ek=20Zatloukal?= <fzatlouk@redhat.com>
+Date: Mon, 24 Aug 2020 15:45:36 +0200
+Subject: [PATCH] Exclude failing tests on s390x
+
+---
+ js/src/tests/jstests.list | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/js/src/tests/jstests.list b/js/src/tests/jstests.list
+index 8f5c0df..75f80f8 100644
+--- a/js/src/tests/jstests.list
++++ b/js/src/tests/jstests.list
+@@ -493,6 +493,12 @@ skip script test262/language/expressions/class/elements/derived-cls-direct-eval-
+ skip script test262/language/statements/class/elements/derived-cls-direct-eval-err-contains-superproperty-1.js
+ skip script test262/language/statements/class/elements/derived-cls-direct-eval-err-contains-superproperty-2.js
+
++# Crashes on s390x and ppc64, avoid it
++skip-if(xulRuntime.XPCOMABI.match(/s390x|ppc64-/)) script non262/extensions/clone-errors.js
++
++# Crashes on s390x
++skip-if(xulRuntime.XPCOMABI.match(/s390x/)) script test262/built-ins/TypedArray/prototype/set/typedarray-arg-set-values-same-buffer-other-type.js
++skip-if(xulRuntime.XPCOMABI.match(/s390x/)) script non262/Intl/DateTimeFormat/timeZone_backward_links.js
+
+ ###########################################################
+ # Tests disabled due to issues in test262 importer script #
+--
+2.26.2
+

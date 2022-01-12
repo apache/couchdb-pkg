@@ -25,3 +25,4 @@ stage/
 *.tar.gz
 *.bak
 *~
+.idea/
