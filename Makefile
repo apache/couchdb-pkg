@@ -154,6 +154,14 @@ centos8: SPIDERMONKEY_DEV=mozjs60-devel
 centos8: SM_VER=60
 centos8: sm-ver-rpm make-rpmbuild centos
 
+# aarch64 RHEL-based
+aarch64-rhel: DIST=rhel
+# Needs 68 for aarch compat, we're using the included one here
+aarch64-rhel: SPIDERMONKEY=couch-js-68
+aarch64-rhel: SPIDERMONKEY_DEV=couch-js-68-devel
+aarch64-rhel: SM_VER=68
+aarch64-rhel: sm-ver-rpm make-rpmbuild centos
+
 openSUSE: centos7
 
 
