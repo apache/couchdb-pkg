@@ -28,10 +28,11 @@ Prefix:        %{prefix}
 Group:         Applications/Databases
 URL:           https://couchdb.apache.org/
 Vendor:        The Apache Software Foundation
-BuildArch:     x86_64 ppc64le
-ExclusiveArch: x86_64 ppc64le
+BuildArch:     x86_64 ppc64le aarch64
+ExclusiveArch: x86_64 ppc64le aarch64
 Exclusiveos:   linux
 Packager:      CouchDB Developers <dev@couchdb.apache.org>
+Patch1:        0001-build-with-sm68-on-aarch64.patch
 
 %if 0%{?suse_version}
 BuildRequires: erlang
@@ -91,6 +92,11 @@ languages and environments.
 
 # NOTE: Stripping binaries causes issues so we skip it.
 %define __os_install_post %{nil}
+
+%prep
+%ifarch aarch64
+%patch01 -p1
+%endif
 
 %build
 ./configure --spidermonkey-version=%SM_VER%
