@@ -1,0 +1,12 @@
+diff -up firefox-68.0/build/autoconf/icu.m4.icu firefox-68.0/build/autoconf/icu.m4
+--- firefox-68.0/build/autoconf/icu.m4.icu	2018-04-24 13:13:03.938961958 +0200
++++ firefox-68.0/build/autoconf/icu.m4	2018-04-24 13:14:44.472714375 +0200
+@@ -78,7 +78,7 @@
+     # TODO: the l is actually endian-dependent
+     # We could make this set as 'l' or 'b' for little or big, respectively,
+     # but we'd need to check in a big-endian version of the file.
+-    ICU_DATA_FILE="icudt${version}l.dat"
++    ICU_DATA_FILE="icudt${version}b.dat"
+ fi
+
+ AC_SUBST(MOZ_ICU_VERSION)
