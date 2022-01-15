@@ -109,12 +109,6 @@ ppc64le-debian-bullseye: bullseye
 bullseye: debian
 
 
-# Ubuntu 16.04 (Xenial)
-ubuntu-xenial: PLATFORM=xenial
-ubuntu-xenial: DIST=ubuntu-xenial
-ubuntu-xenial: xenial
-xenial: debian
-
 # Ubuntu 18.04 (Bionic)
 ubuntu-bionic: PLATFORM=bionic
 ubuntu-bionic: DIST=ubuntu-bionic
