@@ -31,10 +31,10 @@ SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DEBIANS="debian-stretch debian-buster debian-bullseye"
 UBUNTUS="ubuntu-bionic ubuntu-focal"
 CENTOSES="centos-7 centos-8"
-XPLAT_BASE="debian-buster"
+XPLAT_BASE="debian-bullseye"
 XPLAT_ARCHES="arm64v8 ppc64le"
 BINARY_API="https://apache.jfrog.io/artifactory"
-ERLANGVERSION=${ERLANGVERSION:-20.3.8.26-1}
+ERLANGVERSION=${ERLANGVERSION:-23.3.4.10}
 
 split-os-ver() {
   OLDIFS=$IFS
@@ -94,7 +94,7 @@ build-couch() {
     docker run \
         --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
         -u 0 -w /home/jenkins/couchdb-pkg \
-        apache/couchdbci-${os}:${CONTAINERARCH}-${version}-erlang-${ERLANGVERSION} \
+        apache/couchdbci-${os}:${version}-erlang-${ERLANGVERSION} \
         make copy-couch ${CONTAINERARCH}-$1 COUCHTARBALL=${COUCHTARBALL}
   fi
   make clean
