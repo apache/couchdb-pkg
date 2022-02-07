@@ -32,7 +32,7 @@ DEBIANS="debian-stretch debian-buster debian-bullseye"
 UBUNTUS="ubuntu-bionic ubuntu-focal"
 CENTOSES="centos-7 centos-8"
 XPLAT_BASE="debian-bullseye"
-XPLAT_ARCHES="arm64v8 ppc64le"
+XPLAT_ARCHES="arm64 ppc64le"
 BINARY_API="https://apache.jfrog.io/artifactory"
 ERLANGVERSION=${ERLANGVERSION:-23.3.4.10}
 
@@ -88,12 +88,14 @@ build-couch() {
     docker run \
         --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
         -u 0 -w /home/jenkins/couchdb-pkg \
+        --platform linux/amd64 \
         apache/couchdbci-${os}:${version}-erlang-${ERLANGVERSION} \
         make copy-couch $1 COUCHTARBALL=${COUCHTARBALL}
   else
     docker run \
         --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
         -u 0 -w /home/jenkins/couchdb-pkg \
+        --platform linux/${CONTAINERARCH} \
         apache/couchdbci-${os}:${version}-erlang-${ERLANGVERSION} \
         make copy-couch ${CONTAINERARCH}-$1 COUCHTARBALL=${COUCHTARBALL}
   fi
