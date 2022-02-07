@@ -18,7 +18,7 @@ Summary:       RESTful document oriented database
 License:       Apache License v2.0
 Name:          %{name}
 Version:       %{_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Source:        https://www.apache.org/dist/couchdb/source/${version}/apache-couchdb-%{version}.tar.gz
 Source1:       %{name}.service
 Source2:       %{name}.init

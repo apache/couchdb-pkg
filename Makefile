@@ -11,7 +11,10 @@
 # the License.
 
 COUCHDIR=../couchdb
-DEBCHANGELOG="Automatically generated package from upstream."
+DEBCHANGELOG="Bump to Erlang 23"
+
+# Define DEBVERSION to append a package version to the upstream CouchDB version
+DEBVERSION="1"
 
 JS_DEBCHANGELOG="Automatically generated package from couchdb-ci repository."
 JS_VERSION=1.8.5-1.0.0+couch-2
@@ -194,7 +197,7 @@ copy-debian:
 	cp -R debian $(DISTDIR)
 
 update-changelog:
-	cd $(DISTDIR) && dch -v $(VERSION)~$(PLATFORM) $(DEBCHANGELOG)
+	cd $(DISTDIR) && dch -v $(VERSION)-$(DEBVERSION)~$(PLATFORM) $(DEBCHANGELOG)
 
 dpkg:
 	cd $(DISTDIR) && dpkg-buildpackage -b -us -uc
