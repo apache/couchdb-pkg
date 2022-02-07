@@ -91,6 +91,7 @@ debian-bullseye: SPIDERMONKEY_DEV=libmozjs-78-dev
 debian-bullseye: SM_VER=78
 debian-bullseye: bullseye
 
+arm64-debian-bullseye: aarch64-debian-bullseye
 arm64v8-debian-bullseye: aarch64-debian-bullseye
 aarch64-debian-bullseye: PLATFORM=bullseye
 aarch64-debian-bullseye: DIST=debian-bullseye
