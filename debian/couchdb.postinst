@@ -157,6 +157,11 @@ case $1 in
       false
     fi
 
+    # set inet_dist_use_interface default if not present
+    if ! grep -q '^-kernel inet_dist_use_interface' /opt/couchdb/etc/vm.args; then
+        echo "-kernel inet_dist_use_interface '{127,0,0,1}'" >> /opt/couchdb/etc/vm.args
+    fi
+
     case $mode in
       none)
       ;;
@@ -166,6 +171,12 @@ case $1 in
         if ! setadminpass; then
           password_error="yes"
         fi
+
+        # Bind distribution port to loopback interface only
+        sed -i "s/^-kernel inet_dist_use_interface '{0,0,0,0}'$/-kernel inet_dist_use_interface '{127,0,0,1}'/" /opt/couchdb/etc/vm.args
+
+        # Bind EPMD to loopback interface
+        sed -i "s/^ERL_EPMD_ADDRESS=$/ERL_EPMD_ADDRESS=127.0.0.1/" /etc/default/couchdb
       ;;
       clustered)
         db_get couchdb/nodename && nodename="$RET"
@@ -179,6 +190,12 @@ case $1 in
         if ! setadminpass; then
           password_error="yes"
         fi
+
+        # Unbind distribution port from lookback interface only
+        sed -i "s/^-kernel inet_dist_use_interface '{127,0,0,1}'$/-kernel inet_dist_use_interface '{0,0,0,0}'/" /opt/couchdb/etc/vm.args
+
+        # Unbind EPMD from loopback interface
+        sed -i "s/^ERL_EPMD_ADDRESS=127.0.0.1$/ERL_EPMD_ADDRESS=/" /etc/default/couchdb
       ;;
       *)
         echo "incomprehensible couchdb mode '$mode'!" 1>&2

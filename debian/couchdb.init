@@ -39,6 +39,10 @@ DAEMON=/opt/couchdb/bin/couchdb
 START_ARGS="--chuid couchdb:couchdb --chdir /opt/couchdb --background"
 STOP_ARGS="--pid $PID"
 
+if [ -r /etc/default/${NAME} ]; then
+    . /etc/default/${NAME}
+fi
+
 do_usage() {
     echo "Usage: couchdb {start|stop|status|restart|try-restart|force-reload}" >&2
 }
