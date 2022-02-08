@@ -4,6 +4,7 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
+EnvironmentFile=-/etc/default/couchdb
 RuntimeDirectory=couchdb
 User=couchdb
 Group=couchdb
