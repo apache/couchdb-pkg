@@ -230,7 +230,7 @@ case $1 in
     done
       
     # These should also not be world readable or writable:
-    find /opt/couchdb/etc -name *.ini -exec chmod 0640 {} \;
+    find /opt/couchdb/etc -name '*.ini' -o -name vm.args -exec chmod 0640 {} \;
     chmod 0750 /var/log/couchdb
     chmod 0750 /var/lib/couchdb
 
