@@ -249,7 +249,7 @@ In the very rare case you need to connect to the couchdb server, a remsh script 
 provided. You need to specify both the name of the server and the cookie, even if
 you are using the default. 
 ```bash
-/snap/bin/couchdb.remsh -n couchdb@localhost -c monster
+/snap/bin/couchdb.remsh -n couchdb@localhost -c $COOKIE
 ```
 # Building this snap <a name="building"></a>
 

@@ -37,7 +37,6 @@ _Description: CouchDB Erlang node name:
 
 Template: couchdb/cookie
 Type: string
-Default: monster
 _Description: CouchDB Erlang magic cookie:
  A CouchDB node has an Erlang magic cookie value set at startup.
  .
@@ -104,3 +103,13 @@ _Description: Remove all CouchDB databases?
  The /var/lib/couchdb directory containing all CouchDB databases will
  be removed. This will also clear the stored node name for this machine,
  and remove the couchdb user and group.
+
+Template: couchdb/no_cookie_monsters
+Type: error
+_Description: Cookie input error
+ The Erlang cookie cannot be set to 'monster'. Please try again.
+
+Template: couchdb/no_cookie
+Type: error
+_Description: Cookie input error
+ The Erlang cookie cannot be empty. Please try again.
