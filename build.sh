@@ -131,8 +131,8 @@ binary-upload() {
 upload-couch() {
   # invoke with $1 as plat, expect to find the binaries under pkgs/couch/$plat/*
   if [ -z ${BINARY_CREDS+x} ]; then
-    echo "Please set your upload credentials before using this command:"
-    echo "  export BINARY_CREDS=<user@domain:KEYGOESHERE>"
+    echo "Please set your Artifactory upload credentials before using this command:"
+    echo "  export BINARY_CREDS=username:KEYGOESHERE"
     exit 1
   fi
   for PKG in $(ls pkgs/couch/$1/*.deb 2>/dev/null); do

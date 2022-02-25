@@ -26,7 +26,7 @@ make couch-js-debs PLATFORM=$(lsb_release -cs)
 
 ### CouchDB
 
-#### rpms or debs from `master` branch:
+#### rpms or debs from `main` branch:
 
 ```shell
 cd .. && git clone https://github.com/apache/couchdb
@@ -41,11 +41,10 @@ make copy-couch $(lsb_release -cs) COUCHTARBALL=path/to/couchdb-#.#.#.tar.gz PLA
 
 -----
 
-## Building inside the `couchdbdev` docker containers
+## Building inside the CI docker containers
 
 You must first pull down the image or images you need from Docker Hub, or build the images
-using the [apache/couchdb-ci](https://github.com/apache/couchdb-ci) repository. A full
-list of supported environments is at https://hub.docker.com/u/couchdbdev/ .
+using the [apache/couchdb-ci](https://github.com/apache/couchdb-ci) repository.
 
 ### SpiderMonkey 1.8.5
 
@@ -100,9 +99,51 @@ Packages will be placed in the `pkgs/couch` subdirectory.
 
 A similar `js-all` target exists, should the SpiderMonkey packages need to be regenerated.
 
+## Signing RPMs
+
+If you're building RPMs inside the CI containers you'll need to export your code signing key:
+
+```
+gpg --export-secret-keys -a $KEYID > my_private_key.asc
+gpg --export -a $KEYID > my_public_key.asc
+```
+
+Import it inside the container:
+
+```
+✗ docker run -it --mount type=bind,src=`pwd`,dst=/home/jenkins/couchdb-pkg -u 0 -w /home/jenkins/couchdb-pkg --platform linux/amd64 apache/couchdbci-centos:7-erlang-23.3.4.10
+[root@38a8b375b3cb couchdb-pkg]# ls *.asc
+my_private_key.asc  my_public_key.asc
+[root@38a8b375b3cb couchdb-pkg]# gpg --import *.asc
+gpg: directory `/root/.gnupg' created
+gpg: new configuration file `/root/.gnupg/gpg.conf' created
+gpg: WARNING: options in `/root/.gnupg/gpg.conf' are not yet active during this run
+gpg: keyring `/root/.gnupg/secring.gpg' created
+gpg: keyring `/root/.gnupg/pubring.gpg' created
+gpg: key 232EF177: secret key imported
+gpg: /root/.gnupg/trustdb.gpg: trustdb created
+gpg: key 232EF177: public key "Adam Kocoloski (CODE SIGNING KEY) <kocolosk@apache.org>" imported
+gpg: key 232EF177: "Adam Kocoloski (CODE SIGNING KEY) <kocolosk@apache.org>" not changed
+gpg: Total number processed: 2
+gpg:               imported: 1  (RSA: 1)
+gpg:              unchanged: 1
+gpg:       secret keys read: 1
+gpg:   secret keys imported: 1
+```
+
+Ensure `%_gpg_name` is configured, and then it's time to sign:
+
+```
+[root@38a8b375b3cb couchdb-pkg]# echo "%_gpg_name Adam Kocoloski (CODE SIGNING KEY) <kocolosk@apache.org>" > ~/.rpmmacros
+[root@38a8b375b3cb couchdb-pkg]# rpmsign --addsign pkgs/couch/centos-7/couchdb-3.2.1-2.el7.x86_64.rpm
+Enter pass phrase:
+Pass phrase is good.
+pkgs/couch/centos-7/couchdb-3.2.1-2.el7.x86_64.rpm:
+```
+
 ## Uploading the packages
 
-If you have Apache credentials (set your `BINARY_CREDS` environment variable appropriately), after building all CouchDB packages above, **and signing the rpms with the appropriate GPG key using the `rpmsign --addsign <file.rpm>` command**, simply run:
+If you have Apache credentials (set your `BINARY_CREDS` environment variable using credentials from Artifactory), after building all CouchDB packages above, **and signing the rpms with the appropriate GPG key using the `rpmsign --addsign <file.rpm>` command above**, simply run:
 
     ./build.sh couch-upload-all
 
