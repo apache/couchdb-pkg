@@ -144,12 +144,21 @@ if ! /usr/bin/getent passwd couchdb > /dev/null; then /usr/sbin/adduser \
 %{__ln_s} -f -T /var/log/%{name} %{buildroot}/opt/%{name}/var/log/%{name}
 
 %post
-echo "Please enter a cookie value for this installation: " >/dev/tty
-if exec </dev/tty; then
-  read cookie;
+if %{__grep} -q "^-setcookie monster$" /opt/%{name}/etc/vm.args; then
+  echo "Please enter a cookie value for this installation: " >/dev/tty
+  if exec </dev/tty; then
+    read cookie;
+  fi
+  echo "Writing $cookie to vm.args..."
+  %{__sed} -i "s/^-setcookie monster.*$/-setcookie ${cookie}/" /opt/%{name}/etc/vm.args
+elif %{__grep} -q "^[# ]*-setcookie$" /opt/%{name}/etc/vm.args; then
+  echo "Please enter a cookie value for this installation: " >/dev/tty
+  if exec </dev/tty; then
+    read cookie;
+  fi
+  echo "Writing $cookie to vm.args..."
+  %{__sed} -i "s/^[# ]*-setcookie.*$/-setcookie ${cookie}/" /opt/%{name}/etc/vm.args
 fi
-echo "Writing $cookie to vm.args..."
-%{__sed} -i "s/^[# ]*-setcookie.*$/-setcookie ${cookie}/" /opt/%{name}/etc/vm.args
 %{__chown} -R couchdb:couchdb /opt/%{name}
 %{__chmod} a+x /opt/%{name}/bin/*
 %if 0%{?fedora} || 0%{?rhel} >= 7
