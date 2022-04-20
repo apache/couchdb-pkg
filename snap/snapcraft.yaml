@@ -41,16 +41,16 @@ parts:
       - erlang-os-mon
       - erlang-syntax-tools
       # moz68
-      - libmozjs-68-dev
+      - libmozjs-91-dev
       # For fauxton
       - libnode-dev
       - npm
     stage-packages:
       - procps
       - libcurl4
-      - libicu66
-      - libmozjs-68-0
-      - libssl1.1
+      - libicu70
+      - libmozjs-91-0
+      - libssl3
       - libtinfo5
     stage:
       - -usr/share/doc
