@@ -58,8 +58,8 @@ parts:
       - -var
     override-stage: |
       # focal libmozjs is busted...
-      cd ${SNAPCRAFT_PART_INSTALL}/usr/lib/x86_64-linux-gnu/
-      ln -s libmozjs-68.so.68.6.0 libmozjs-68.so.0
+      #cd ${SNAPCRAFT_PART_INSTALL}/usr/lib/x86_64-linux-gnu/
+      #ln -s libmozjs-68.so.68.6.0 libmozjs-68.so.0
       snapcraftctl stage
 
 environment:
