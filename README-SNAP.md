@@ -25,11 +25,11 @@ sudo apt install libsquashfuse0 squashfuse fuse
 sudo apt install snapd
 ```
 
-If this is your first time installing couchdb then you will need to set an admin password
-and manually start CouchDB.
+If this is your first time installing couchdb then you will need to set an admin password,
+a (random) cookie, and manually start CouchDB.
 
 ```bash
-$ sudo snap set couchdb admin=[your-password-goes-here]
+$ sudo snap set couchdb admin=[your-password-goes-here] setcookie=[your-cookie-goes-here]
 $ sudo snap start couchdb 
 ```
 
@@ -55,7 +55,7 @@ in `/var/local/...`. With this in mind, if are you going to use snaps for your d
 the files will be stored in `/var/snap/couchdb/common` and your `/var` partition will need
 to be large enough for your database size. 
 
-CouchDB defaults are stored **read-only** in `/snap/couchdb/current/opt/couchdb/etc/`.
+CouchDB defaults are stored **read-only** in `/snap/couchdb/current/etc/`.
 This includes `default.ini` and any `default.d/*` files added in the snap build process.
 These are all read-only and should never be changed.
 
@@ -132,7 +132,6 @@ and set a admin password.
 ```bash
 $> snap install couchdb_1
 $> snap connect couchdb_1:mount-observe
-$> snap connect couchdb_1:process-control
 $> snap set couchdb_1 name=couchdb1@127.0.0.1 setcookie=cutter port=5981 admin=Be1stDB
 ```
 You will need to edit the local configuration file to manually set the data directories. 
@@ -158,11 +157,9 @@ the name, port number for each. They should all have the same admin password and
 ```bash
 $> snap install couchdb_2
 $> snap connect couchdb_2:mount-observe
-$> snap connect couchdb_2:process-control
 $> snap set couchdb_2 name=couchdb2@127.0.0.1 setcookie=cutter port=5982 admin=Be1stDB
 $> snap install couchdb_3
 $> snap connect couchdb_3:mount-observe
-$> snap connect couchdb_3:process-control
 $> snap set couchdb_3 name=couchdb3@127.0.0.1 setcookie=cutter port=5983 admin=Be1stDB
 ```
 
@@ -238,6 +235,7 @@ $ curl -X GET http://localhost:5983/example/_all_docs
 The backup machine we will configure as a single instance (`n=1, q=1`). 
 ```bash
 $> snap install couchdb_bkup
+$> snap connect couchdb_3:mount-observe
 $> snap set couchdb_bkup name=couchdb0@localhost setcookie=cutter port=5980 admin=Be1stDB
 $> curl -X PUT http://admin:Be1stDB@localhost:5980/_node/_local/_config/cluster/n -d '"1"'
 $> curl -X PUT http://admin:Be1stDB@localhost:5980/_node/_local/_config/cluster/q -d '"1"'
@@ -262,7 +260,7 @@ In the very rare case you need to connect to the couchdb server, a remsh script 
 provided. You need to specify both the name of the server and the cookie, even if
 you are using the default. 
 ```bash
-/snap/bin/couchdb.remsh -n couchdb@localhost -c monster
+/snap/bin/couchdb.remsh -n couchdb@localhost -c cutter
 ```
 # Building this snap <a name="building"></a>
 
@@ -270,12 +268,11 @@ Prior to the release of Unbuntu 20.04 (Focal), we can compile the tarball using 
 have to run it in destructive mode (within the LXD container) and not via multipass. 
 
 ```bash
-> lxc launch ubuntu-daily:20.04 -c focal
+> lxc launch ubuntu-daily:22.04 cdb
 > lxc shell focal
 $ snapcraft --destructive-mode
 ```
-This build was ran on a Ubuntu 19.10 base system, with the `core18` build-core and `core20` 
-core, and the `snapcraft` tool. The snapcraft tool from the store can be installed as 
+The snapcraft tool from the store can be installed as 
 
 ```bash
 snap install snapcraft
@@ -284,6 +281,6 @@ snap install snapcraft
 Once the snap has been built, the snap can be installed locally using `--dangerous`:
 
 ```bash
-sudo snap install ./couchdb_3.0.0_amd64.snap --dangerous
+sudo snap install ./couchdb_3.2.2_amd64.snap --dangerous
 ```
 
