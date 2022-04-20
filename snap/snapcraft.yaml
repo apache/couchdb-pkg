@@ -22,7 +22,7 @@ parts:
     source: https://dlcdn.apache.org/couchdb/source/3.2.2/apache-couchdb-3.2.2.tar.gz
     source-type: tar
     override-build: |
-            ./configure --prefix=$SNAPCRAFT_PART_INSTALL --disable-docs --spidermonkey-version 68
+            ./configure --prefix=$SNAPCRAFT_PART_INSTALL --disable-docs --spidermonkey-version 91
             make release
             cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
     build-packages:
