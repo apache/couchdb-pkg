@@ -40,13 +40,14 @@ parts:
       - erlang-eunit
       - erlang-os-mon
       - erlang-syntax-tools
-      # moz68
+      # mozjs
       - libmozjs-91-dev
       # For fauxton
       - libnode-dev
       - npm
     stage-packages:
       - procps
+      - libc6
       - libcurl4
       - libicu70
       - libmozjs-91-0
@@ -65,8 +66,8 @@ parts:
 environment:
   COUCHDB_ARGS_FILE: ${SNAP_DATA}/etc/vm.args
   COUCHDB_FAUXTON_DOCROOT: ${SNAP}/share/www
-  COUCHDB_QUERY_SERVER_JAVASCRIPT: ${SNAP}/bin/couchjs ${SNAP}/share/server/main.js
-  COUCHDB_QUERY_SERVER_COFFEESCRIPT: ${SNAP}/bin/couchjs ${SNAP}/share/server/main-coffee.js
+  COUCHDB_QUERY_SERVER_JAVASCRIPT: ${SNAP}/bin/couchjs ${COUCHJS_ARGS} ${SNAP}/share/server/main.js
+  COUCHDB_QUERY_SERVER_COFFEESCRIPT: ${SNAP}/bin/couchjs ${COUCHJS_ARGS} ${SNAP}/share/server/main-coffee.js
   ERL_FLAGS: "-couch_ini ${SNAP}/etc/default.ini
                          ${SNAP}/etc/default.d
                          ${SNAP_DATA}/etc/local.ini
