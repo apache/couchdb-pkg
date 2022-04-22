@@ -47,7 +47,6 @@ parts:
       - npm
     stage-packages:
       - procps
-      - libc6
       - libcurl4
       - libicu70
       - libmozjs-91-0
