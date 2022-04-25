@@ -43,22 +43,6 @@ all:
 # Debian default
 debian: sm-ver-debian find-couch-dist copy-debian update-changelog dpkg lintian copy-pkgs
 
-# Debian 9 - stretch
-debian-stretch: PLATFORM=stretch
-debian-stretch: DIST=debian-stretch
-debian-stretch: stretch
-
-arm64v8-debian-stretch: aarch64-debian-stretch
-aarch64-debian-stretch: PLATFORM=stretch
-aarch64-debian-stretch: DIST=debian-stretch
-aarch64-debian-stretch: stretch
-
-ppc64le-debian-stretch: PLATFORM=stretch
-ppc64le-debian-stretch: DIST=debian-stretch
-ppc64le-debian-stretch: stretch
-
-stretch: debian
-
 # Debian 10 - buster
 debian-buster: PLATFORM=buster
 debian-buster: DIST=debian-buster
