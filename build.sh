@@ -34,7 +34,7 @@ CENTOSES="centos-7 centos-8"
 XPLAT_BASE="debian-bullseye"
 XPLAT_ARCHES="arm64 ppc64le"
 BINARY_API="https://apache.jfrog.io/artifactory"
-ERLANGVERSION=${ERLANGVERSION:-23.3.4.10}
+ERLANGVERSION=${ERLANGVERSION:-23.3.4.14}
 
 split-os-ver() {
   OLDIFS=$IFS
