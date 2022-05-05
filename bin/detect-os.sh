@@ -68,13 +68,17 @@ case "${OSTYPE}" in
     # and finally some rough heuristics
     if [[ -f /etc/redhat-release ]]; then
       # /etc/redhat-release is so inconsistent, we use rpm instead
-      rhelish=$(rpm -qa '(redhat|sl|slf|centos|centos-linux|oraclelinux)-release(|-server|-workstation|-client|-computenode)' 2>/dev/null | head -1)
+      rhelish=$(rpm -qa '(redhat|sl|slf|centos|centos-linux|oraclelinux|rocky)-release(|-server|-workstation|-client|-computenode)' 2>/dev/null | head -1)
       if [[ $rhelish ]]; then
         ID=${ID:-$(echo ${rhelish} | awk -F'-' '{print tolower($1)}')}
         VERSION_ID=${VERSION_ID:-$(echo ${rhelish} | sed -E 's/([^[:digit:]]+)([[:digit:]]+)(.*)/\2/' )}
         VERSION_CODENAME=${VERSION_CODENAME:-${VERSION_ID}}
         DISTRIB_CODENAME=${VERSION_CODENAME:-${VERSION_ID}}
       fi
+      # We expect VERSION_ID for RPM distros to be major version only (and as read
+      # from /etc/os-release it might not be) so we ensure that below
+      VERSION_ID=$(echo ${VERSION_ID} | cut -d. -f1)
+
     elif [[ -f /etc/debian_version ]]; then
       # Ubuntu keeps changing the format of /etc/os-release's VERSION, and
       # it's numeric, not the codename. Boo.
