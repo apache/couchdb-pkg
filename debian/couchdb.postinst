@@ -184,7 +184,7 @@ case $1 in
         fi
 
         # Bind distribution port to loopback interface only
-        sed -i "s/^-kernel inet_dist_use_interface '{0,0,0,0}'$/-kernel inet_dist_use_interface '{127,0,0,1}'/" /opt/couchdb/etc/vm.args
+        sed -i "s/^-kernel inet_dist_use_interface '*{0,0,0,0}'*$/-kernel inet_dist_use_interface '{127,0,0,1}'/" /opt/couchdb/etc/vm.args
 
         # Bind EPMD to loopback interface
         sed -i "s/^ERL_EPMD_ADDRESS=$/ERL_EPMD_ADDRESS=127.0.0.1/" /etc/default/couchdb
@@ -201,7 +201,7 @@ case $1 in
         fi
 
         # Unbind distribution port from lookback interface only
-        sed -i "s/^-kernel inet_dist_use_interface '{127,0,0,1}'$/-kernel inet_dist_use_interface '{0,0,0,0}'/" /opt/couchdb/etc/vm.args
+        sed -i "s/^-kernel inet_dist_use_interface '*{127,0,0,1}'*$/-kernel inet_dist_use_interface '{0,0,0,0}'/" /opt/couchdb/etc/vm.args
 
         # Unbind EPMD from loopback interface
         sed -i "s/^ERL_EPMD_ADDRESS=127.0.0.1$/ERL_EPMD_ADDRESS=/" /etc/default/couchdb
