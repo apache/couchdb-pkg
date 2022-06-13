@@ -151,7 +151,7 @@ if %{__grep} -q "^-setcookie monster$" /opt/%{name}/etc/vm.args; then
     cookie=${COUCHDB_COOKIE}
   else
     echo "Generating random cookie value."
-    cookie=$(cat /dev/random | tr -dc 'a-zA-Z0-9' | head --bytes 48)
+    cookie=$(dd if=/dev/random bs=1 count=38 status=none | base64 | tr -cd [:alnum:])
   fi
   %{__sed} -i "s/^-setcookie monster.*$/-setcookie ${cookie}/" /opt/%{name}/etc/vm.args
 elif %{__grep} -q "^[# ]*-setcookie$" /opt/%{name}/etc/vm.args; then
@@ -161,7 +161,7 @@ elif %{__grep} -q "^[# ]*-setcookie$" /opt/%{name}/etc/vm.args; then
     cookie=${COUCHDB_COOKIE}
   else
     echo "Generating random cookie value."
-    cookie=$(cat /dev/random | tr -dc 'a-zA-Z0-9' | head --bytes 48)
+    cookie=$(dd if=/dev/random bs=1 count=38 status=none | base64 | tr -cd [:alnum:])
   fi
   %{__sed} -i "s/^[# ]*-setcookie.*$/-setcookie ${cookie}/" /opt/%{name}/etc/vm.args
 fi
