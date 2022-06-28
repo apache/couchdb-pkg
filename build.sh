@@ -29,7 +29,7 @@ SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # TODO derive these by interrogating the couchdb-ci repo rather than hard coding the list
 DEBIANS="debian-buster debian-bullseye"
-UBUNTUS="ubuntu-bionic ubuntu-focal"
+UBUNTUS="ubuntu-bionic ubuntu-focal ubuntu-jammy"
 CENTOSES="centos-7 centos-8"
 XPLAT_BASE="debian-bullseye"
 XPLAT_ARCHES="arm64 ppc64le"

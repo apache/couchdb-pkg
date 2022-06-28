@@ -32,3 +32,8 @@ Codename: focal
 Components: main
 Architectures: amd64 arm64 ppc64el
 Description: Official CouchDB Ubuntu 20.04 focal repository
+
+Codename: jammy
+Components: main
+Architectures: amd64 arm64 ppc64el
+Description: Official CouchDB Ubuntu 22.04 jammy repository
