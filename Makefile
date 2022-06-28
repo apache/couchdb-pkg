@@ -109,6 +109,14 @@ ubuntu-focal: SM_VER=68
 ubuntu-focal: focal
 focal: debian
 
+# Ubuntu 22.04 (Jammy)
+ubuntu-jammy: PLATFORM=jammy
+ubuntu-jammy: DIST=ubuntu-jammy
+ubuntu-jammy: SPIDERMONKEY=libmozjs-78-0
+ubuntu-jammy: SPIDERMONKEY_DEV=libmozjs-78-dev
+ubuntu-jammy: SM_VER=78
+ubuntu-jammy: jammy
+jammy: debian
 
 # RPM default
 centos: PKGDIR=../rpmbuild/RPMS/$(PKGARCH)
