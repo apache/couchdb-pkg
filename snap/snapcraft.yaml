@@ -1,7 +1,8 @@
+---
 name: couchdb-sklassen
 version: 3.2.2
-base: core20
-build-base: core18
+type: app
+base: core22
 summary: Official Apache CouchDB snap - a clustering document oriented database
 description: |
   CouchDB is a database that completely embraces the web. Store your data with
