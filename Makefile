@@ -122,12 +122,6 @@ jammy: debian
 centos: PKGDIR=../rpmbuild/RPMS/$(PKGARCH)
 centos: find-couch-dist link-couch-dist build-rpm copy-pkgs
 
-centos-6: DIST=centos-6
-centos-6: centos6
-centos6: SPIDERMONKEY=couch-js = 1:1.8.5
-centos6: SPIDERMONKEY_DEV=couch-js-devel = 1:1.8.5
-centos6: sm-ver-rpm make-rpmbuild centos
-
 centos-7: DIST=centos-7
 centos-7: centos7
 centos7: SPIDERMONKEY=couch-js = 1:1.8.5
@@ -140,6 +134,10 @@ centos8: SPIDERMONKEY=mozjs60
 centos8: SPIDERMONKEY_DEV=mozjs60-devel
 centos8: SM_VER=60
 centos8: sm-ver-rpm make-rpmbuild centos
+
+# Rocky 8 is a CentOS 8 alias
+rocky-8: centos-8
+rocky-8.6: centos-8
 
 # aarch64 RHEL-based
 aarch64-rhel: DIST=rhel
@@ -236,7 +234,7 @@ couch-js-debs: couch-js-clean
 	cp -r js/debian js/build
 	if [ "$(shell arch)" = "armv7l" ]; then rm js/build/debian/*symbols; fi
 	cd js/build && dch -v $(JS_VERSION)~$(PLATFORM) $(JS_DEBCHANGELOG)
-	cd js/build && dpkg-buildpackage -b -us -uc	
+	cd js/build && dpkg-buildpackage -b -us -uc
 
 couch-js-rpms: couch-js-clean
 	mkdir -p ../rpmbuild
