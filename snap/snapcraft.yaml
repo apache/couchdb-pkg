@@ -1,5 +1,5 @@
 name: couchdb
-version: 3.1.1
+version: 3.2.2
 summary: Official Apache CouchDB snap - a clustering document oriented database
 description: |
   CouchDB is a database that completely embraces the web. Store your data with
@@ -31,7 +31,7 @@ parts:
   couchdb:
     after: [add-repo]
     plugin: dump
-    source: https://apache.bintray.com/couchdb-deb/pool/C/CouchDB/couchdb_3.1.1~focal_amd64.deb
+    source: https://apache.bintray.com/couchdb-deb/pool/C/CouchDB/couchdb_3.2.2~jammy_amd64.deb
     source-type: deb
     # because this doesn't use apt, we have to manually list all of our
     # dependencies :(
