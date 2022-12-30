@@ -138,6 +138,7 @@ centos8: sm-ver-rpm make-rpmbuild centos
 # Rocky 8 is a CentOS 8 alias
 rocky-8: centos-8
 rocky-8.6: centos-8
+rocky-8.7: centos-8
 
 # aarch64 RHEL-based
 aarch64-rhel: DIST=rhel
