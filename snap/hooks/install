@@ -49,3 +49,6 @@ if ! $(grep -q "^database_dir" ${LOCAL_INI}); then
     sed --in-place "/^\[couchdb\].*$/a ${database_line}" ${LOCAL_INI} 
 fi
 
+
+snap set ${SNAP_INSTANCE_NAME} setcookie=`echo $RANDOM | md5sum | head -c 20; echo;`
+
