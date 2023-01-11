@@ -22,8 +22,8 @@ _modify_vm_args() {
   opt=$1
   value="$2"
   replace_line="-$opt $value"
-  if $(grep -q "^-$opt " $VM_ARGS); then
-    sed --in-place "s/^-$opt .*/$replace_line/" $VM_ARGS 
+  if $(grep -q "^[#|[:space:]]*-$opt " $VM_ARGS); then
+    sed --in-place "s/^[#|[:space:]]*-$opt .*/$replace_line/" $VM_ARGS 
   else
     echo $replace_line >> $VM_ARGS
   fi
