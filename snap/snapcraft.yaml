@@ -1,6 +1,6 @@
 ---
 name: couchdb-sklassen
-version: 3.2.2
+version: 3.3.1
 type: app
 base: core22
 summary: Official Apache CouchDB snap - a clustering document oriented database
@@ -20,7 +20,7 @@ confinement: strict
 parts:
   couchdb:
     plugin: make
-    source: https://dlcdn.apache.org/couchdb/source/3.2.2/apache-couchdb-3.2.2.tar.gz
+    source: https://dlcdn.apache.org/couchdb/source/3.3.1/apache-couchdb-3.3.1.tar.gz
     source-type: tar
     override-build: |
             ./configure --prefix=$SNAPCRAFT_PART_INSTALL --disable-docs --spidermonkey-version 91
