@@ -153,7 +153,8 @@ if %{__grep} -q "^-setcookie monster$" /opt/%{name}/etc/vm.args; then
     echo "Generating random cookie value."
     cookie=$(dd if=/dev/random bs=1 count=38 status=none | base64 | tr -cd [:alnum:])
   fi
-  %{__sed} -i "s/^-setcookie monster.*$/-setcookie ${cookie}/" /opt/%{name}/etc/vm.args
+  escaped_cookie=$(printf '%s' "$cookie" | sed 's:\\:\\\\:g')
+  %{__sed} -i "/^-setcookie monster/c\-setcookie '${escaped_cookie}'" /opt/%{name}/etc/vm.args
 elif %{__grep} -q "^[# ]*-setcookie$" /opt/%{name}/etc/vm.args; then
   # -v is a bash 4.2+ feature
   if [[ -v COUCHDB_COOKIE ]]; then
@@ -163,7 +164,8 @@ elif %{__grep} -q "^[# ]*-setcookie$" /opt/%{name}/etc/vm.args; then
     echo "Generating random cookie value."
     cookie=$(dd if=/dev/random bs=1 count=38 status=none | base64 | tr -cd [:alnum:])
   fi
-  %{__sed} -i "s/^[# ]*-setcookie.*$/-setcookie ${cookie}/" /opt/%{name}/etc/vm.args
+  escaped_cookie=$(printf '%s' "$cookie" | sed 's:\\:\\\\:g')
+  %{__sed} -i "/^[# ]*-setcookie/c\-setcookie '${escaped_cookie}'" /opt/%{name}/etc/vm.args
 fi
 %{__chown} -R couchdb:couchdb /opt/%{name}
 %{__chmod} a+x /opt/%{name}/bin/*
