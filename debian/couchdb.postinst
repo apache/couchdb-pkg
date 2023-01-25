@@ -159,13 +159,14 @@ case $1 in
 
     # Set the cookie
     db_get couchdb/cookie && cookie="$RET"
+    escaped_cookie=$(printf '%s' "$cookie" | sed 's:\\:\\\\:g')
 
     # change existing setcookie line if present
-    sed -i "s/^[# ]*-setcookie.*$/-setcookie ${cookie}/" /opt/couchdb/etc/vm.args
+    sed -i "/^[# ]*-setcookie/c\-setcookie '${escaped_cookie}'" /opt/couchdb/etc/vm.args
 
     # add setcookie line if not present
     if ! grep -q '^-setcookie' /opt/couchdb/etc/vm.args; then
-        echo "-setcookie ${cookie}" >> /opt/couchdb/etc/vm.args
+        printf -- '-setcookie %s\n' "'${cookie}'" >> /opt/couchdb/etc/vm.args
     fi
 
     # set inet_dist_use_interface default if not present
@@ -192,7 +193,7 @@ case $1 in
       clustered)
         db_get couchdb/nodename && nodename="$RET"
 
-        sed -i "s/^-name .*$/-name ${nodename}/" /opt/couchdb/etc/vm.args
+        sed -i "/^-name/c\-name ${nodename}" /opt/couchdb/etc/vm.args
 
         setbindaddress
 
