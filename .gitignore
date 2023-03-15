@@ -15,7 +15,7 @@ rpm/SPECS/couchdb.spec
 repo/db
 repo/dists
 repo/pool
-couchdb_*.snap
+couchdb*.snap
 parts/
 prime/
 snap/.snapcraft/

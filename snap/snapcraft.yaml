@@ -9,10 +9,6 @@ description: |
   JSON documents. Access your documents and query your indexes with your web
   browser, via HTTP. Index, combine, and transform your documents with
   JavaScript.
-
-architectures:
-  - build-on: amd64
-    run-on: amd64
 assumes: [command-chain, common-data-dir]
 grade: stable
 confinement: strict
@@ -26,6 +22,8 @@ parts:
             ./configure --prefix=$SNAPCRAFT_PART_INSTALL --disable-docs --spidermonkey-version 91
             make release
             cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
+    build-snaps:
+      - erlang
     build-packages:
       - gcc
       - g++
@@ -33,14 +31,6 @@ parts:
       - libcurl4-openssl-dev
       - libicu-dev
       - icu-devtools
-      # For erlang/rebar processing
-      - erlang-dev
-      - erlang-base
-      - erlang-reltool
-      - erlang-nox
-      - erlang-eunit
-      - erlang-os-mon
-      - erlang-syntax-tools
       # mozjs
       - libmozjs-91-dev
       # For fauxton
@@ -75,12 +65,10 @@ environment:
 
 apps:
   couchdb:
-    adapter: full
     command: bin/couchdb
     plugs: [network, network-bind, mount-observe]
   server:
     daemon: simple
-    adapter: full
     command: bin/couchdb
     plugs: [network, network-bind, mount-observe]
   remsh:
