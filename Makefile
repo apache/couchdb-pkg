@@ -91,6 +91,14 @@ ppc64le-debian-bullseye: SPIDERMONKEY_DEV=libmozjs-78-dev
 ppc64le-debian-bullseye: SM_VER=78
 ppc64le-debian-bullseye: bullseye
 
+s390x-debian-bullseye: PLATFORM=bullseye
+s390x-debian-bullseye: DIST=debian-bullseye
+s390x-debian-bullseye: SPIDERMONKEY=libmozjs-78-0
+s390x-debian-bullseye: SPIDERMONKEY_DEV=libmozjs-78-dev
+s390x-debian-bullseye: SM_VER=78
+s390x-debian-bullseye: bullseye
+
+
 bullseye: debian
 
 
@@ -108,6 +116,27 @@ ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
 ubuntu-focal: SM_VER=68
 ubuntu-focal: focal
 focal: debian
+
+arm64-ubuntu-focal: PLATFORM=focal
+arm64-ubuntu-focal: DIST=ubuntu-focal
+arm64-ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
+arm64-ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
+arm64-ubuntu-focal: SM_VER=68
+arm64-ubuntu-focal: focal
+
+ppc64le-ubuntu-focal: PLATFORM=focal
+ppc64le-ubuntu-focal: DIST=ubuntu-focal
+ppc64le-ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
+ppc64le-ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
+ppc64le-ubuntu-focal: SM_VER=68
+ppc64le-ubuntu-focal: focal
+
+s390x-ubuntu-focal: PLATFORM=focal
+s390x-ubuntu-focal: DIST=ubuntu-focal
+s390x-ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
+s390x-ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
+s390x-ubuntu-focal: SM_VER=68
+s390x-ubuntu-focal: focal
 
 # Ubuntu 22.04 (Jammy)
 ubuntu-jammy: PLATFORM=jammy
@@ -190,8 +219,10 @@ update-changelog:
 dpkg:
 	cd $(DISTDIR) && dpkg-buildpackage -b -us -uc
 
+# lintian happens to be stuck on arm64 builds on some ubuntu/debian versions
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=964770
 lintian:
-	cd $(DISTDIR)/.. && lintian --profile couchdb couch*.deb || true
+	if [ "$(shell arch)" = "x86_64" ]; then cd $(DISTDIR)/.. && lintian --profile couchdb couch*.deb || true ; fi
 
 # ######################################
 link-couch-dist:

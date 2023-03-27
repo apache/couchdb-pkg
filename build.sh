@@ -31,10 +31,10 @@ SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DEBIANS="debian-buster debian-bullseye"
 UBUNTUS="ubuntu-bionic ubuntu-focal ubuntu-jammy"
 CENTOSES="centos-7 centos-8"
-XPLAT_BASE="debian-bullseye"
-XPLAT_ARCHES="arm64 ppc64le"
+XPLAT_BASES="debian-bullseye ubuntu-focal"
+XPLAT_ARCHES="arm64 ppc64le s390x"
 BINARY_API="https://apache.jfrog.io/artifactory"
-ERLANGVERSION=${ERLANGVERSION:-24.3.4.7}
+ERLANGVERSION=${ERLANGVERSION:-24.3.4.10}
 
 split-os-ver() {
   OLDIFS=$IFS
@@ -107,8 +107,10 @@ build-all-couch() {
   for plat in $DEBIANS $UBUNTUS $CENTOSES; do
     build-couch $plat $*
   done
-  for arch in $XPLAT_ARCHES; do
-    CONTAINERARCH="${arch}" build-couch $XPLAT_BASE
+  for base in $XPLAT_BASES; do
+    for arch in $XPLAT_ARCHES; do
+      CONTAINERARCH="${arch}" build-couch ${base}
+    done
   done
 }
 
@@ -150,15 +152,28 @@ upload-couch() {
   done
   for PKG in $(ls pkgs/couch/$1/*.rpm 2>/dev/null); do
     # Example filename: couchdb-2.3.0-1.el7.x86_64.rpm.asc
+    #                   couchdb-3.3.1.1.1-1.el7.x86_64.rpm
     fname=${PKG##*/}
     REPO="couchdb-rpm"
-    # better not put any extra . in the filename...
-    DIST=$(echo $fname | cut -d. -f 4)
-    PKGARCH=$(echo $fname | cut -d. -f 5)
+    DIST=$(echo $fname | cut -d- -f 3 | cut -d. -f 2)
+    PKGARCH=$(echo $fname | cut -d- -f 3 | cut -d. -f 3)
     PKGVERSION=$(echo $fname | cut -d- -f 2)
     RELPATH="${DIST}/${PKGARCH}/${fname}"
     SUFFIX=""
     binary-upload
+    if [ ${DIST} == "el7" ]; then
+        # see https://github.com/apache/couchdb-pkg/issues/103
+        DIST="el7Server"
+        RELPATH="${DIST}/${PKGARCH}/${fname}"
+        SUFFIX=""
+        binary-upload
+    elif [ ${DIST} == "el8" ]; then
+        # see https://github.com/apache/couchdb-pkg/issues/103
+        DIST="el8Server"
+        RELPATH="${DIST}/${PKGARCH}/${fname}"
+        SUFFIX=""
+        binary-upload
+    fi
   done
   echo "Recalculating Debian repo metadata..."
   local ret="$(curl \
