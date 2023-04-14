@@ -270,7 +270,7 @@ have to run it in destructive mode (within the LXD container) and not via multip
 ```bash
 > lxc launch ubuntu-daily:22.04 cdb
 > lxc shell focal
-$ snapcraft --destructive-mode
+$ snapcraft --destructive-mode --verbose
 ```
 The snapcraft tool from the store can be installed as 
 
