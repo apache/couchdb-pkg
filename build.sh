@@ -112,6 +112,7 @@ build-all-couch() {
       CONTAINERARCH="${arch}" build-couch ${base}
     done
   done
+  CONTAINERARCH="s390x" build-couch centos-8
   CONTAINERARCH="s390x" build-couch centos-9
 }
 
