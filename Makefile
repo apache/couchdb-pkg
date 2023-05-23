@@ -164,10 +164,22 @@ centos8: SPIDERMONKEY_DEV=mozjs60-devel
 centos8: SM_VER=60
 centos8: sm-ver-rpm make-rpmbuild centos
 
+centos-9: DIST=centos-9
+centos-9: centos9
+centos9: SPIDERMONKEY=mozjs78
+centos9: SPIDERMONKEY_DEV=mozjs78-devel
+centos9: SM_VER=78
+centos9: sm-ver-rpm make-rpmbuild centos
+
 # Rocky 8 is a CentOS 8 alias
 rocky-8: centos-8
 rocky-8.6: centos-8
 rocky-8.7: centos-8
+
+# Rocky 9 is a CentOS 9 alias
+rocky-9: centos-9
+# s390x RHEL clone 9 based
+s390x-centos-9: centos-9
 
 # aarch64 RHEL-based
 aarch64-rhel: DIST=rhel

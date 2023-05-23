@@ -30,7 +30,7 @@ SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # TODO derive these by interrogating the couchdb-ci repo rather than hard coding the list
 DEBIANS="debian-buster debian-bullseye"
 UBUNTUS="ubuntu-bionic ubuntu-focal ubuntu-jammy"
-CENTOSES="centos-7 centos-8"
+CENTOSES="centos-7 centos-8 centos-9"
 XPLAT_BASES="debian-bullseye ubuntu-focal"
 XPLAT_ARCHES="arm64 ppc64le s390x"
 BINARY_API="https://apache.jfrog.io/artifactory"
@@ -112,6 +112,7 @@ build-all-couch() {
       CONTAINERARCH="${arch}" build-couch ${base}
     done
   done
+  CONTAINERARCH="s390x" build-couch centos-9
 }
 
 
