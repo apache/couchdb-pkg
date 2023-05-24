@@ -94,9 +94,6 @@ languages and environments.
 %define __os_install_post %{nil}
 
 %prep
-%ifarch aarch64
-%patch01 -p1
-%endif
 
 %build
 ./configure --spidermonkey-version=%SM_VER%

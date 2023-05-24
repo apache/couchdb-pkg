@@ -147,6 +147,10 @@ ubuntu-jammy: SM_VER=78
 ubuntu-jammy: jammy
 jammy: debian
 
+s390x-ubuntu-jammy: ubuntu-jammy
+arm64-ubuntu-jammy: ubuntu-jammy
+ppc64le-ubuntu-jammy: ubuntu-jammy
+
 # RPM default
 centos: PKGDIR=../rpmbuild/RPMS/$(PKGARCH)
 centos: find-couch-dist link-couch-dist build-rpm copy-pkgs
@@ -177,8 +181,12 @@ almalinux-8: centos-8
 almalinux-9: centos-9
 # s390x RHEL 8 clone based
 s390x-centos-8: centos-8
+ppc64le-centos-8: centos-8
 # s390x RHEL 9 clone based
 s390x-centos-9: centos-9
+arm64-centos-9: PKGARCH=aarch64
+arm64-centos-9: centos-9
+ppc64le-centos-9: centos-9
 
 # aarch64 RHEL-based
 aarch64-rhel: DIST=rhel
