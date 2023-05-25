@@ -175,6 +175,12 @@ upload-couch() {
         RELPATH="${DIST}/${PKGARCH}/${fname}"
         SUFFIX=""
         binary-upload
+    elif [ ${DIST} == "el9" ]; then
+        # see https://github.com/apache/couchdb-pkg/issues/103
+        DIST="el9Server"
+        RELPATH="${DIST}/${PKGARCH}/${fname}"
+        SUFFIX=""
+        binary-upload
     fi
   done
   echo "Recalculating Debian repo metadata..."
