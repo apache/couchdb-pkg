@@ -40,7 +40,7 @@ fi
 
 cd ${SCRIPTPATH}/..
 
-redhats='(rhel|centos|fedora|rocky)'
+redhats='(rhel|centos|fedora|rocky|almalinux)'
 debians='(debian|ubuntu)'
 if [[ ${ID} =~ ${redhats} ]]; then
   # it will always place the build path at /root/rpmbuild :(

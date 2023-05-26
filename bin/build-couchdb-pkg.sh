@@ -28,7 +28,7 @@ SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 . ${SCRIPTPATH}/detect-os.sh
 
-redhats='(rhel|centos|fedora|rocky)'
+redhats='(rhel|centos|fedora|rocky|almalinux)'
 debians='(debian|ubuntu)'
 
 cd /home/jenkins
