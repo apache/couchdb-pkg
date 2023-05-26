@@ -177,8 +177,10 @@ centos9: sm-ver-rpm make-rpmbuild centos
 
 # Almalinux 8 is a CentOS 8 alias
 almalinux-8: centos-8
+almalinux-8.8: centos-8
 # Almalinux 9 is a CentOS 9 alias
 almalinux-9: centos-9
+almalinux-9.2: centos-9
 # s390x RHEL 8 clone based
 s390x-centos-8: centos-8
 ppc64le-centos-8: centos-8
