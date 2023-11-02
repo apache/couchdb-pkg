@@ -102,6 +102,41 @@ s390x-debian-bullseye: bullseye
 bullseye: debian
 
 
+# Debian 12 - bookworm
+debian-bookworm: PLATFORM=bookworm
+debian-bookworm: DIST=debian-bookworm
+debian-bookworm: SPIDERMONKEY=libmozjs-78-0
+debian-bookworm: SPIDERMONKEY_DEV=libmozjs-78-dev
+debian-bookworm: SM_VER=78
+debian-bookworm: bookworm
+
+arm64-debian-bookworm: aarch64-debian-bookworm
+arm64v8-debian-bookworm: aarch64-debian-bookworm
+aarch64-debian-bookworm: PLATFORM=bookworm
+aarch64-debian-bookworm: DIST=debian-bookworm
+aarch64-debian-bookworm: SPIDERMONKEY=libmozjs-78-0
+aarch64-debian-bookworm: SPIDERMONKEY_DEV=libmozjs-78-dev
+aarch64-debian-bookworm: SM_VER=78
+aarch64-debian-bookworm: bookworm
+
+ppc64le-debian-bookworm: PLATFORM=bookworm
+ppc64le-debian-bookworm: DIST=debian-bookworm
+ppc64le-debian-bookworm: SPIDERMONKEY=libmozjs-78-0
+ppc64le-debian-bookworm: SPIDERMONKEY_DEV=libmozjs-78-dev
+ppc64le-debian-bookworm: SM_VER=78
+ppc64le-debian-bookworm: bookworm
+
+s390x-debian-bookworm: PLATFORM=bookworm
+s390x-debian-bookworm: DIST=debian-bookworm
+s390x-debian-bookworm: SPIDERMONKEY=libmozjs-78-0
+s390x-debian-bookworm: SPIDERMONKEY_DEV=libmozjs-78-dev
+s390x-debian-bookworm: SM_VER=78
+s390x-debian-bookworm: bookworm
+
+
+bookworm: debian
+
+
 # Ubuntu 18.04 (Bionic)
 ubuntu-bionic: PLATFORM=bionic
 ubuntu-bionic: DIST=ubuntu-bionic
