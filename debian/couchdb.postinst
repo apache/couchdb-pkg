@@ -157,6 +157,23 @@ case $1 in
       false
     fi
 
+    # Set the cookie
+    db_get couchdb/cookie && cookie="$RET"
+    escaped_cookie=$(printf '%s' "$cookie" | sed 's:\\:\\\\:g')
+
+    # change existing setcookie line if present
+    sed -i "/^[# ]*-setcookie/c\-setcookie '${escaped_cookie}'" /opt/couchdb/etc/vm.args
+
+    # add setcookie line if not present
+    if ! grep -q '^-setcookie' /opt/couchdb/etc/vm.args; then
+        printf -- '-setcookie %s\n' "'${cookie}'" >> /opt/couchdb/etc/vm.args
+    fi
+
+    # set inet_dist_use_interface default if not present
+    if ! grep -q '^-kernel inet_dist_use_interface' /opt/couchdb/etc/vm.args; then
+        echo "-kernel inet_dist_use_interface '{127,0,0,1}'" >> /opt/couchdb/etc/vm.args
+    fi
+
     case $mode in
       none)
       ;;
@@ -166,19 +183,29 @@ case $1 in
         if ! setadminpass; then
           password_error="yes"
         fi
+
+        # Bind distribution port to loopback interface only
+        sed -i "s/^-kernel inet_dist_use_interface '*{0,0,0,0}'*$/-kernel inet_dist_use_interface '{127,0,0,1}'/" /opt/couchdb/etc/vm.args
+
+        # Bind EPMD to loopback interface
+        sed -i "s/^ERL_EPMD_ADDRESS=$/ERL_EPMD_ADDRESS=127.0.0.1/" /etc/default/couchdb
       ;;
       clustered)
         db_get couchdb/nodename && nodename="$RET"
-        db_get couchdb/cookie && cookie="$RET"
 
-        sed -i "s/^-name .*$/-name ${nodename}/" /opt/couchdb/etc/vm.args
-        sed -i "s/^-setcookie .*$/-setcookie ${cookie}/" /opt/couchdb/etc/vm.args
+        sed -i "/^-name/c\-name ${nodename}" /opt/couchdb/etc/vm.args
 
         setbindaddress
 
         if ! setadminpass; then
           password_error="yes"
         fi
+
+        # Unbind distribution port from lookback interface only
+        sed -i "s/^-kernel inet_dist_use_interface '*{127,0,0,1}'*$/-kernel inet_dist_use_interface '{0,0,0,0}'/" /opt/couchdb/etc/vm.args
+
+        # Unbind EPMD from loopback interface
+        sed -i "s/^ERL_EPMD_ADDRESS=127.0.0.1$/ERL_EPMD_ADDRESS=/" /etc/default/couchdb
       ;;
       *)
         echo "incomprehensible couchdb mode '$mode'!" 1>&2
@@ -204,7 +231,7 @@ case $1 in
     done
       
     # These should also not be world readable or writable:
-    find /opt/couchdb/etc -name *.ini -exec chmod 0640 {} \;
+    find /opt/couchdb/etc -name '*.ini' -o -name vm.args -exec chmod 0640 {} \;
     chmod 0750 /var/log/couchdb
     chmod 0750 /var/lib/couchdb
 

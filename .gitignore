@@ -1,3 +1,4 @@
+archive/
 debian/control
 debian/*.log
 debian/*.debhelper
@@ -6,6 +7,7 @@ debian/files
 debian/couchdb
 debian/tmp
 debian/control.bak
+debian/sm_ver.mk
 js/build
 rpm/BUILD
 rpm/BUILDROOT
@@ -21,3 +23,6 @@ prime/
 snap/.snapcraft/
 stage/
 *.tar.gz
+*.bak
+*~
+.idea/

@@ -1,5 +1,5 @@
 ---
-name: couchdb-sklassen
+name: couchdb
 version: 3.3.2
 type: app
 base: core22

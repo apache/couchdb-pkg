@@ -36,24 +36,12 @@ SPIDERMONKEY_DEV=couch-libmozjs185-dev
 SM_VER=1.8.5
 
 
+# Try and guess the correct target...
+all:
+	make `bin/detect-target.sh`
+
 # Debian default
 debian: sm-ver-debian find-couch-dist copy-debian update-changelog dpkg lintian copy-pkgs
-
-# Debian 9 - stretch
-debian-stretch: PLATFORM=stretch
-debian-stretch: DIST=debian-stretch
-debian-stretch: stretch
-
-arm64v8-debian-stretch: aarch64-debian-stretch
-aarch64-debian-stretch: PLATFORM=stretch
-aarch64-debian-stretch: DIST=debian-stretch
-aarch64-debian-stretch: stretch
-
-ppc64le-debian-stretch: PLATFORM=stretch
-ppc64le-debian-stretch: DIST=debian-stretch
-ppc64le-debian-stretch: stretch
-
-stretch: debian
 
 # Debian 10 - buster
 debian-buster: PLATFORM=buster
@@ -79,12 +67,40 @@ ppc64le-debian-buster: buster
 
 buster: debian
 
+# Debian 11 - bullseye
+debian-bullseye: PLATFORM=bullseye
+debian-bullseye: DIST=debian-bullseye
+debian-bullseye: SPIDERMONKEY=libmozjs-78-0
+debian-bullseye: SPIDERMONKEY_DEV=libmozjs-78-dev
+debian-bullseye: SM_VER=78
+debian-bullseye: bullseye
 
-# Ubuntu 16.04 (Xenial)
-ubuntu-xenial: PLATFORM=xenial
-ubuntu-xenial: DIST=ubuntu-xenial
-ubuntu-xenial: xenial
-xenial: debian
+arm64-debian-bullseye: aarch64-debian-bullseye
+arm64v8-debian-bullseye: aarch64-debian-bullseye
+aarch64-debian-bullseye: PLATFORM=bullseye
+aarch64-debian-bullseye: DIST=debian-bullseye
+aarch64-debian-bullseye: SPIDERMONKEY=libmozjs-78-0
+aarch64-debian-bullseye: SPIDERMONKEY_DEV=libmozjs-78-dev
+aarch64-debian-bullseye: SM_VER=78
+aarch64-debian-bullseye: bullseye
+
+ppc64le-debian-bullseye: PLATFORM=bullseye
+ppc64le-debian-bullseye: DIST=debian-bullseye
+ppc64le-debian-bullseye: SPIDERMONKEY=libmozjs-78-0
+ppc64le-debian-bullseye: SPIDERMONKEY_DEV=libmozjs-78-dev
+ppc64le-debian-bullseye: SM_VER=78
+ppc64le-debian-bullseye: bullseye
+
+s390x-debian-bullseye: PLATFORM=bullseye
+s390x-debian-bullseye: DIST=debian-bullseye
+s390x-debian-bullseye: SPIDERMONKEY=libmozjs-78-0
+s390x-debian-bullseye: SPIDERMONKEY_DEV=libmozjs-78-dev
+s390x-debian-bullseye: SM_VER=78
+s390x-debian-bullseye: bullseye
+
+
+bullseye: debian
+
 
 # Ubuntu 18.04 (Bionic)
 ubuntu-bionic: PLATFORM=bionic
@@ -92,16 +108,52 @@ ubuntu-bionic: DIST=ubuntu-bionic
 ubuntu-bionic: bionic
 bionic: debian
 
+# Ubuntu 20.04 (Focal)
+ubuntu-focal: PLATFORM=focal
+ubuntu-focal: DIST=ubuntu-focal
+ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
+ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
+ubuntu-focal: SM_VER=68
+ubuntu-focal: focal
+focal: debian
+
+arm64-ubuntu-focal: PLATFORM=focal
+arm64-ubuntu-focal: DIST=ubuntu-focal
+arm64-ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
+arm64-ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
+arm64-ubuntu-focal: SM_VER=68
+arm64-ubuntu-focal: focal
+
+ppc64le-ubuntu-focal: PLATFORM=focal
+ppc64le-ubuntu-focal: DIST=ubuntu-focal
+ppc64le-ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
+ppc64le-ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
+ppc64le-ubuntu-focal: SM_VER=68
+ppc64le-ubuntu-focal: focal
+
+s390x-ubuntu-focal: PLATFORM=focal
+s390x-ubuntu-focal: DIST=ubuntu-focal
+s390x-ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
+s390x-ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
+s390x-ubuntu-focal: SM_VER=68
+s390x-ubuntu-focal: focal
+
+# Ubuntu 22.04 (Jammy)
+ubuntu-jammy: PLATFORM=jammy
+ubuntu-jammy: DIST=ubuntu-jammy
+ubuntu-jammy: SPIDERMONKEY=libmozjs-78-0
+ubuntu-jammy: SPIDERMONKEY_DEV=libmozjs-78-dev
+ubuntu-jammy: SM_VER=78
+ubuntu-jammy: jammy
+jammy: debian
+
+s390x-ubuntu-jammy: ubuntu-jammy
+arm64-ubuntu-jammy: ubuntu-jammy
+ppc64le-ubuntu-jammy: ubuntu-jammy
 
 # RPM default
 centos: PKGDIR=../rpmbuild/RPMS/$(PKGARCH)
 centos: find-couch-dist link-couch-dist build-rpm copy-pkgs
-
-centos-6: DIST=centos-6
-centos-6: centos6
-centos6: SPIDERMONKEY=couch-js = 1:1.8.5
-centos6: SPIDERMONKEY_DEV=couch-js-devel = 1:1.8.5
-centos6: sm-ver-rpm make-rpmbuild centos
 
 centos-7: DIST=centos-7
 centos-7: centos7
@@ -115,6 +167,36 @@ centos8: SPIDERMONKEY=mozjs60
 centos8: SPIDERMONKEY_DEV=mozjs60-devel
 centos8: SM_VER=60
 centos8: sm-ver-rpm make-rpmbuild centos
+
+centos-9: DIST=centos-9
+centos-9: centos9
+centos9: SPIDERMONKEY=mozjs78
+centos9: SPIDERMONKEY_DEV=mozjs78-devel
+centos9: SM_VER=78
+centos9: sm-ver-rpm make-rpmbuild centos
+
+# Almalinux 8 is a CentOS 8 alias
+almalinux-8: centos-8
+almalinux-8.8: centos-8
+# Almalinux 9 is a CentOS 9 alias
+almalinux-9: centos-9
+almalinux-9.2: centos-9
+# s390x RHEL 8 clone based
+s390x-centos-8: centos-8
+ppc64le-centos-8: centos-8
+# s390x RHEL 9 clone based
+s390x-centos-9: centos-9
+arm64-centos-9: PKGARCH=aarch64
+arm64-centos-9: centos-9
+ppc64le-centos-9: centos-9
+
+# aarch64 RHEL-based
+aarch64-rhel: DIST=rhel
+# Needs 68 for aarch compat, we're using the included one here
+aarch64-rhel: SPIDERMONKEY=couch-js-68
+aarch64-rhel: SPIDERMONKEY_DEV=couch-js-68-devel
+aarch64-rhel: SM_VER=68
+aarch64-rhel: sm-ver-rpm make-rpmbuild centos
 
 openSUSE: centos7
 
@@ -158,8 +240,10 @@ update-changelog:
 dpkg:
 	cd $(DISTDIR) && dpkg-buildpackage -b -us -uc
 
+# lintian happens to be stuck on arm64 builds on some ubuntu/debian versions
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=964770
 lintian:
-	cd $(DISTDIR)/.. && lintian --profile couchdb couch*.deb || true
+	if [ "$(shell arch)" = "x86_64" ]; then cd $(DISTDIR)/.. && lintian --profile couchdb couch*.deb || true ; fi
 
 # ######################################
 link-couch-dist:
@@ -203,7 +287,7 @@ couch-js-debs: couch-js-clean
 	cp -r js/debian js/build
 	if [ "$(shell arch)" = "armv7l" ]; then rm js/build/debian/*symbols; fi
 	cd js/build && dch -v $(JS_VERSION)~$(PLATFORM) $(JS_DEBCHANGELOG)
-	cd js/build && dpkg-buildpackage -b -us -uc	
+	cd js/build && dpkg-buildpackage -b -us -uc
 
 couch-js-rpms: couch-js-clean
 	mkdir -p ../rpmbuild
@@ -211,3 +295,8 @@ couch-js-rpms: couch-js-clean
 	cp js/src/js185-1.0.0.tar.gz ../rpmbuild/SOURCES
 	cd ../rpmbuild && rpmbuild --verbose -bb SPECS/js.spec
 
+couch-js-68-rpms: couch-js-clean
+	mkdir -p ../rpmbuild
+	cp -R js68/* ../rpmbuild
+	cd ../rpmbuild/SOURCES && curl -O https://ftp.mozilla.org/pub/firefox/releases/68.12.0esr/source/firefox-68.12.0esr.source.tar.xz
+	cd ../rpmbuild && rpmbuild --verbose -bb SPECS/js68.spec

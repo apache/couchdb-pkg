@@ -22,7 +22,7 @@ override_dh_auto_clean:
 	-mv src/mango/src/mango_cursor_text.nocompile src/mango/src/mango_cursor_text.erl
 
 override_dh_auto_configure:
-	./configure -c --spidermonkey-version $(SM_VER)
+	./configure --spidermonkey-version $(SM_VER)
 
 override_dh_auto_build:
 	dh_auto_build -- release

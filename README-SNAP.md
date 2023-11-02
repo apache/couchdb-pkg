@@ -67,8 +67,14 @@ Erlang settings are stored in the `/var/snap/couchdb/current/etc/vm.args` file. 
 configuration tool can be used to quickly change the node name and security cookie:
 
 ```bash
-$ sudo snap set couchdb name=couchdb@1.2.3.4 setcookie=cutter
+$ sudo snap set couchdb name=couchdb@1.2.3.4 setcookie=$COOKIE
 ```
+
+Where COOKIE is an enviroment variable. You can auto generated a cookie with the command 
+below. 
+
+```bash
+$ export COOKIE=`echo $RANDOM | md5sum | head -c 20; echo;`
 
 Be sure to read `vm.args` to understand what these settings do before changing them.
 
@@ -132,7 +138,7 @@ and set a admin password.
 ```bash
 $> snap install couchdb_1
 $> snap connect couchdb_1:mount-observe
-$> snap set couchdb_1 name=couchdb1@127.0.0.1 setcookie=cutter port=5981 admin=Be1stDB
+$> snap set couchdb_1 name=couchdb1@127.0.0.1 setcookie=$COOKIE port=5981 admin=$PASSWD
 ```
 You will need to edit the local configuration file to manually set the data directories. 
 You can find the local.ini at ```/var/snap/couchdb_1/current/etc/local.ini``` ensure
@@ -157,68 +163,77 @@ the name, port number for each. They should all have the same admin password and
 ```bash
 $> snap install couchdb_2
 $> snap connect couchdb_2:mount-observe
-$> snap set couchdb_2 name=couchdb2@127.0.0.1 setcookie=cutter port=5982 admin=Be1stDB
+$> snap set couchdb_2 name=couchdb2@127.0.0.1 setcookie=$COOKIE port=5982 admin=$PASSWD
 $> snap install couchdb_3
 $> snap connect couchdb_3:mount-observe
-$> snap set couchdb_3 name=couchdb3@127.0.0.1 setcookie=cutter port=5983 admin=Be1stDB
+$> snap set couchdb_3 name=couchdb3@127.0.0.1 setcookie=$COOKIE port=5983 admin=$PASSWD
 ```
 
 ## Enable CouchDB Cluster (using the http interface)
 
-Have the first node generate two uuids 
+Have the first node generate two uuids (which couchdb can generate for you).
 ```bash
 $> curl http://localhost:5981/_uuids?count=2
 ```
+
+These can also be set by batch script.
+
+```bash
+$> export UUID=`curl "http://localhost:5984/_uuids" | jq .uuids[0]`
+$> export SECRET=`curl "http://localhost:5984/_uuids" | jq .uuids[0]`
+```
+
+
 The each instances within a cluster needs to share the same uuid ... 
 
 ```bash
-curl -X PUT http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_config/couchdb/uuid -d '"f6f22e2c664b49ba2c6dc88379002548"'
-curl -X PUT http://admin:Be1stDB@127.0.0.1:5982/_node/_local/_config/couchdb/uuid -d '"f6f22e2c664b49ba2c6dc88379002548"'
-curl -X PUT http://admin:Be1stDB@127.0.0.1:5983/_node/_local/_config/couchdb/uuid -d '"f6f22e2c664b49ba2c6dc88379002548"'
+curl -X PUT http://admin:$PASSWD@127.0.0.1:5981/_node/_local/_config/couchdb/uuid -d '$UUID'
+curl -X PUT http://admin:$PASSWD@127.0.0.1:5982/_node/_local/_config/couchdb/uuid -d '$UUID'
+curl -X PUT http://admin:$PASSWD@127.0.0.1:5983/_node/_local/_config/couchdb/uuid -d '$UUID'
 ```
 ... and a (different) but common secret ...
 
 ```bash
-curl -X PUT http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_config/couch_httpd_auth/secret -d '"f6f22e2c664b49ba2c6dc88379002a80"'
-curl -X PUT http://admin:Be1stDB@127.0.0.1:5982/_node/_local/_config/couch_httpd_auth/secret -d '"f6f22e2c664b49ba2c6dc88379002a80"'
-curl -X PUT http://admin:Be1stDB@127.0.0.1:5983/_node/_local/_config/couch_httpd_auth/secret -d '"f6f22e2c664b49ba2c6dc88379002a80"'
+curl -X PUT http://admin:$PASSWD@127.0.0.1:5981/_node/_local/_config/couch_httpd_auth/secret -d '$SECRET'
+curl -X PUT http://admin:$PASSWD@127.0.0.1:5982/_node/_local/_config/couch_httpd_auth/secret -d '$SECRET'
+curl -X PUT http://admin:$PASSWD@127.0.0.1:5983/_node/_local/_config/couch_httpd_auth/secret -d '$SECRET'
 ```
 ... after which they can be enabled for clustering
 ```bash
-curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"Be1stDB", "node_count":"3"}'
-curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5982/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"Be1stDB", "node_count":"3"}'
-curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5983/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"Be1stDB", "node_count":"3"}'
+curl -X POST -H "Content-Type: application/json" http://admin:$PASSWD@127.0.0.1:5981/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"$PASSWD", "node_count":"3"}'
+curl -X POST -H "Content-Type: application/json" http://admin:$PASSWD@127.0.0.1:5982/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"$PASSWD", "node_count":"3"}'
+curl -X POST -H "Content-Type: application/json" http://admin:$PASSWD@127.0.0.1:5983/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"$PASSWD", "node_count":"3"}'
 ```
 You can check the status here.
 ```bash
-curl http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup
-curl http://admin:Be1stDB@127.0.0.1:5982/_cluster_setup
-curl http://admin:Be1stDB@127.0.0.1:5983/_cluster_setup
+curl http://admin:$PASSWD@127.0.0.1:5981/_cluster_setup
+curl http://admin:$PASSWD@127.0.0.1:5982/_cluster_setup
+curl http://admin:$PASSWD@127.0.0.1:5983/_cluster_setup
 ```
 
 ## Configure CouchDB Cluster (using the http interface)
 Next we want to join the three nodes together. We do this through requests to the first node.
 ```bash
-curl -X PUT "http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_nodes/couchdb2@127.0.0.1" -d '{"port":5982}'
-curl -X PUT "http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_nodes/couchdb3@127.0.0.1" -d '{"port":5983}'
+curl -X PUT "http://admin:$PASSWD@127.0.0.1:5981/_node/_local/_nodes/couchdb2@127.0.0.1" -d '{"port":5982}'
+curl -X PUT "http://admin:$PASSWD@127.0.0.1:5981/_node/_local/_nodes/couchdb3@127.0.0.1" -d '{"port":5983}'
 
-curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup -d '{"action": "finish_cluster"}'
+curl -X POST -H "Content-Type: application/json" http://admin:$PASSWD@127.0.0.1:5981/_cluster_setup -d '{"action": "finish_cluster"}'
 
-curl http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup
+curl http://admin:$PASSWD@127.0.0.1:5981/_cluster_setup
 ```
 If everthing as been successful, then the three notes can be seen here.
 ```bash
-$> curl -X GET "http://admin:Be1stDB@127.0.0.1:5981/_membership"
+$> curl -X GET "http://admin:$PASSWD@127.0.0.1:5981/_membership"
 ```
 Now we have a functioning three node cluster. Next we will test it. 
 
 ## An Example Database
 Let's create an example database ...
 ```bash
-$ curl -X PUT http://admin:Be1stDB@localhost:5981/example
-$ curl -X PUT http://admin:Be1stDB@localhost:5981/example/aaa -d '{"test":1}' -H "Content-Type: application/json"
-$ curl -X PUT http://admin:Be1stDB@localhost:5981/example/aab -d '{"test":2}' -H "Content-Type: application/json"
-$ curl -X PUT http://admin:Be1stDB@localhost:5981/example/aac -d '{"test":3}' -H "Content-Type: application/json"
+$ curl -X PUT http://admin:$PASSWD@localhost:5981/example
+$ curl -X PUT http://admin:$PASSWD@localhost:5981/example/aaa -d '{"test":1}' -H "Content-Type: application/json"
+$ curl -X PUT http://admin:$PASSWD@localhost:5981/example/aab -d '{"test":2}' -H "Content-Type: application/json"
+$ curl -X PUT http://admin:$PASSWD@localhost:5981/example/aac -d '{"test":3}' -H "Content-Type: application/json"
 ```
 ... and verify that it is created on all three nodes ...
 ```bash
@@ -236,16 +251,16 @@ The backup machine we will configure as a single instance (`n=1, q=1`).
 ```bash
 $> snap install couchdb_bkup
 $> snap connect couchdb_3:mount-observe
-$> snap set couchdb_bkup name=couchdb0@localhost setcookie=cutter port=5980 admin=Be1stDB
-$> curl -X PUT http://admin:Be1stDB@localhost:5980/_node/_local/_config/cluster/n -d '"1"'
-$> curl -X PUT http://admin:Be1stDB@localhost:5980/_node/_local/_config/cluster/q -d '"1"'
+$> snap set couchdb_bkup name=couchdb0@localhost setcookie=$COOKIE port=5980 admin=$PASSWD
+$> curl -X PUT http://admin:$PASSWD@localhost:5980/_node/_local/_config/cluster/n -d '"1"'
+$> curl -X PUT http://admin:$PASSWD@localhost:5980/_node/_local/_config/cluster/q -d '"1"'
 ```
 We will manually replicate to this from one (can be any one) of the nodes.
 ```bash
-$ curl -X POST http://admin:Be1stDB@localhost:5980/_replicate \
+$ curl -X POST http://admin:$PASSWD@localhost:5980/_replicate \
     -d '{"source":"http://localhost:5981/example","target":"example","continuous":false,"create_target":true}' \
     -H "Content-Type: application/json"
-$ curl -X GET http://admin:Be1stDB@localhost:5980/example/_all_docs
+$ curl -X GET http://admin:$PASSWD@localhost:5980/example/_all_docs
 ```
 The backup database has a single shard and single directory:
 ```bash
@@ -260,22 +275,27 @@ In the very rare case you need to connect to the couchdb server, a remsh script 
 provided. You need to specify both the name of the server and the cookie, even if
 you are using the default. 
 ```bash
-/snap/bin/couchdb.remsh -n couchdb@localhost -c cutter
+/snap/bin/couchdb.remsh -n couchdb@localhost -c $COOKIE
 ```
+
 # Building this snap <a name="building"></a>
 
-Prior to the release of Unbuntu 20.04 (Focal), we can compile the tarball using LXD. You will 
-have to run it in destructive mode (within the LXD container) and not via multipass. 
+The snapcraft tool can be installed from the snap store as such
+
+```bash
+sudo snap install snapcraft --classic
+```
+
+If you run snapcraft on your base system it will start either a mutlipass or lxd
+container and execute the installation within there. 
+
+This can be tedious if errors occur. An alternative is to create your own lxd 
+container and run snapcraft in destructive mode (within the LXD container).
 
 ```bash
 > lxc launch ubuntu-daily:22.04 cdb
-> lxc shell focal
+> lxc shell cdb
 $ snapcraft --destructive-mode --verbose
-```
-The snapcraft tool from the store can be installed as 
-
-```bash
-snap install snapcraft
 ```
 
 Once the snap has been built, the snap can be installed locally using `--dangerous`:

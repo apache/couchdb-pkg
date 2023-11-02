@@ -11,7 +11,12 @@ Description: Official CouchDB Debian stretch repository
 Codename: buster
 Components: main
 Architectures: amd64 arm64 ppc64el
-Description: Official CouchDB Debian stretch repository
+Description: Official CouchDB Debian buster repository
+
+Codename: bullseye
+Components: main
+Architectures: amd64 arm64 ppc64el
+Description: Official CouchDB Debian bullseye repository
 
 Codename: xenial
 Components: main
@@ -22,3 +27,13 @@ Codename: bionic
 Components: main
 Architectures: amd64 arm64 ppc64el
 Description: Official CouchDB Ubuntu 18.04 bionic repository
+
+Codename: focal
+Components: main
+Architectures: amd64 arm64 ppc64el
+Description: Official CouchDB Ubuntu 20.04 focal repository
+
+Codename: jammy
+Components: main
+Architectures: amd64 arm64 ppc64el
+Description: Official CouchDB Ubuntu 22.04 jammy repository
