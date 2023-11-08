@@ -74,7 +74,7 @@ Where COOKIE is an enviroment variable. You can auto generated a cookie with the
 below. 
 
 ```bash
-$ export COOKIE=`echo $RANDOM | md5sum | head -c 20; echo;`
+$ export COOKIE=`echo $(dd if=/dev/random bs=1 count=38 status=none | base64 | tr -cd '[:alnum:]')`
 
 Be sure to read `vm.args` to understand what these settings do before changing them.
 
@@ -121,8 +121,6 @@ $ sudo snap remove couchdb --purge
 # Clustering <a name="clustering"></a>
 
 You can set up a snap-based cluster on your desktop in no time using the couchdb snap.
-
-## Create three nodes
 
 In the example below, we are going to set up a three node CouchDB cluster. (Three is the
 minimum number needed to support clustering features.) We'll also set up a separate,
