@@ -301,6 +301,6 @@ $ snapcraft --destructive-mode --verbose
 Once the snap has been built, the snap can be installed locally using `--dangerous`:
 
 ```bash
-sudo snap install ./couchdb_3.2.2_amd64.snap --dangerous
+sudo snap install ./couchdb_3.3.2_amd64.snap --dangerous
 ```
 
