@@ -21,7 +21,6 @@ Build-Depends: debhelper (>= 9),
                lsb-release,
                po-debconf,
                python3
-
 Homepage: http://couchdb.apache.org/
 
 Package: couchdb
