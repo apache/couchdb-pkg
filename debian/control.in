@@ -20,8 +20,8 @@ Build-Depends: debhelper (>= 9),
                %SPIDERMONKEY_DEV%,
                lsb-release,
                po-debconf,
-               python3,
-               python3-sphinx
+               python3
+
 Homepage: http://couchdb.apache.org/
 
 Package: couchdb
