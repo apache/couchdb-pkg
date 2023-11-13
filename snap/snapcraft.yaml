@@ -13,15 +13,16 @@ assumes: [command-chain, common-data-dir]
 grade: stable
 confinement: strict
 
+architectures:
+  - build-on: arm64
+  - build-on: amd64
+
 parts:
   couchdb:
     plugin: make
     source: https://dlcdn.apache.org/couchdb/source/3.3.2/apache-couchdb-3.3.2.tar.gz
     source-type: tar
-    override-build: |
-            ./configure --disable-docs --spidermonkey-version 91
-            make release
-            cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
+    override-build: ./configure --disable-docs --spidermonkey-version 91 && make release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
     build-packages:
       - gcc
       - g++

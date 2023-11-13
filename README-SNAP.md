@@ -293,7 +293,7 @@ container and run snapcraft in destructive mode (within the LXD container).
 ```bash
 > lxc launch ubuntu-daily:22.04 cdb
 > lxc shell cdb
-$ snapcraft --destructive-mode --verbose
+$ snapcraft --destructive-mode --verbosity=debug
 ```
 
 Once the snap has been built, the snap can be installed locally using `--dangerous`:
