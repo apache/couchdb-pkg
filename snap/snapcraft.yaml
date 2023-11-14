@@ -14,7 +14,10 @@ grade: stable
 confinement: strict
 
 architectures:
+  - build-on: s390x
+  - build-on: ppc64el
   - build-on: arm64
+  - build-on: armhf
   - build-on: amd64
 
 parts:
