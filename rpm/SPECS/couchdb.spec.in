@@ -96,7 +96,11 @@ languages and environments.
 %prep
 
 %build
-./configure --spidermonkey-version=%SM_VER%
+if [ -d ./nouveau ]; then
+    ./configure --spidermonkey-version=%SM_VER% --enable-nouveau
+else
+    ./configure --spidermonkey-version=%SM_VER%
+fi
 %{__make} release
 
 %clean
