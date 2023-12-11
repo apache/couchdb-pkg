@@ -253,9 +253,8 @@ build-couch:
 
 # ######################################
 sm-ver-debian:
-	cp debian/control.in debian/control
-	sed -i 's/%SPIDERMONKEY%/$(SPIDERMONKEY)/g' debian/control
-	sed -i 's/%SPIDERMONKEY_DEV%/$(SPIDERMONKEY_DEV)/g' debian/control
+	sed 's/%SPIDERMONKEY%/$(SPIDERMONKEY)/g;s/%SPIDERMONKEY_DEV%/$(SPIDERMONKEY_DEV)/g' \
+	debian/control.in > debian/control
 	echo 'SM_VER = $(SM_VER)' > debian/sm_ver.mk
 
 find-couch-dist:
@@ -285,10 +284,8 @@ link-couch-dist:
 	$(eval VERSION := $(shell echo $(VERSION) | sed 's/-/\./'))
 
 sm-ver-rpm:
-	cp rpm/SPECS/couchdb.spec.in rpm/SPECS/couchdb.spec
-	sed -i 's/%SPIDERMONKEY%/$(SPIDERMONKEY)/g' rpm/SPECS/couchdb.spec
-	sed -i 's/%SPIDERMONKEY_DEV%/$(SPIDERMONKEY_DEV)/g' rpm/SPECS/couchdb.spec
-	sed -i 's/%SM_VER%/$(SM_VER)/g' rpm/SPECS/couchdb.spec
+	sed 's/%SPIDERMONKEY%/$(SPIDERMONKEY)/g;s/%SPIDERMONKEY_DEV%/$(SPIDERMONKEY_DEV)/g;s/%SM_VER%/$(SM_VER)/g' \
+	rpm/SPECS/couchdb.spec.in > rpm/SPECS/couchdb.spec
 
 make-rpmbuild:
 	rm -rf ../rpmbuild
