@@ -244,23 +244,6 @@ case $1 in
       db_input high couchdb/have_1x_databases || true
       db_go
     fi
-
-    #DEBHELPER#
-
-    # just in case - CouchDB can be slow to startup
-    sleep 5
-
-    # if standalone, create _users and _replicator DBs
-    case $mode in
-      standalone)
-        createdb _users
-        createdb _replicator
-      ;;
-      clustered)
-      ;;
-      *)
-      ;;
-    esac
   ;;
 
   abort-upgrade|abort-remove|abort-configure)
@@ -270,4 +253,27 @@ case $1 in
     echo "postinst called with unknown argument '$1'" 1>&2
     exit 1
   ;;
+esac
+
+#DEBHELPER#
+
+case $1 in
+  configure)
+      # just in case - CouchDB can be slow to startup
+      sleep 5
+
+      # if standalone, create _users and _replicator DBs
+      case $mode in
+          standalone)
+              createdb _users
+              createdb _replicator
+              ;;
+          clustered)
+              ;;
+          *)
+              ;;
+      esac
+      ;;
+  *)
+      ;;
 esac
