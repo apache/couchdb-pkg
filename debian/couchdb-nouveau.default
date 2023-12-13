@@ -10,4 +10,8 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-ERL_EPMD_ADDRESS=127.0.0.1
+# Java options
+JAVA_OPTS="-server"
+
+# Nouveau will open lots of file handles
+ulimit -n unlimited

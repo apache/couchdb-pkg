@@ -37,6 +37,7 @@ Depends: adduser,
          ${misc:Depends}
 Replaces: couchdb-bin,
           couchdb-common
+Suggests: couchdb-nouveau
 Breaks: couchdb-bin,
         couchdb-common
 Description: RESTful document oriented database
@@ -56,3 +57,17 @@ Description: RESTful document oriented database
  standalone node or part of a cluster, and associated other parameters as
  necessary. It adds the systemd / init job and other items needed for a
  system-wide CouchDB instance that is started at boot.
+
+Package: couchdb-nouveau
+Architecture: any
+Depends: adduser,
+         debconf,
+         default-jre-headless | java11-runtime-headless | java11-runtime,
+         init-system-helpers,
+         lsb-base,
+         procps,
+         systemd,
+         ${misc:Depends}
+Description: Nouveau adds Lucene capabilities to CouchDB
+ Nouveau transforms Apache CouchDB databases into Apache Lucene indexes at
+ the shard level and then merges the results together.
