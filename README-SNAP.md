@@ -18,33 +18,44 @@ The snap can be installed from a file or directly from the snap store:
 $ sudo snap install couchdb
 ```  
 
-If this is your first time installing couchdb then you will need to set an admin password
-and manually start CouchDB.
+If you are installing on ChromeOS you will need to install snapd, and its prerequisites, first.
 
 ```bash
-$ sudo snap set couchdb admin=[your-password-goes-here]
+sudo apt install libsquashfuse0 squashfuse fuse
+sudo apt install snapd
+```
+
+If this is your first time installing couchdb then you will need to set an admin password,
+a (random) cookie, and manually start CouchDB.
+
+```bash
+$ sudo snap set couchdb admin=[your-password-goes-here] setcookie=[your-cookie-goes-here]
 $ sudo snap start couchdb 
 ```
 
 ## Enable snap permissions
 
-The snap installation uses AppArmor to protect your system. CouchDB requests access to two
-interfaces: mount-observe, which is used by the disk compactor to know when to initiate a
-cleanup; and process-control, which is used by the indexer to set the priority of couchjs
-to 'nice'. These two interfaces are required for CouchDB to run correctly.
+The snap installation uses AppArmor to protect your system. CouchDB requests access to 
+mount-observe, which is used by the disk compactor to know when to initiate a
+cleanup.
 
-To connect the interfaces type:
+To connect the interface type:
 
 ```bash
 $ sudo snap connect couchdb:mount-observe
-$ sudo snap connect couchdb:process-control
 ```
 
 # Configuration <a name="configuration"></a>
 
 Be sure to read the [CouchDB documentation](http://docs.couchdb.org/en/stable/) first.
 
-CouchDB defaults are stored **read-only** in `/snap/couchdb/current/opt/couchdb/etc/`.
+Snaps enforce -- what was previous merely suggested -- the Unix philosophy that local 
+binaries or libraries sit in `/usr/local/...` and anything variable is stored separately
+in `/var/local/...`. With this in mind, if are you going to use snaps for your database, 
+the files will be stored in `/var/snap/couchdb/common` and your `/var` partition will need
+to be large enough for your database size. 
+
+CouchDB defaults are stored **read-only** in `/snap/couchdb/current/etc/`.
 This includes `default.ini` and any `default.d/*` files added in the snap build process.
 These are all read-only and should never be changed.
 
@@ -56,8 +67,14 @@ Erlang settings are stored in the `/var/snap/couchdb/current/etc/vm.args` file. 
 configuration tool can be used to quickly change the node name and security cookie:
 
 ```bash
-$ sudo snap set couchdb name=couchdb@1.2.3.4 setcookie=cutter
+$ sudo snap set couchdb name=couchdb@1.2.3.4 setcookie=$COOKIE
 ```
+
+Where COOKIE is an enviroment variable. You can auto generated a cookie with the command 
+below. 
+
+```bash
+$ export COOKIE=`echo $(dd if=/dev/random bs=1 count=38 status=none | base64 | tr -cd '[:alnum:]')`
 
 Be sure to read `vm.args` to understand what these settings do before changing them.
 
@@ -105,8 +122,6 @@ $ sudo snap remove couchdb --purge
 
 You can set up a snap-based cluster on your desktop in no time using the couchdb snap.
 
-## Create three nodes
-
 In the example below, we are going to set up a three node CouchDB cluster. (Three is the
 minimum number needed to support clustering features.) We'll also set up a separate,
 single machine for making backups. In this example we will be using parallel instance of 
@@ -121,8 +136,7 @@ and set a admin password.
 ```bash
 $> snap install couchdb_1
 $> snap connect couchdb_1:mount-observe
-$> snap connect couchdb_1:process-control
-$> snap set couchdb_1 name=couchdb1@127.0.0.1 setcookie=cutter port=5981 admin=Be1stDB
+$> snap set couchdb_1 name=couchdb1@127.0.0.1 setcookie=$COOKIE port=5981 admin=$PASSWD
 ```
 You will need to edit the local configuration file to manually set the data directories. 
 You can find the local.ini at ```/var/snap/couchdb_1/current/etc/local.ini``` ensure
@@ -134,81 +148,90 @@ that the ```[couchdb]``` stanza should look like this
 database_dir = /var/snap/couchdb_1/common/data
 view_index_dir = /var/snap/couchdb_1/common/data
 ```
-Start your engine ... and confirm that couchdb is running.
+Start your engine(s) ... 
 ```bash
 $> snap start couchdb_1
-
+```
+... and confirm that couchdb is running
+```bash
 $> curl -X GET http://localhost:5981
 ```
-Then repeat for couchdb_1, couchdb_2 and couchdb_bkup, editing the local.ini and changing
+Then repeat for couchdb_2 and couchdb_3, editing the local.ini and changing
 the name, port number for each. They should all have the same admin password and cookie. 
 ```bash
 $> snap install couchdb_2
 $> snap connect couchdb_2:mount-observe
-$> snap connect couchdb_2:process-control
-$> snap set couchdb_2 name=couchdb2@127.0.0.1 setcookie=cutter port=5982 admin=Be1stDB
+$> snap set couchdb_2 name=couchdb2@127.0.0.1 setcookie=$COOKIE port=5982 admin=$PASSWD
 $> snap install couchdb_3
 $> snap connect couchdb_3:mount-observe
-$> snap connect couchdb_3:process-control
-$> snap set couchdb_3 name=couchdb3@127.0.0.1 setcookie=cutter port=5983 admin=Be1stDB
+$> snap set couchdb_3 name=couchdb3@127.0.0.1 setcookie=$COOKIE port=5983 admin=$PASSWD
 ```
 
 ## Enable CouchDB Cluster (using the http interface)
 
-Have the first node generate two uuids 
+Have the first node generate two uuids (which couchdb can generate for you).
 ```bash
 $> curl http://localhost:5981/_uuids?count=2
 ```
+
+These can also be set by batch script.
+
+```bash
+$> export UUID=`curl "http://localhost:5984/_uuids" | jq .uuids[0]`
+$> export SECRET=`curl "http://localhost:5984/_uuids" | jq .uuids[0]`
+```
+
+
 The each instances within a cluster needs to share the same uuid ... 
 
 ```bash
-curl -X PUT http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_config/couchdb/uuid -d '"f6f22e2c664b49ba2c6dc88379002548"'
-curl -X PUT http://admin:Be1stDB@127.0.0.1:5982/_node/_local/_config/couchdb/uuid -d '"f6f22e2c664b49ba2c6dc88379002548"'
-curl -X PUT http://admin:Be1stDB@127.0.0.1:5983/_node/_local/_config/couchdb/uuid -d '"f6f22e2c664b49ba2c6dc88379002548"'
+curl -X PUT http://admin:$PASSWD@127.0.0.1:5981/_node/_local/_config/couchdb/uuid -d '$UUID'
+curl -X PUT http://admin:$PASSWD@127.0.0.1:5982/_node/_local/_config/couchdb/uuid -d '$UUID'
+curl -X PUT http://admin:$PASSWD@127.0.0.1:5983/_node/_local/_config/couchdb/uuid -d '$UUID'
 ```
 ... and a (different) but common secret ...
 
 ```bash
-curl -X PUT http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_config/couch_httpd_auth/secret -d '"f6f22e2c664b49ba2c6dc88379002a80"'
-curl -X PUT http://admin:Be1stDB@127.0.0.1:5982/_node/_local/_config/couch_httpd_auth/secret -d '"f6f22e2c664b49ba2c6dc88379002a80"'
-curl -X PUT http://admin:Be1stDB@127.0.0.1:5983/_node/_local/_config/couch_httpd_auth/secret -d '"f6f22e2c664b49ba2c6dc88379002a80"'
+curl -X PUT http://admin:$PASSWD@127.0.0.1:5981/_node/_local/_config/couch_httpd_auth/secret -d '$SECRET'
+curl -X PUT http://admin:$PASSWD@127.0.0.1:5982/_node/_local/_config/couch_httpd_auth/secret -d '$SECRET'
+curl -X PUT http://admin:$PASSWD@127.0.0.1:5983/_node/_local/_config/couch_httpd_auth/secret -d '$SECRET'
 ```
 ... after which they can be enabled for clustering
 ```bash
-curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"Be1stDB", "node_count":"3"}'
-curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5982/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"Be1stDB", "node_count":"3"}'
-curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5983/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"Be1stDB", "node_count":"3"}'
+curl -X POST -H "Content-Type: application/json" http://admin:$PASSWD@127.0.0.1:5981/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"$PASSWD", "node_count":"3"}'
+curl -X POST -H "Content-Type: application/json" http://admin:$PASSWD@127.0.0.1:5982/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"$PASSWD", "node_count":"3"}'
+curl -X POST -H "Content-Type: application/json" http://admin:$PASSWD@127.0.0.1:5983/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"$PASSWD", "node_count":"3"}'
 ```
 You can check the status here.
 ```bash
-curl http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup
-curl http://admin:Be1stDB@127.0.0.1:5982/_cluster_setup
-curl http://admin:Be1stDB@127.0.0.1:5983/_cluster_setup
+curl http://admin:$PASSWD@127.0.0.1:5981/_cluster_setup
+curl http://admin:$PASSWD@127.0.0.1:5982/_cluster_setup
+curl http://admin:$PASSWD@127.0.0.1:5983/_cluster_setup
 ```
 
 ## Configure CouchDB Cluster (using the http interface)
 Next we want to join the three nodes together. We do this through requests to the first node.
 ```bash
-curl -X PUT "http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_nodes/couchdb2@127.0.0.1" -d '{"port":5982}'
-curl -X PUT "http://admin:Be1stDB@127.0.0.1:5981/_node/_local/_nodes/couchdb3@127.0.0.1" -d '{"port":5983}'
+curl -X PUT "http://admin:$PASSWD@127.0.0.1:5981/_node/_local/_nodes/couchdb2@127.0.0.1" -d '{"port":5982}'
+curl -X PUT "http://admin:$PASSWD@127.0.0.1:5981/_node/_local/_nodes/couchdb3@127.0.0.1" -d '{"port":5983}'
 
-curl -X POST -H "Content-Type: application/json" http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup -d '{"action": "finish_cluster"}'
+curl -X POST -H "Content-Type: application/json" http://admin:$PASSWD@127.0.0.1:5981/_cluster_setup -d '{"action": "finish_cluster"}'
 
-curl http://admin:Be1stDB@127.0.0.1:5981/_cluster_setup
+curl http://admin:$PASSWD@127.0.0.1:5981/_cluster_setup
 ```
 If everthing as been successful, then the three notes can be seen here.
 ```bash
-$> curl -X GET "http://admin:Be1stDB@127.0.0.1:5981/_membership"
+$> curl -X GET "http://admin:$PASSWD@127.0.0.1:5981/_membership"
 ```
 Now we have a functioning three node cluster. Next we will test it. 
 
 ## An Example Database
 Let's create an example database ...
 ```bash
-$ curl -X PUT http://admin:Be1stDB@localhost:5981/example
-$ curl -X PUT http://admin:Be1stDB@localhost:5981/example/aaa -d '{"test":1}' -H "Content-Type: application/json"
-$ curl -X PUT http://admin:Be1stDB@localhost:5981/example/aab -d '{"test":2}' -H "Content-Type: application/json"
-$ curl -X PUT http://admin:Be1stDB@localhost:5981/example/aac -d '{"test":3}' -H "Content-Type: application/json"
+$ curl -X PUT http://admin:$PASSWD@localhost:5981/example
+$ curl -X PUT http://admin:$PASSWD@localhost:5981/example/aaa -d '{"test":1}' -H "Content-Type: application/json"
+$ curl -X PUT http://admin:$PASSWD@localhost:5981/example/aab -d '{"test":2}' -H "Content-Type: application/json"
+$ curl -X PUT http://admin:$PASSWD@localhost:5981/example/aac -d '{"test":3}' -H "Content-Type: application/json"
 ```
 ... and verify that it is created on all three nodes ...
 ```bash
@@ -225,16 +248,17 @@ $ curl -X GET http://localhost:5983/example/_all_docs
 The backup machine we will configure as a single instance (`n=1, q=1`). 
 ```bash
 $> snap install couchdb_bkup
-$> snap set couchdb_bkup name=couchdb0@localhost setcookie=cutter port=5980 admin=Be1stDB
-$> curl -X PUT http://admin:Be1stDB@localhost:5980/_node/_local/_config/cluster/n -d '"1"'
-$> curl -X PUT http://admin:Be1stDB@localhost:5980/_node/_local/_config/cluster/q -d '"1"'
+$> snap connect couchdb_3:mount-observe
+$> snap set couchdb_bkup name=couchdb0@localhost setcookie=$COOKIE port=5980 admin=$PASSWD
+$> curl -X PUT http://admin:$PASSWD@localhost:5980/_node/_local/_config/cluster/n -d '"1"'
+$> curl -X PUT http://admin:$PASSWD@localhost:5980/_node/_local/_config/cluster/q -d '"1"'
 ```
 We will manually replicate to this from one (can be any one) of the nodes.
 ```bash
-$ curl -X POST http://admin:Be1stDB@localhost:5980/_replicate \
+$ curl -X POST http://admin:$PASSWD@localhost:5980/_replicate \
     -d '{"source":"http://localhost:5981/example","target":"example","continuous":false,"create_target":true}' \
     -H "Content-Type: application/json"
-$ curl -X GET http://admin:Be1stDB@localhost:5980/example/_all_docs
+$ curl -X GET http://admin:$PASSWD@localhost:5980/example/_all_docs
 ```
 The backup database has a single shard and single directory:
 ```bash
@@ -251,30 +275,30 @@ you are using the default.
 ```bash
 /snap/bin/couchdb.remsh -n couchdb@localhost -c $COOKIE
 ```
+
 # Building this snap <a name="building"></a>
 
-This build requires `core20`. On Ubuntu 18.04, you will need to do the following:
+The snapcraft tool can be installed from the snap store as such
 
-```
-sudo apt remove snapcraft
-sudo snap remove snapcraft
+```bash
 sudo snap install snapcraft --classic
 ```
 
-Then building is easy:
+If you run snapcraft on your base system it will start either a mutlipass or lxd
+container and execute the installation within there. 
+
+This can be tedious if errors occur. An alternative is to create your own lxd 
+container and run snapcraft in destructive mode (within the LXD container).
 
 ```bash
-$ snapcraft
+> lxc launch ubuntu-daily:22.04 cdb
+> lxc shell cdb
+$ snapcraft --destructive-mode --verbosity=debug
 ```
 
-The self-built snap will need to be installed using `--dangerous`:
+Once the snap has been built, the snap can be installed locally using `--dangerous`:
 
 ```bash
-sudo snap install ./couchdb_3.0.0_amd64.snap --dangerous
+sudo snap install ./couchdb_3.3.3_amd64.snap --dangerous
 ```
 
-Clean up with:
-
-```bash
-$ sudo snapcraft clean          # sudo may not be required but is safe
-```
