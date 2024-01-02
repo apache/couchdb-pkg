@@ -1,6 +1,6 @@
 ---
 name: couchdb
-version: 3.3.2
+version: 3.3.3
 type: app
 base: core22
 summary: Official Apache CouchDB snap - a clustering document oriented database
@@ -23,9 +23,9 @@ architectures:
 parts:
   couchdb:
     plugin: make
-    source: https://dlcdn.apache.org/couchdb/source/3.3.2/apache-couchdb-3.3.2.tar.gz
+    source: https://dlcdn.apache.org/couchdb/source/3.3.3/apache-couchdb-3.3.3.tar.gz
     source-type: tar
-    override-build: ./configure --disable-docs --spidermonkey-version 91 && make release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
+    override-build: ./configure --spidermonkey-version 91 && make release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
     build-packages:
       - gcc
       - g++
