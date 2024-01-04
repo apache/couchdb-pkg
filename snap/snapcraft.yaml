@@ -3,6 +3,7 @@ name: couchdb
 version: 3.3.3
 type: app
 base: core22
+license: Apache-2.0
 summary: Official Apache CouchDB snap - a clustering document oriented database
 description: |
   CouchDB is a database that completely embraces the web. Store your data with

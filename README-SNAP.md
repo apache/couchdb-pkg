@@ -18,7 +18,7 @@ The snap can be installed from a file or directly from the snap store:
 $ sudo snap install couchdb
 ```  
 
-If you are installing on ChromeOS you will need to install snapd, and its prerequisites, first.
+If you are installing on ChromeOS you will need to install `snapd`, and its prerequisites, first.
 
 ```bash
 sudo apt install libsquashfuse0 squashfuse fuse
@@ -55,7 +55,7 @@ in `/var/local/...`. With this in mind, if are you going to use snaps for your d
 the files will be stored in `/var/snap/couchdb/common` and your `/var` partition will need
 to be large enough for your database size. 
 
-CouchDB defaults are stored **read-only** in `/snap/couchdb/current/etc/`.
+CouchDB's defaults are stored **read-only** in `/snap/couchdb/current/etc/`.
 This includes `default.ini` and any `default.d/*` files added in the snap build process.
 These are all read-only and should never be changed.
 
@@ -63,14 +63,14 @@ User-configurable files are stored in `/var/snap/couchdb/current/etc/` and are w
 Changes may be made to `local.ini` or placed in any `local.d/*.ini` file. Configuration
 management tools (like puppet, chef, ansible, and salt) can be used to manage these files.
 
-Erlang settings are stored in the `/var/snap/couchdb/current/etc/vm.args` file.  The snap
+Erlang's settings are stored in the `/var/snap/couchdb/current/etc/vm.args` file.  The snap
 configuration tool can be used to quickly change the node name and security cookie:
 
 ```bash
 $ sudo snap set couchdb name=couchdb@1.2.3.4 setcookie=$COOKIE
 ```
 
-Where COOKIE is an enviroment variable. You can auto generated a cookie with the command 
+Where COOKIE is an environment variable. You can auto generated a cookie with the command 
 below. 
 
 ```bash
@@ -102,7 +102,7 @@ user to clean up any databases latter.
 
 Calling 'snap remove couchdb' *will* remove binaries, configurations and the database.
 
-On newer versions of snapd (snapd 2.39+) a snapshot is made of the SNAP_DATA 
+On newer versions of `snapd` (snapd 2.39+) a snapshot is made of the SNAP_DATA 
 and SNAP_COMMON directories and this is stored (subject to disc space) for about 30 days. 
 On these newer version a 'snap remove' followed by a 'snap install' may restore the 
 database; but you are best to make your own backup before removing couchdb.
@@ -125,14 +125,14 @@ You can set up a snap-based cluster on your desktop in no time using the couchdb
 In the example below, we are going to set up a three node CouchDB cluster. (Three is the
 minimum number needed to support clustering features.) We'll also set up a separate,
 single machine for making backups. In this example we will be using parallel instance of 
-snaps that is availble from version 2.36.
+snaps that is available from version 2.36.
 
 First we need to enable parallel instances of snap.
 ```bash
 $ snap set system experimental.parallel-instances=true
 ```
 We install couchdb via snap from the store and enable interfaces, open up the bind address
-and set a admin password.
+and set an admin password.
 ```bash
 $> snap install couchdb_1
 $> snap connect couchdb_1:mount-observe
@@ -181,8 +181,7 @@ $> export UUID=`curl "http://localhost:5984/_uuids" | jq .uuids[0]`
 $> export SECRET=`curl "http://localhost:5984/_uuids" | jq .uuids[0]`
 ```
 
-
-The each instances within a cluster needs to share the same uuid ... 
+Each instance within a cluster needs to share the same uuid ... 
 
 ```bash
 curl -X PUT http://admin:$PASSWD@127.0.0.1:5981/_node/_local/_config/couchdb/uuid -d '$UUID'
@@ -269,7 +268,7 @@ The backup database has a single shard and single directory:
 
 # Remote Shell into CouchDB
 
-In the very rare case you need to connect to the couchdb server, a remsh script is
+In the very rare case you need to connect to the couchdb server, a `remsh` script is
 provided. You need to specify both the name of the server and the cookie, even if
 you are using the default. 
 ```bash
@@ -284,7 +283,7 @@ The snapcraft tool can be installed from the snap store as such
 sudo snap install snapcraft --classic
 ```
 
-If you run snapcraft on your base system it will start either a mutlipass or lxd
+If you run snapcraft on your base system it will start either a `multipass` or `lxd`
 container and execute the installation within there. 
 
 This can be tedious if errors occur. An alternative is to create your own lxd 
@@ -301,4 +300,3 @@ Once the snap has been built, the snap can be installed locally using `--dangero
 ```bash
 sudo snap install ./couchdb_3.3.3_amd64.snap --dangerous
 ```
-
