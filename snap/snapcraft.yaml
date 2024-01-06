@@ -1,3 +1,19 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing,
+#   software distributed under the License is distributed on an
+#   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+#   KIND, either express or implied.  See the License for the
+#   specific language governing permissions and limitations
+#   under the License.
 ---
 name: couchdb
 version: 3.3.3
@@ -15,18 +31,53 @@ grade: stable
 confinement: strict
 
 architectures:
+  - build-on: amd64
+  - build-on: armhf
+  - build-on: arm64
   - build-on: s390x
   - build-on: ppc64el
-  - build-on: arm64
-  - build-on: armhf
-  - build-on: amd64
 
 parts:
+  erl-iex:
+    plugin: dump
+    build-environment:
+      - ASDF_ERLANG_VERSION: "24.3.4.15"
+      - ASDF_ELIXIR_VERSION: "1.15.7-otp-24"
+    source: https://github.com/asdf-vm/asdf.git
+    source-branch: v0.13.1
+    source-type: git
+    build-packages:
+      - libncurses-dev
+      - unzip
+      - curl
+    override-build: |
+      source "./asdf.sh"
+      
+      # Install Erlang
+      asdf plugin add erlang
+      asdf install erlang "$ASDF_ERLANG_VERSION"
+      asdf global erlang "$ASDF_ERLANG_VERSION"
+      
+      # Install Erlang
+      asdf plugin add elixir
+      asdf install elixir "$ASDF_ELIXIR_VERSION"
+      asdf global elixir "$ASDF_ELIXIR_VERSION"
   couchdb:
+    after: [erl-iex]
     plugin: make
+    build-environment:
+      - SPIDERMONKEY_VERSION: "91"
     source: https://dlcdn.apache.org/couchdb/source/3.3.3/apache-couchdb-3.3.3.tar.gz
     source-type: tar
-    override-build: ./configure --spidermonkey-version 91 && make release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
+    override-build: |
+      # Use the version of erlang/elixir we configured before
+      source "$(pwd)/../../erl-iex/build/asdf.sh"
+      
+      # Configure, build and release CouchDB binaries
+      ./configure --spidermonkey-version "$SPIDERMONKEY_VERSION" && make release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
+      
+      # Verifying that all is working
+      #make check
     build-packages:
       - gcc
       - g++
@@ -34,17 +85,9 @@ parts:
       - libcurl4-openssl-dev
       - libicu-dev
       - icu-devtools
-      # For erlang/rebar processing
-      - erlang-dev
-      - erlang-base
-      - erlang-reltool
-      - erlang-nox
-      - erlang-eunit
-      - erlang-os-mon
-      - erlang-syntax-tools
-      # mozjs
+      # Mozilla JS engine
       - libmozjs-91-dev
-      # For fauxton
+      # For Fauxton
       - libnode-dev
       - npm
     stage-packages:
