@@ -22,8 +22,10 @@ _modify_vm_args() {
   opt=$1
   value="$2"
   replace_line="-$opt $value"
-  if $(grep -q "^[#|[:space:]]*-$opt " $VM_ARGS); then
-    sed --in-place "s/^[#|[:space:]]*-$opt .*/$replace_line/" $VM_ARGS 
+  if $(grep -q "^# -$opt" $VM_ARGS); then
+    sed --in-place "s/^# -$opt.*/$replace_line/" $VM_ARGS
+  elif $(grep -q "^-$opt " $VM_ARGS); then
+    sed --in-place "s/^-$opt .*/$replace_line/" $VM_ARGS
   else
     echo $replace_line >> $VM_ARGS
   fi
@@ -51,6 +53,7 @@ do
   if [ ! -z "$val" ]; then
     _modify_vm_args $key $val
     sleep 0.125
+    snapctl unset $key
   fi
 done
 
@@ -61,5 +64,6 @@ do
   if [ ! -z "$val" ]; then
     _modify_ini_args $key $val
     sleep 0.125
+    snapctl unset $key
   fi
 done
