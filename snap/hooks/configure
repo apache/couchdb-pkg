@@ -29,7 +29,6 @@ _modify_vm_args() {
   else
     echo $replace_line >> $VM_ARGS
   fi
-  snapctl unset $key
 }
 
 ## add or replace for the local.ini file
@@ -42,7 +41,6 @@ _modify_ini_args() {
   else
     echo $replace_line >> $LOCAL_INI
   fi
-  snapctl unset $key
 }
 
 # The vm_args file can only be changed from the filesystem
@@ -55,6 +53,7 @@ do
   if [ ! -z "$val" ]; then
     _modify_vm_args $key $val
     sleep 0.125
+    snapctl unset $key
   fi
 done
 
@@ -65,5 +64,6 @@ do
   if [ ! -z "$val" ]; then
     _modify_ini_args $key $val
     sleep 0.125
+    snapctl unset $key
   fi
 done
