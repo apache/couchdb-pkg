@@ -31,11 +31,11 @@ grade: stable
 confinement: strict
 
 architectures:
-  - build-on: amd64
-  - build-on: armhf
-  - build-on: arm64
-  - build-on: s390x
-  - build-on: ppc64el
+  - build-on: [amd64]
+  - build-on: [armhf]
+  - build-on: [arm64]
+  - build-on: [s390x]
+  - build-on: [ppc64el]
 
 parts:
   erl-iex:
@@ -82,22 +82,18 @@ parts:
       - gcc
       - g++
       - libc6-dev
-      - libcurl4-openssl-dev
       - libicu-dev
-      - icu-devtools
       # Mozilla JS engine
       - libmozjs-91-dev
       # For Fauxton
-      - libnode-dev
       - npm
     stage-packages:
-      - procps
-      - libcurl4
       - libicu70
       - libmozjs-91-0
-      - libssl3
-      - libtinfo5
     stage:
+      - -usr/lib/**/libicuio.so.*
+      - -usr/lib/**/libicutu.so.*
+      - -usr/lib/**/libicutest.so.*
       - -usr/share/doc
       - -usr/share/man
       - -var
