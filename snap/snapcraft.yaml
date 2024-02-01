@@ -83,17 +83,16 @@ parts:
       - g++
       - libc6-dev
       - libicu-dev
+      - libssl-dev
       # Mozilla JS engine
       - libmozjs-91-dev
       # For Fauxton
       - npm
     stage-packages:
       - libicu70
+      - libssl3
       - libmozjs-91-0
     stage:
-      - -usr/lib/**/libicuio.so.*
-      - -usr/lib/**/libicutu.so.*
-      - -usr/lib/**/libicutest.so.*
       - -usr/share/doc
       - -usr/share/man
       - -var
