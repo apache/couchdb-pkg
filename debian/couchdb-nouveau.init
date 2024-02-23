@@ -1,0 +1,16 @@
+#!/bin/sh /lib/init/init-d-script
+### BEGIN INIT INFO
+# Provides:          nouveau
+# Required-Start:    $local_fs $network $time
+# Required-Stop:     $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Nouveau adds Lucene capabilities to CouchDB
+# Description:       Nouveau transforms Apache CouchDB databases into
+#                    Apache Lucene indexes.
+### END INIT INFO
+# Author: CouchDB Developers <dev@couchdb.apache.org>
+
+DAEMON=/opt/nouveau/bin/nouveau
+DAEMON_ARGS="server /opt/nouveau/etc/nouveau.yaml"
+START_ARGS="--chuid nouveau:nouveau --chdir /opt/nouveau --background"

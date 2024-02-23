@@ -1,0 +1,7 @@
+# nouveau libs live in /opt
+couchdb-nouveau: jar-not-in-usr-share opt/nouveau/lib/*
+couchdb-nouveau: dir-or-file-in-etc-opt opt/nouveau/etc
+couchdb-nouveau: dir-or-file-in-etc-opt opt/nouveau/etc/nouveau.yaml
+
+couchdb-nouveau: unknown-java-class-version opt/nouveau/lib/*
+couchdb-nouveau: codeless-jar opt/nouveau/lib/*
