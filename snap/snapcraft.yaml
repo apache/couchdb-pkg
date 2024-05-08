@@ -41,7 +41,7 @@ parts:
   erl-iex:
     plugin: dump
     build-environment:
-      - ASDF_ERLANG_VERSION: "24.3.4.15"
+      - ASDF_ERLANG_VERSION: "24.3.4.17"
       - ASDF_ELIXIR_VERSION: "1.15.7-otp-24"
     source: https://github.com/asdf-vm/asdf.git
     source-branch: v0.13.1
