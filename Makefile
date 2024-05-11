@@ -43,30 +43,6 @@ all:
 # Debian default
 debian: sm-ver-debian find-couch-dist copy-debian update-changelog dpkg lintian copy-pkgs
 
-# Debian 10 - buster
-debian-buster: PLATFORM=buster
-debian-buster: DIST=debian-buster
-debian-buster: SPIDERMONKEY=libmozjs-60-0
-debian-buster: SPIDERMONKEY_DEV=libmozjs-60-dev
-debian-buster: SM_VER=60
-debian-buster: buster
-
-# Blacklist arm64 from SM60 for now.
-# See https://github.com/apache/couchdb/issues/2423 for details.
-arm64v8-debian-buster: aarch64-debian-buster
-aarch64-debian-buster: PLATFORM=buster
-aarch64-debian-buster: DIST=debian-buster
-aarch64-debian-buster: buster
-
-ppc64le-debian-buster: PLATFORM=buster
-ppc64le-debian-buster: DIST=debian-buster
-ppc64le-debian-buster: SPIDERMONKEY=libmozjs-60-0
-ppc64le-debian-buster: SPIDERMONKEY_DEV=libmozjs-60-dev
-ppc64le-debian-buster: SM_VER=60
-ppc64le-debian-buster: buster
-
-buster: debian
-
 # Debian 11 - bullseye
 debian-bullseye: PLATFORM=bullseye
 debian-bullseye: DIST=debian-bullseye
@@ -135,12 +111,6 @@ s390x-debian-bookworm: bookworm
 
 bookworm: debian
 
-# Ubuntu 18.04 (Bionic)
-ubuntu-bionic: PLATFORM=bionic
-ubuntu-bionic: DIST=ubuntu-bionic
-ubuntu-bionic: bionic
-bionic: debian
-
 # Ubuntu 20.04 (Focal)
 ubuntu-focal: PLATFORM=focal
 ubuntu-focal: DIST=ubuntu-focal
@@ -188,12 +158,6 @@ ppc64le-ubuntu-jammy: ubuntu-jammy
 centos: PKGDIR=../rpmbuild/RPMS/$(PKGARCH)
 centos: find-couch-dist link-couch-dist build-rpm copy-pkgs
 
-centos-7: DIST=centos-7
-centos-7: centos7
-centos7: SPIDERMONKEY=couch-js = 1:1.8.5
-centos7: SPIDERMONKEY_DEV=couch-js-devel = 1:1.8.5
-centos7: sm-ver-rpm make-rpmbuild centos
-
 centos-8: DIST=centos-8
 centos-8: centos8
 centos8: SPIDERMONKEY=mozjs60
@@ -215,6 +179,7 @@ almalinux-8.9: centos-8
 # Almalinux 9 is a CentOS 9 alias
 almalinux-9: centos-9
 almalinux-9.2: centos-9
+almalinux-9.4: centos-9
 # s390x RHEL 8 clone based
 s390x-centos-8: centos-8
 ppc64le-centos-8: centos-8
@@ -231,9 +196,6 @@ aarch64-rhel: SPIDERMONKEY=couch-js-68
 aarch64-rhel: SPIDERMONKEY_DEV=couch-js-68-devel
 aarch64-rhel: SM_VER=68
 aarch64-rhel: sm-ver-rpm make-rpmbuild centos
-
-openSUSE: centos7
-
 
 # ######################################
 get-couch:

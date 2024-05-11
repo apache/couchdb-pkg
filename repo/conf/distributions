@@ -1,18 +1,3 @@
-Codename: jessie
-Components: main
-Architectures: amd64 arm64 ppc64el
-Description: Official CouchDB Debian jessie repository
-
-Codename: stretch
-Components: main
-Architectures: amd64 arm64 ppc64el
-Description: Official CouchDB Debian stretch repository
-
-Codename: buster
-Components: main
-Architectures: amd64 arm64 ppc64el
-Description: Official CouchDB Debian buster repository
-
 Codename: bullseye
 Components: main
 Architectures: amd64 arm64 ppc64el
@@ -22,16 +7,6 @@ Codename: bookworm
 Components: main
 Architectures: amd64 arm64 ppc64el
 Description: Official CouchDB Debian bookworm repository
-
-Codename: xenial
-Components: main
-Architectures: amd64 arm64 ppc64el
-Description: Official CouchDB Ubuntu 16.04 xenial repository
-
-Codename: bionic
-Components: main
-Architectures: amd64 arm64 ppc64el
-Description: Official CouchDB Ubuntu 18.04 bionic repository
 
 Codename: focal
 Components: main
