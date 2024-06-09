@@ -292,6 +292,6 @@ couch-js-rpms: couch-js-clean
 
 couch-js-68-rpms: couch-js-clean
 	mkdir -p ../rpmbuild
-	cp -R js68/* ../rpmbuild
+	cp -R js68/rpm/* ../rpmbuild
 	cd ../rpmbuild/SOURCES && curl -O https://ftp.mozilla.org/pub/firefox/releases/68.12.0esr/source/firefox-68.12.0esr.source.tar.xz
 	cd ../rpmbuild && rpmbuild --verbose -bb SPECS/js68.spec
