@@ -1,6 +1,6 @@
 # CouchDB Packaging support repo
 
-The main purpose of this repository is to provide packaging support files for Apache CouchDB and its SpiderMoneky 1.8.5 dependency, for a number of well-known and used packaging formats, namely:
+The main purpose of this repository is to provide packaging support files for Apache CouchDB and its SpiderMonkey 1.8.5 dependency, for a number of well-known and used packaging formats, namely:
 
 * `.deb` files, as used by Debian, Ubuntu, and derivatives
 * `.rpm` files, as used by CentOS, RedHat, and derivatives
