@@ -109,7 +109,18 @@ build-all-couch() {
   done
   for base in $XPLAT_BASES; do
     for arch in $XPLAT_ARCHES; do
-      if [[ ${base} != "centos-8" ]] || [[ ${arch} != "arm64" ]]; then
+      # nouveau packaging fails on ppc64le OSes
+      # see https://github.com/apache/couchdb-pkg/issues/140
+      echo " **** base:${base}  arch:${arch} ****"
+      if ! [[
+              ( ${base} == "centos-8" && ${arch} == "arm64" ) ||
+              ( ${base} == "centos-8" && ${arch} == "ppc64le" ) ||
+              ( ${base} == "centos-9" && ${arch} == "ppc64le" ) ||
+              ( ${base} == "debian-bullseye" && ${arch} == "ppc64le" ) ||
+              ( ${base} == "debian-bookworm" && ${arch} == "ppc64le" ) ||
+              ( ${base} == "ubuntu-focal" && ${arch} == "ppc64le" ) ||
+              ( ${base} == "ubuntu-jammy" && ${arch} == "ppc64le" )
+      ]]; then
         CONTAINERARCH="${arch}" build-couch ${base}
       fi
     done
