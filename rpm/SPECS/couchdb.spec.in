@@ -97,7 +97,7 @@ languages and environments.
 
 %build
 if [ -d ./nouveau ]; then
-    ./configure --spidermonkey-version=%SM_VER% --enable-nouveau
+    ./configure --spidermonkey-version=%SM_VER% --with-nouveau
 else
     ./configure --spidermonkey-version=%SM_VER%
 fi

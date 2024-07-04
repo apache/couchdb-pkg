@@ -23,7 +23,7 @@ override_dh_auto_clean:
 
 override_dh_auto_configure:
 	if [ -d "./nouveau" ]; then \
-		./configure --spidermonkey-version $(SM_VER) --enable-nouveau; \
+		./configure --spidermonkey-version $(SM_VER) --with-nouveau; \
         else \
 		./configure --spidermonkey-version $(SM_VER); \
 	fi

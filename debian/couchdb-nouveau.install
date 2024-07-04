@@ -1,0 +1,4 @@
+#!/usr/bin/dh-exec
+rel/couchdb/nouveau/bin/nouveau /opt/nouveau/bin
+rel/couchdb/nouveau/lib /opt/nouveau/
+rel/couchdb/etc/nouveau.yaml /opt/nouveau/etc
