@@ -14,6 +14,9 @@
 %define name couchdb
 %define prefix /opt/%{name}
 
+# NOTE: Stripping binaries causes issues so we skip it.
+%define __os_install_post %{nil}
+
 Summary:       RESTful document oriented database
 License:       Apache License v2.0
 Name:          %{name}
@@ -23,6 +26,7 @@ Source:        https://www.apache.org/dist/couchdb/source/${version}/apache-couc
 Source1:       %{name}.service
 Source2:       %{name}.init
 Source3:       10-filelog.ini
+Source4:       nouveau.ini
 Source5:       %{name}.logrotate
 Prefix:        %{prefix}
 Group:         Applications/Databases
@@ -90,8 +94,14 @@ that provides means to make HTTP requests. There are a multitude of third-party
 client libraries that make this even easier for a variety of programming
 languages and environments.
 
-# NOTE: Stripping binaries causes issues so we skip it.
-%define __os_install_post %{nil}
+%package nouveau
+Summary: Full text search engine for couchdb
+Requires: couchdb
+
+%description nouveau
+Nouveau indexes enable you to query a database by using the Lucene Query Parser Syntax.
+A nouveau index uses one, or multiple, fields from your documents. You can use a nouveau
+index to run queries to find documents based on the content they contain.
 
 %prep
 
@@ -129,6 +139,7 @@ if ! /usr/bin/getent passwd couchdb > /dev/null; then /usr/sbin/adduser \
 %{__install} -d -m0750 %{buildroot}%{_sharedstatedir}/%{name}
 %endif
 %{__install} -Dp -m0644 %{SOURCE3} %{buildroot}/opt/%{name}/etc/default.d/10-filelog.ini
+%{__install} -Dp -m0644 %{SOURCE3} %{buildroot}/opt/%{name}/etc/local.d/nouveau.ini
 %{__install} -Dp -m0644 %{SOURCE5} %{buildroot}/etc/logrotate.d/%{name}
 /bin/find %{buildroot}/opt/%{name} -name *.ini -exec %{__chmod} 0640 {} \;
 
@@ -176,6 +187,9 @@ fi
 /sbin/chkconfig --add %{name} || :
 %endif
 
+%post nouveau
+%systemd_post couchdb.service
+
 %preun
 %if 0%{?fedora} || 0%{?rhel} >= 7 || 0%{?suse_version}
 %systemd_preun %{name}.service
@@ -215,6 +229,9 @@ fi
 %{_initrddir}/%{name}
 %endif
 
+%files nouveau
+%defattr(-,root,root)
+%config(noreplace) /opt/couchdb/etc/local.d/nouveau.ini
 
 %changelog
 * Tue May 2 2017 CouchDB Developers <dev@couchdb.apache.org> 2.0.0-1
