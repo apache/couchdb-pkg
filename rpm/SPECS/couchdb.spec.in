@@ -21,9 +21,7 @@ Version:       %{_version}
 Release:       1%{?dist}
 Source:        https://www.apache.org/dist/couchdb/source/${version}/apache-couchdb-%{version}.tar.gz
 Source1:       %{name}.service
-Source2:       %{name}.init
-Source3:       10-filelog.ini
-Source5:       %{name}.logrotate
+Source2:       %{name}-nouveau.service
 Prefix:        %{prefix}
 Group:         Applications/Databases
 URL:           https://couchdb.apache.org/
@@ -40,15 +38,17 @@ Requires(pre): shadow-utils
 
 BuildRequires: git
 BuildRequires: help2man
-#BuildRequires: %SPIDERMONKEY_DEV%
 BuildRequires: libcurl-devel
 BuildRequires: libicu-devel
 BuildRequires: nodejs >= 6.10.1
+BuildRequires: java-21-openjdk-devel
 
 Requires(post): curl
 Requires(post): %SPIDERMONKEY%
 Requires(post): libicu >= 4.2.1
 Requires(post): procps
+
+Suggests: java-21-openjdk-headless
 
 BuildRequires:		xfsprogs-devel
 %{?systemd_requires}
@@ -93,14 +93,12 @@ if ! /usr/bin/getent passwd couchdb > /dev/null; then /usr/sbin/adduser \
 %install
 %{__install} -d -m0755 %{buildroot}/opt
 %{__cp} -r rel/couchdb %{buildroot}/opt
-%{__install} -d -m0750 %{buildroot}/var/log/%{name}
 %{__install} -d -m0750 %{buildroot}%{_sharedstatedir}/%{name}
-%{__install} -Dp -m0644 %{SOURCE3} %{buildroot}/opt/%{name}/etc/default.d/10-filelog.ini
-%{__install} -Dp -m0644 %{SOURCE5} %{buildroot}/etc/logrotate.d/%{name}
+%{__install} -d -m0750 %{buildroot}%{_sharedstatedir}/%{name}/nouveau
 /bin/find %{buildroot}/opt/%{name} -name *.ini -exec %{__chmod} 0640 {} \;
 %{__install} -Dp -m0644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
+%{__install} -Dp -m0644 %{SOURCE2} %{buildroot}%{_unitdir}/%{name}-nouveau.service
 %{__ln_s} -f -T %{_sharedstatedir}/%{name} %{buildroot}/opt/%{name}/data
-%{__ln_s} -f -T /var/log/%{name} %{buildroot}/opt/%{name}/var/log/%{name}
 
 %post
 if %{__grep} -q "^-setcookie monster$" /opt/%{name}/etc/vm.args; then
@@ -126,26 +124,50 @@ elif %{__grep} -q "^[# ]*-setcookie$" /opt/%{name}/etc/vm.args; then
   escaped_cookie=$(printf '%s' "$cookie" | sed 's:\\:\\\\:g')
   %{__sed} -i "/^[# ]*-setcookie/c\-setcookie '${escaped_cookie}'" /opt/%{name}/etc/vm.args
 fi
+
+if [[ -v COUCHDB_NOUVEAU_ENABLE ]]; then
+    echo "Enabling nouveau in /opt/couchdb/etc/default.d/10-nouveau.ini"
+    echo " * Make sure to install java version 11+ (dnf install java-21-openjdk-headless)"
+    echo " * Enable couchdb-nouveau systemd unit"
+    cat <<EOF > /opt/couchdb/etc/default.d/10-nouveau.ini
+[nouveau]
+enable = true
+EOF
+fi
+
 %{__chown} -R couchdb:couchdb /opt/%{name}
 %{__chmod} a+x /opt/%{name}/bin/*
+%{__chmod} a+x /opt/%{name}/nouveau/bin/*
 %systemd_post %{name}.service
+%systemd_post %{name}-nouveau.service
 
 %preun
 %systemd_preun %{name}.service
+%systemd_preun %{name}-nouveau.service
 
 %postun
 %systemd_postun_with_restart %{name}.service
+%systemd_postun_with_restart %{name}-nouveau.service
+
+if [ $1 -eq 0 ] ; then
+    # uninstall, remove auto-generated nouveau enable file
+    ${__rm} /opt/couchdb/etc/default.d/10-nouveau.ini
+fi
 
 %files
 %attr(0755, %{name}, %{name}) /opt/couchdb
 %attr(0755, %{name}, %{name}) %dir %{_sharedstatedir}/%{name}
-%attr(0755, %{name}, %{name}) %dir /var/log/%{name}
+%attr(0755, %{name}, %{name}) %dir %{_sharedstatedir}/%{name}/nouveau
 %config(noreplace) /opt/couchdb/etc/local.ini
 %config(noreplace) /opt/couchdb/etc/vm.args
-%config /etc/logrotate.d/%{name}
+%config(noreplace) /opt/couchdb/etc/nouveau.yaml
 %{_unitdir}/%{name}.service
+%{_unitdir}/%{name}-nouveau.service
 
 %changelog
+* Thu Aug 22 2024 CouchDB Developers <dev@couchdb.apache.org> 3.4
+- Add nouveau service with a suggested dependency for java 21
+- Remove file-based logger, use journalctl for both couchdb and couchdb-nouveau
 * Tue May 2 2017 CouchDB Developers <dev@couchdb.apache.org> 2.0.0-1
 - New upstream version
 - New sysvinit and systemd service files

@@ -1,9 +1,0 @@
-/var/log/couchdb/couchdb.log {
-  daily
-  rotate 7
-  copytruncate
-  delaycompress
-  compress
-  notifempty
-  missingok
-}
