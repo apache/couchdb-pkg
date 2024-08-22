@@ -1,0 +1,22 @@
+[Unit]
+Description=Apache CouchDB - Nouveau
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Environment="JAVA_OPTS=-server"
+ExecStart=/opt/couchdb/nouveau/bin/nouveau server /opt/couchdb/etc/nouveau.yaml
+LimitNOFILE=infinity
+Restart=on-failure
+NoNewPrivileges=true
+ProtectHome=yes
+ProtectSystem=strict
+ReadWritePaths=/var/lib/couchdb/nouveau/
+SystemCallErrorNumber=EPERM
+SystemCallFilter=@system-service
+RuntimeDirectory=couchdb-nouveau
+User=couchdb
+Group=couchdb
+
+[Install]
+WantedBy=multi-user.target
