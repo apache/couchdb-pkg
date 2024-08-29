@@ -7,10 +7,11 @@ Wants=network-online.target
 
 # Configuration
 WorkingDirectory=/opt/nouveau
-Environment="JAVA_OPTS=-server"
+EnvironmentFile=/etc/default/couchdb-nouveau
 
 # Lifecycle
-ExecStart=/opt/nouveau/bin/nouveau server /opt/nouveau/etc/nouveau.yaml
+ExecStart=/bin/sh -c "exec ${JAVA_HOME}/bin/java ${JAVA_OPTS} -jar /opt/nouveau/lib/nouveau-*.jar server /opt/nouveau/etc/nouveau.yaml"
+SuccessExitStatus=143
 LimitNOFILE=infinity
 Restart=on-failure
 
