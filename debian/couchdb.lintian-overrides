@@ -18,6 +18,5 @@ couchdb: doc-base-file-references-wrong-path couchdb:9 /opt/couchdb/share/www/do
 
 # nouveau
 couchdb: jar-not-in-usr-share opt/couchdb/nouveau/lib/*
-couchdb: executable-not-elf-or-script opt/couchdb/nouveau/bin/nouveau.bat
 couchdb: unknown-java-class-version opt/couchdb/nouveau/lib/*
 couchdb: codeless-jar opt/couchdb/nouveau/lib/*

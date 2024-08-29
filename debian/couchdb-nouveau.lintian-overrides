@@ -5,9 +5,4 @@ couchdb-nouveau: dir-or-file-in-etc-opt opt/nouveau/etc/nouveau.yaml
 
 couchdb-nouveau: unknown-java-class-version opt/nouveau/lib/*
 couchdb-nouveau: codeless-jar opt/nouveau/lib/*
-
-# We use init-d-script which does these for us
-couchdb-nouveau: init.d-script-does-not-implement-required-option etc/init.d/couchdb-nouveau force-reload
-couchdb-nouveau: init.d-script-does-not-implement-required-option etc/init.d/couchdb-nouveau restart
-couchdb-nouveau: init.d-script-does-not-implement-required-option etc/init.d/couchdb-nouveau start
-couchdb-nouveau: init.d-script-does-not-implement-required-option etc/init.d/couchdb-nouveau stop
+couchdb-nouveau: init.d-script-not-included-in-package
