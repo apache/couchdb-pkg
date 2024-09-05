@@ -22,6 +22,7 @@ Release:       1%{?dist}
 Source:        https://www.apache.org/dist/couchdb/source/${version}/apache-couchdb-%{version}.tar.gz
 Source1:       %{name}.service
 Source2:       %{name}-nouveau.service
+Source3:       %{name}-nouveau
 Prefix:        %{prefix}
 Group:         Applications/Databases
 URL:           https://couchdb.apache.org/
@@ -98,6 +99,7 @@ if ! /usr/bin/getent passwd couchdb > /dev/null; then /usr/sbin/adduser \
 /bin/find %{buildroot}/opt/%{name} -name *.ini -exec %{__chmod} 0640 {} \;
 %{__install} -Dp -m0644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
 %{__install} -Dp -m0644 %{SOURCE2} %{buildroot}%{_unitdir}/%{name}-nouveau.service
+%{__install} -Dp -m0644 %{SOURCE3} %{buildroot}/etc/sysconfig/%{name}-nouveau
 %{__ln_s} -f -T %{_sharedstatedir}/%{name} %{buildroot}/opt/%{name}/data
 
 %post
@@ -137,7 +139,6 @@ fi
 
 %{__chown} -R couchdb:couchdb /opt/%{name}
 %{__chmod} a+x /opt/%{name}/bin/*
-%{__chmod} a+x /opt/%{name}/nouveau/bin/*
 %systemd_post %{name}.service
 %systemd_post %{name}-nouveau.service
 
@@ -151,7 +152,7 @@ fi
 
 if [ $1 -eq 0 ] ; then
     # uninstall, remove auto-generated nouveau enable file
-    ${__rm} /opt/couchdb/etc/default.d/10-nouveau.ini
+    %{__rm} /opt/couchdb/etc/default.d/10-nouveau.ini
 fi
 
 %files
@@ -161,6 +162,7 @@ fi
 %config(noreplace) /opt/couchdb/etc/local.ini
 %config(noreplace) /opt/couchdb/etc/vm.args
 %config(noreplace) /opt/couchdb/etc/nouveau.yaml
+%config(noreplace) /etc/sysconfig/couchdb-nouveau
 %{_unitdir}/%{name}.service
 %{_unitdir}/%{name}-nouveau.service
 
