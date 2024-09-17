@@ -35,6 +35,7 @@ XPLAT_BASES="debian-bullseye debian-bookworm ubuntu-focal ubuntu-jammy centos-8 
 XPLAT_ARCHES="arm64 ppc64le s390x"
 BINARY_API="https://apache.jfrog.io/artifactory"
 ERLANGVERSION=${ERLANGVERSION:-25.3.2.13}
+REPO_NAME="couch-dev"
 
 split-os-ver() {
   OLDIFS=$IFS
@@ -129,16 +130,13 @@ build-all-couch() {
 
 
 binary-upload() {
-  echo "Uploading ${PKG}..."
-  local ret="$(curl \
-      --request PUT \
-      --upload-file $PKG \
-      --user ${BINARY_CREDS} \
-      "${BINARY_API}/${REPO}/${RELPATH}${SUFFIX}")"
+  local URL_PATH="${BINARY_API}/${REPO}/${RELPATH}${SUFFIX}"
+  echo "http PUT ${URL_PATH} upload-file:${PKG}"
+  local ret="$(curl --request PUT --upload-file ${PKG} --user ${BINARY_CREDS} ${URL_PATH})"
   if [[ ${ret} =~ '"created" :' ]]; then
     echo "Uploaded successfully."
   else
-    echo "Failed to upload $PKG, ${ret}"
+    echo "Failed to upload ${PKG} to ${URL_PATH}, ${ret}"
     exit 1
   fi
 }
@@ -150,10 +148,15 @@ upload-couch() {
     echo "  export BINARY_CREDS=<user@domain:KEYGOESHERE>"
     exit 1
   fi
+  if [ -z ${REPO_NAME+x} ]; then
+    echo "REPO_NAME variable must be set. Use couchdb or couchdb-dev."
+    exit 1
+  fi
+  echo " **** uploading $1 to ${REPO_NAME} **** "
   for PKG in $(ls pkgs/couch/$1/*.deb 2>/dev/null); do
     # Example filename: couchdb_2.3.0~jessie_amd64.deb
     fname=${PKG##*/}
-    REPO="couchdb-deb"
+    REPO="${REPO_NAME}-deb"
     RELPATH="pool/C/CouchDB/${fname}"
     DIST=$(echo $fname | cut -d~ -f 2 | cut -d_ -f 1)
     PKGARCH=$(echo $fname | cut -d_ -f 3 | cut -d. -f 1)
@@ -167,7 +170,7 @@ upload-couch() {
     # Example filename: couchdb-2.3.0-1.el7.x86_64.rpm.asc
     #                   couchdb-3.3.1.1.1-1.el7.x86_64.rpm
     fname=${PKG##*/}
-    REPO="couchdb-rpm"
+    REPO="${REPO_NAME}-rpm"
     DIST=$(echo $fname | cut -d- -f 3 | cut -d. -f 2)
     PKGARCH=$(echo $fname | cut -d- -f 3 | cut -d. -f 3)
     PKGVERSION=$(echo $fname | cut -d- -f 2)
@@ -188,11 +191,9 @@ upload-couch() {
         binary-upload
     fi
   done
-  echo "Recalculating Debian repo metadata..."
-  local ret="$(curl \
-    --request POST \
-    --user ${BINARY_CREDS} \
-    "${BINARY_API}/api/deb/reindex/couchdb-deb")"
+  local reindex_url="${BINARY_API}/api/deb/reindex/${REPO_NAME}-deb"
+  echo "Recalculating Debian repo metadata: POST to ${reindex_url}"
+  local ret="$(curl --request POST --user ${BINARY_CREDS} ${reindex_url})"
   echo "${ret}"
 }
 
@@ -204,8 +205,10 @@ Recognized commands:
   clean                 Remove all built package artefacts.
   couch <plat> <src>    Builds CouchDB packages for <plat>.
   couch-all <src>       Builds CouchDB packages for all platforms.
-  *couch-upload <plat>  Uploads the JS packages for <plat> to binary.
-  *couch-upload-all     Uploads the JS packages for all platforms to binary.
+  *couch-upload <plat>  Uploads the packages for <plat> to repo.
+  *couch-dev-upload <plat> Upload the package for <plat> to dev repo.
+  *couch-upload-all     Uploads packages for all platforms to repo
+  *couch-dev-upload-all Uploads packages for all platforms to dev repo.
 
   <src> is either
     - a path/to/a/couchdb.tar.gz, or
@@ -236,11 +239,25 @@ case "$1" in
     ;;
   couch-upload)
     shift
+    REPO_NAME="couchdb"
+    upload-couch $1
+    ;;
+  couch-dev-upload)
+    shift
+    REPO_NAME="couch-dev"
     upload-couch $1
     ;;
   couch-upload-all)
     shift
     for dir in $(ls pkgs/couch); do
+      REPO_NAME="couchdb"
+      upload-couch $dir
+    done
+    ;;
+  couch-dev-upload-all)
+    shift
+    for dir in $(ls pkgs/couch); do
+      REPO_NAME="couch-dev"
       upload-couch $dir
     done
     ;;
