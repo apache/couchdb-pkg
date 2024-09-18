@@ -12,5 +12,5 @@
 
 # Java options
 
-JAVA_HOME=/usr/lib/jvm/default-java
+JAVA_PATH=/usr/bin/java
 JAVA_OPTS="-server -Djava.awt.headless=true -Xmx2g"

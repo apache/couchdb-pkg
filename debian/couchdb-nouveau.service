@@ -10,7 +10,7 @@ WorkingDirectory=/opt/nouveau
 EnvironmentFile=/etc/default/couchdb-nouveau
 
 # Lifecycle
-ExecStart=/bin/sh -c "exec ${JAVA_HOME}/bin/java ${JAVA_OPTS} -jar /opt/nouveau/lib/nouveau-*.jar server /opt/nouveau/etc/nouveau.yaml"
+ExecStart=/bin/sh -c "exec ${JAVA_PATH} ${JAVA_OPTS} -jar /opt/nouveau/lib/nouveau-*.jar server /opt/nouveau/etc/nouveau.yaml"
 SuccessExitStatus=143
 LimitNOFILE=infinity
 Restart=on-failure
