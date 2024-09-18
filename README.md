@@ -112,6 +112,75 @@ Or, for the SpiderMonkey packages:
 
 -----
 
+# Upload Dev Packages
+
+`couch-dev-deb` and `couch-dev-rpm` are dev repos which can be used
+for pre-release or testing of packages.
+
+To upload packages to the dev repository:
+
+    ./build.sh couch-dev-upload-all path/to/apache-couchdb-VERSION.tar.gz
+
+To upload only a subset of packages, edit build.sh temporary to remove some of these variables:
+```
+DEBIANS="..."
+UBUNTUS="..."
+CENTOSES="..."
+XPLAT_BASES="..."
+XPLAT_ARCHES="..."
+```
+
+# Install Dev Packages
+
+## Deb Packages
+
+```
+sudo apt update && sudo apt install -y curl apt-transport-https gnupg
+curl https://couchdb.apache.org/repo/keys.asc | gpg --dearmor | sudo tee /usr/share/keyrings/couchdb-archive-keyring.gpg >/dev/null 2>&1
+source /etc/os-release
+echo "deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://apache.jfrog.io/artifactory/couch-dev-deb/ ${VERSION_CODENAME} main" \
+    | sudo tee /etc/apt/sources.list.d/couchdb.list >/dev/null
+```
+
+## RPM Packages
+
+### RHEL/AlmaLinux/RockyLinux 8
+
+```
+sudo dnf install -y yum-utils
+sudo yum-config-manager --add-repo https://apache.jfrog.io/artifactory/couchdb/couchdev.repo
+sudo dnf install -y couchdb
+```
+
+### RHEL/AlmaLinux/RockyLinux 9
+
+```
+sudo dnf install -y yum-utils
+sudo yum-config-manager --add-repo https://apache.jfrog.io/artifactory/couchdb/couchdev.repo
+sudo dnf config-manager --set-enabled crb
+sudo dnf install epel-release epel-next-release
+sudo dnf install -y mozjs78
+sudo dnf install -y couchdb
+```
+
+### Enable Nouveau
+
+To try out Nouveau, install Java:
+
+1. Use `COUCHDB_NOUVEAU_ENABLE=1` when installing the couchdb package.
+   That enables the `nouveau` config setting
+
+2. Install Java 11+:
+```
+    sudo dnf install java-21-openjdk-headless
+```
+
+3. Start the service:
+```
+    sudo service start couchdb
+```
+
+
 # Snap packages
 
 See [README-SNAP.md](README-SNAP.md).
