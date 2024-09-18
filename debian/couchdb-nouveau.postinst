@@ -36,8 +36,6 @@ case $1 in
         for i in "/opt/nouveau
           /opt/nouveau/etc
           /opt/nouveau/etc/nouveau.yaml
-          /opt/nouveau/lib
-          /opt/nouveau/lib/*.jar
           /var/lib/nouveau
           /var/lib/nouveau/*"
         do
