@@ -10,7 +10,7 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-# alternatives system will automatically switch the /usr/lib/jvm/jre symlink
+# alternatives system will automatically switch the /usr/bin/java
 
-JAVA_HOME="/usr/lib/jvm/jre"
+JAVA_PATH="/usr/bin/java"
 JAVA_OPTS="-server -Djava.awt.headless=true -Xmx2g"

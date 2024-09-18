@@ -5,7 +5,7 @@ After=network-online.target
 
 [Service]
 EnvironmentFile=/etc/sysconfig/couchdb-nouveau
-ExecStart=/bin/sh -c "exec ${JAVA_HOME}/bin/java ${JAVA_OPTS} -jar /opt/couchdb/nouveau/lib/nouveau-*.jar server /opt/couchdb/etc/nouveau.yaml"
+ExecStart=/bin/sh -c "exec ${JAVA_PATH} ${JAVA_OPTS} -jar /opt/couchdb/nouveau/lib/nouveau-*.jar server /opt/couchdb/etc/nouveau.yaml"
 LimitNOFILE=infinity
 Restart=on-failure
 NoNewPrivileges=true
