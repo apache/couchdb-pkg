@@ -1,4 +1,4 @@
-# CouchDB Packaging support repo
+## CouchDB Packaging support repo
 
 The main purpose of this repository is to provide packaging support files for Apache CouchDB and its SpiderMonkey 1.8.5 dependency, for a number of well-known and used packaging formats, namely:
 
@@ -6,34 +6,34 @@ The main purpose of this repository is to provide packaging support files for Ap
 * `.rpm` files, as used by CentOS, RedHat, and derivatives
 * `snapcraft` files, as used by the Ubuntu Snappy package manager
 
-# Usage
+## Usage
 
-## On a system with all necessary build-time dependencies:
+### On a system with all necessary build-time dependencies:
 
-### SpiderMonkey 1.8.5
+#### SpiderMonkey 1.8.5
 
-#### rpms
+##### rpms
 
 ```shell
 make couch-js-rpms
 ```
 
-#### debs
+##### debs
 
 ```shell
 make couch-js-debs PLATFORM=$(lsb_release -cs)
 ```
 
-### CouchDB
+#### CouchDB
 
-#### rpms or debs from `master` branch:
+##### rpms or debs from `master` branch:
 
 ```shell
 cd .. && git clone https://github.com/apache/couchdb
 cd couchdb-pkg && make build-couch $(lsb_release -cs) PLATFORM=$(lsb_release -cs)
 ```
 
-#### rpms or debs from a release tarball:
+##### rpms or debs from a release tarball:
 
 ```shell
 make copy-couch $(lsb_release -cs) COUCHTARBALL=path/to/couchdb-#.#.#.tar.gz PLATFORM=$(lsb_release -cs)
@@ -41,20 +41,20 @@ make copy-couch $(lsb_release -cs) COUCHTARBALL=path/to/couchdb-#.#.#.tar.gz PLA
 
 -----
 
-## Building inside the `couchdbdev` docker containers
+### Building inside the `couchdbdev` docker containers
 
 You must first pull down the image or images you need from Docker Hub, or build the images
 using the [apache/couchdb-ci](https://github.com/apache/couchdb-ci) repository. A full
 list of supported environments is at https://hub.docker.com/u/couchdbdev/ .
 
-### SpiderMonkey 1.8.5
+#### SpiderMonkey 1.8.5
 
 ```shell
 docker pull couchdbdev/<os>-<codename>-base
 ./build.sh js <os>-<codename>    # for example, debian-stretch, ubuntu-bionic or centos-7.
 ```
 
-### CouchDB
+#### CouchDB
 
 From a downloaded CouchDB tarball:
 
@@ -72,16 +72,16 @@ docker pull couchdbdev/<osname>-<codename>-erlang-<erlang-version>
 
 -----
 
-# Building packages for a release
+## Building packages for a release
 
-## Prerequisites
+### Prerequisites
 
 1. Linux running Docker
 1. The current user must be capable of running `docker run`.
 1. Enough free disk space to download all of the Docker images + build
    CouchDB.
 
-## Running the package build
+### Running the package build
 
 You can either build packages from a local CouchDB dist tarball (the output
 of `make dist`), or from a URL of a published CouchDB dist tarball (such
@@ -100,7 +100,7 @@ Packages will be placed in the `pkgs/couch` subdirectory.
 
 A similar `js-all` target exists, should the SpiderMonkey packages need to be regenerated.
 
-## Uploading the packages
+### Uploading the packages
 
 If you have Apache credentials (set your `BINARY_CREDS` environment variable appropriately), after building all CouchDB packages above, **and signing the rpms with the appropriate GPG key using the `rpmsign --addsign <file.rpm>` command**, simply run:
 
@@ -112,7 +112,7 @@ Or, for the SpiderMonkey packages:
 
 -----
 
-# Upload Dev Packages
+## Upload Dev Packages
 
 `couch-dev-deb` and `couch-dev-rpm` are dev repos which can be used
 for pre-release or testing of packages.
@@ -130,9 +130,9 @@ XPLAT_BASES="..."
 XPLAT_ARCHES="..."
 ```
 
-# Install Dev Packages
+## Install Dev Packages
 
-## Deb Packages
+### Deb Packages
 
 ```
 sudo apt update && sudo apt install -y curl apt-transport-https gnupg
@@ -142,9 +142,9 @@ echo "deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://ap
     | sudo tee /etc/apt/sources.list.d/couchdb.list >/dev/null
 ```
 
-## RPM Packages
+### RPM Packages
 
-### RHEL/AlmaLinux/RockyLinux 8
+#### RHEL/AlmaLinux/RockyLinux 8
 
 ```
 sudo dnf install -y yum-utils
@@ -152,7 +152,7 @@ sudo yum-config-manager --add-repo https://apache.jfrog.io/artifactory/couchdb/c
 sudo dnf install -y couchdb
 ```
 
-### RHEL/AlmaLinux/RockyLinux 9
+#### RHEL/AlmaLinux/RockyLinux 9
 
 ```
 sudo dnf install -y yum-utils
@@ -163,9 +163,9 @@ sudo dnf install -y mozjs78
 sudo dnf install -y couchdb
 ```
 
-### Enable Nouveau
+#### Enable Nouveau
 
-To try out Nouveau, install Java:
+To try out Nouveau:
 
 1. Use `COUCHDB_NOUVEAU_ENABLE=1` when installing the couchdb package.
    That enables the `nouveau` config setting
@@ -181,13 +181,13 @@ To try out Nouveau, install Java:
 ```
 
 
-# Snap packages
+## Snap packages
 
 See [README-SNAP.md](README-SNAP.md).
 
 -----
 
-# Feedback, Issues, Contributing
+## Feedback, Issues, Contributing
 
 General feedback is welcome at our [user][1] or [developer][2] mailing lists.
 
