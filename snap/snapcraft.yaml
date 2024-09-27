@@ -16,7 +16,7 @@
 #   under the License.
 ---
 name: couchdb
-version: 3.3.3
+version: 3.4.1
 type: app
 base: core22
 license: Apache-2.0
@@ -41,10 +41,10 @@ parts:
   erl-iex:
     plugin: dump
     build-environment:
-      - ASDF_ERLANG_VERSION: "24.3.4.17"
-      - ASDF_ELIXIR_VERSION: "1.15.7-otp-24"
+      - ASDF_ERLANG_VERSION: "25.2.3.13"
+      - ASDF_ELIXIR_VERSION: "1.15.8-otp-25"
     source: https://github.com/asdf-vm/asdf.git
-    source-branch: v0.13.1
+    source-branch: v0.14.1
     source-type: git
     build-packages:
       - libncurses-dev
@@ -67,14 +67,14 @@ parts:
     plugin: make
     build-environment:
       - SPIDERMONKEY_VERSION: "91"
-    source: https://dlcdn.apache.org/couchdb/source/3.3.3/apache-couchdb-3.3.3.tar.gz
+    source: https://dlcdn.apache.org/couchdb/source/3.4.1/apache-couchdb-3.4.1.tar.gz
     source-type: tar
     override-build: |
       # Use the version of erlang/elixir we configured before
       source "$(pwd)/../../erl-iex/build/asdf.sh"
       
       # Configure, build and release CouchDB binaries
-      ./configure --spidermonkey-version "$SPIDERMONKEY_VERSION" && make release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
+      ./configure --spidermonkey-version "$SPIDERMONKEY_VERSION" --with-nouveau && make release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
       
       # Verifying that all is working
       #make check
