@@ -41,7 +41,7 @@ parts:
   erl-iex:
     plugin: dump
     build-environment:
-      - ASDF_ERLANG_VERSION: "25.2.3.13"
+      - ASDF_ERLANG_VERSION: "25.3.2.13"
       - ASDF_ELIXIR_VERSION: "1.15.8-otp-25"
     source: https://github.com/asdf-vm/asdf.git
     source-branch: v0.14.1
@@ -88,10 +88,13 @@ parts:
       - libmozjs-91-dev
       # For Fauxton
       - npm
+      # Nouveau
+      - openjdk-21-jdk-headless
     stage-packages:
       - libicu70
       - libssl3
       - libmozjs-91-0
+      - openjdk-21-jre-headless
     stage:
       - -usr/share/doc
       - -usr/share/man
