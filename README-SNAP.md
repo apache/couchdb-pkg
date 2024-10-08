@@ -263,6 +263,20 @@ The backup database has a single shard and single directory:
 ```bash
   $ ls /var/snap/couchdb_bkup/common/data/shards/
 ```
+-----
+
+# Weather Report
+
+To run the weatherreport, you'll need to pass the configuration directory. The configuration directory
+needs to contain both the default.ini (which can be blank) and the local.ini. 
+
+For the weatherreport options, call with `--help` to see usage. call with `--list` to see options. 
+The `-d info` is the mininal required log level to see results. 
+
+```bash
+  $ /snap/couchdb/current/bin/weatherreport -c /var/snap/couchdb/current/etc/ -d info memory_use
+['couchdb@127.0.0.1'] [info] Process is using 0.4% of available RAM, totalling 68524 KB of real memory.
+```
 
 -----
 
