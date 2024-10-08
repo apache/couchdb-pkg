@@ -86,8 +86,6 @@ parts:
       - libssl-dev
       # Mozilla JS engine
       - libmozjs-91-dev
-      # For Fauxton
-      - npm
     stage-packages:
       - libicu70
       - libssl3
