@@ -74,7 +74,7 @@ parts:
       source "$(pwd)/../../erl-iex/build/asdf.sh"
       
       # Configure, build and release CouchDB binaries
-      ./configure --spidermonkey-version "$SPIDERMONKEY_VERSION" --with-nouveau && make release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
+      ./configure --spidermonkey-version "$SPIDERMONKEY_VERSION" && make release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
       
       # Verifying that all is working
       #make check
@@ -88,13 +88,10 @@ parts:
       - libmozjs-91-dev
       # For Fauxton
       - npm
-      # Nouveau
-      - openjdk-21-jdk-headless
     stage-packages:
       - libicu70
       - libssl3
       - libmozjs-91-0
-      - openjdk-21-jre-headless
     stage:
       - -usr/share/doc
       - -usr/share/man
