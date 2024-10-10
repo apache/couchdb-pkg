@@ -32,10 +32,7 @@ if [ ! -s ${SNAP_INSTANCE_DATA}/etc/vm.args ]; then
    cat ${SNAP}/etc/vm.args > ${SNAP_INSTANCE_DATA}/etc/vm.args
 fi
 
-DEFAULT_INI=$SNAP_INSTANCE_DATA/etc/default.ini
-if [ ! -s ${DEFAULT_INI} ]; then
-   cat ${SNAP}/etc/default.ini > ${DEFAULT_INI}
-fi
+cat ${SNAP}/etc/default.ini > $SNAP_INSTANCE_DATA/etc/default.ini
 
 LOCAL_INI=$SNAP_INSTANCE_DATA/etc/local.ini
 if [ ! -s ${LOCAL_INI} ]; then
