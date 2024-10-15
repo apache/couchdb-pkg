@@ -34,7 +34,7 @@ CENTOSES="centos-8 centos-9"
 XPLAT_BASES="debian-bullseye debian-bookworm ubuntu-focal ubuntu-jammy centos-8 centos-9"
 XPLAT_ARCHES="arm64 ppc64le s390x"
 BINARY_API="https://apache.jfrog.io/artifactory"
-ERLANGVERSION=${ERLANGVERSION:-25.3.2.13}
+ERLANGVERSION=${ERLANGVERSION:-25.3.2.15}
 REPO_NAME="couch-dev"
 
 split-os-ver() {
@@ -110,14 +110,16 @@ build-all-couch() {
   done
   for base in $XPLAT_BASES; do
     for arch in $XPLAT_ARCHES; do
-      # nouveau packaging fails on ppc64le OSes
-      # see https://github.com/apache/couchdb-pkg/issues/140
+      # nouveau packaging fails on ppc64le OSes see
+      # https://github.com/apache/couchdb-pkg/issues/140 and Debian
+      # changed their policy to not support s390x and ppc64le for LTSs
       echo " **** base:${base}  arch:${arch} ****"
       if ! [[
               ( ${base} == "centos-8" && ${arch} == "arm64" ) ||
               ( ${base} == "centos-8" && ${arch} == "ppc64le" ) ||
               ( ${base} == "centos-9" && ${arch} == "ppc64le" ) ||
               ( ${base} == "debian-bullseye" && ${arch} == "ppc64le" ) ||
+              ( ${base} == "debian-bullseye" && ${arch} == "s390x") ||
               ( ${base} == "debian-bookworm" && ${arch} == "ppc64le" ) ||
               ( ${base} == "ubuntu-focal" && ${arch} == "ppc64le" ) ||
               ( ${base} == "ubuntu-jammy" && ${arch} == "ppc64le" )
