@@ -1,0 +1,141 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing,
+#   software distributed under the License is distributed on an
+#   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+#   KIND, either express or implied.  See the License for the
+#   specific language governing permissions and limitations
+#   under the License.
+---
+name: couchdb-nouveau
+version: 3.4.2
+type: app
+base: core22
+license: Apache-2.0
+summary: Official Apache CouchDB snap - a clustering document oriented database
+description: |
+  CouchDB is a database that completely embraces the web. Store your data with
+  JSON documents. Access your documents and query your indexes with your web
+  browser, via HTTP. Index, combine, and transform your documents with
+  JavaScript.
+assumes: [command-chain, common-data-dir]
+grade: stable
+confinement: strict
+
+architectures:
+  - build-on: [amd64]
+  - build-on: [armhf]
+  - build-on: [arm64]
+  - build-on: [s390x]
+  - build-on: [ppc64el]
+
+parts:
+  erlang-elixir-gradle:
+    plugin: dump
+    build-environment:
+      - ASDF_ERLANG_VERSION: "25.3.2.15"
+      - ASDF_ELIXIR_VERSION: "1.15.8-otp-25"
+      - ASDF_GRADLE_VERSION: "8.10"
+    source: https://github.com/asdf-vm/asdf.git
+    source-branch: v0.14.1
+    source-type: git
+    build-packages:
+      - libncurses-dev
+      - unzip
+      - curl
+    override-build: |
+      source "./asdf.sh"
+      
+      # Install Erlang
+      asdf plugin add erlang
+      asdf install erlang "$ASDF_ERLANG_VERSION"
+      asdf global erlang "$ASDF_ERLANG_VERSION"
+      
+      # Install Erlang
+      asdf plugin add elixir
+      asdf install elixir "$ASDF_ELIXIR_VERSION"
+      asdf global elixir "$ASDF_ELIXIR_VERSION"
+
+      # Install Gradle
+      asdf plugin-add gradle https://github.com/rfrancis/asdf-gradle.git
+      asdf install gradle "$ASDF_GRADLE_VERSION"
+      asdf global gradle "$ASDF_GRADLE_VERSION"
+  couchdb:
+    after: [erlang-elixir-gradle]
+    plugin: make
+    build-environment:
+      - SPIDERMONKEY_VERSION: "91"
+    source: https://dlcdn.apache.org/couchdb/source/3.4.2/apache-couchdb-3.4.2.tar.gz
+    source-type: tar
+    override-build: |
+      # Use the version of erlang/elixir/gradle we configured before
+      source "$(pwd)/../../erlang-elixir-gradle/build/asdf.sh"
+      
+      # Configure, build and release CouchDB binaries
+      ./configure --with-nouveau --spidermonkey-version "$SPIDERMONKEY_VERSION" && GRADLE=$(which gradle) make release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
+      
+      # Verifying that all is working
+      #make check
+    build-packages:
+      - gcc
+      - g++
+      - libc6-dev
+      - libicu-dev
+      - libssl-dev
+      # Mozilla JS engine
+      - libmozjs-91-dev
+      - openjdk-21-jdk-headless
+    stage-packages:
+      - libicu70
+      - libssl3
+      - libmozjs-91-0
+      - libgraphite2-3
+      - libharfbuzz0b
+      - libasound2
+      - openjdk-21-jre-headless
+    stage:
+      - -usr/share/doc
+      - -usr/share/man
+      - -var
+  nouveau-launcher:
+    source: snap/local
+    source-type: local
+    plugin: dump
+
+environment:
+  COUCHDB_ARGS_FILE: ${SNAP_DATA}/etc/vm.args
+  COUCHDB_FAUXTON_DOCROOT: ${SNAP}/share/www
+  COUCHDB_QUERY_SERVER_JAVASCRIPT: ${SNAP}/bin/couchjs ${COUCHJS_ARGS} ${SNAP}/share/server/main.js
+  COUCHDB_QUERY_SERVER_COFFEESCRIPT: ${SNAP}/bin/couchjs ${COUCHJS_ARGS} ${SNAP}/share/server/main-coffee.js
+  COUCHDB_INI_FILES: ${SNAP}/etc/default.ini ${SNAP}/etc/default.d ${SNAP_DATA}/etc/local.ini ${SNAP_DATA}/etc/local.d
+  COUCHDB_NOUVEAU_JAR: ${SNAP}/nouveau/lib/nouveau-1.0-SNAPSHOT.jar
+  COUCHDB_NOUVEAU_CFG: ${SNAP_DATA}/etc/nouveau.yaml
+
+apps:
+  couchdb:
+    command: bin/couchdb
+    plugs: [network, network-bind, mount-observe]
+  server:
+    daemon: simple
+    command: bin/couchdb
+    plugs: [network, network-bind, mount-observe]
+  nouveau:
+    environment:
+      JAVA_PATH: ${SNAP}/usr/lib/jvm/java-1.21.0-openjdk-${SNAP_ARCH}/bin/java
+    daemon: simple
+    command: bin/nouveau.sh
+    plugs: [network, network-bind, mount-observe]
+  remsh:
+    command: bin/remsh
+    plugs: [network, network-bind]
+  couchjs:
+    command: bin/couchjs
+    plugs: [network, network-bind]

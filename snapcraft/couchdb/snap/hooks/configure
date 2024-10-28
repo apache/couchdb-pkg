@@ -1,0 +1,69 @@
+#!/bin/sh
+
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy of
+# the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
+
+set -e
+
+VM_ARGS=$SNAP_DATA/etc/vm.args
+LOCAL_INI=$SNAP_DATA/etc/local.ini
+
+## add or replace for the vm.arg file
+_modify_vm_args() {
+  opt=$1
+  value="$2"
+  replace_line="-$opt $value"
+  if $(grep -q "^# -$opt" $VM_ARGS); then
+    sed --in-place "s/^# -$opt.*/$replace_line/" $VM_ARGS
+  elif $(grep -q "^-$opt " $VM_ARGS); then
+    sed --in-place "s/^-$opt .*/$replace_line/" $VM_ARGS
+  else
+    echo $replace_line >> $VM_ARGS
+  fi
+}
+
+## add or replace for the local.ini file
+_modify_ini_args() {
+  opt=$1
+  value="$2"
+  replace_line="$opt = $value"
+  if $(grep -q "^[;|[:space:]]*$opt[[:space:]]*=" $LOCAL_INI); then
+    sed --in-place "s/^[;|[:space:]]*$opt[[:space:]]*=.*/$replace_line/" $LOCAL_INI 
+  else
+    echo $replace_line >> $LOCAL_INI
+  fi
+}
+
+# The vm_args file can only be changed from the filesystem
+# configuration vm.args file
+
+VM_ARGS_OPTIONS="name setcookie"
+for key in $VM_ARGS_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_vm_args $key $val
+    sleep 0.125
+    snapctl unset $key
+  fi
+done
+
+LOCAL_INI_OPTIONS="admin port"
+for key in $LOCAL_INI_OPTIONS
+do
+  val=$(snapctl get $key)
+  if [ ! -z "$val" ]; then
+    _modify_ini_args $key $val
+    sleep 0.125
+    snapctl unset $key
+  fi
+done
