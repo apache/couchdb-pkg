@@ -18,6 +18,6 @@ echo "java opts : ${_JAVA_OPTS}"
 echo "jar       : ${COUCHDB_NOUVEAU_JAR}"
 echo "cfg       : ${COUCHDB_NOUVEAU_CFG}"
 
-export JAVA_OPTS=-server -Djava.awt.headless=true -Xmx2g
+export JAVA_OPTS="-server -Djava.awt.headless=true -Xmx2g"
 
 exec ${JAVA_PATH} ${JAVA_OPTS} -jar ${COUCHDB_NOUVEAU_JAR} server ${COUCHDB_NOUVEAU_CFG}

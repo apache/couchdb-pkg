@@ -64,10 +64,6 @@ parts:
       asdf install elixir "$ASDF_ELIXIR_VERSION"
       asdf global elixir "$ASDF_ELIXIR_VERSION"
 
-      # Install Gradle
-      asdf plugin-add gradle https://github.com/rfrancis/asdf-gradle.git
-      asdf install gradle "$ASDF_GRADLE_VERSION"
-      asdf global gradle "$ASDF_GRADLE_VERSION"
   couchdb:
     after: [erlang-elixir-gradle]
     plugin: make
@@ -78,9 +74,12 @@ parts:
     override-build: |
       # Use the version of erlang/elixir/gradle we configured before
       source "$(pwd)/../../erlang-elixir-gradle/build/asdf.sh"
+
+      # set-up gradle to use launchpad proxy settings (for snapcraft remote-build)      
+      source "$(pwd)/../../nouveau-launcher/src/setup_gradle_launchpad.sh"
       
       # Configure, build and release CouchDB binaries
-      ./configure --with-nouveau --spidermonkey-version "$SPIDERMONKEY_VERSION" && GRADLE=$(which gradle) make release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
+      ./configure --with-nouveau --spidermonkey-version "$SPIDERMONKEY_VERSION" && make release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
       
       # Verifying that all is working
       #make check
@@ -109,6 +108,8 @@ parts:
     source: snap/local
     source-type: local
     plugin: dump
+    stage:
+      - -setup_gradle_launchpad.sh
 
 environment:
   COUCHDB_ARGS_FILE: ${SNAP_DATA}/etc/vm.args
