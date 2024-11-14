@@ -15,12 +15,12 @@
 #   specific language governing permissions and limitations
 #   under the License.
 ---
-name: couchdb-nouveau
-version: 3.4.2
+name: couchdb
+version: 3.4.2-nouveau
 type: app
 base: core22
 license: Apache-2.0
-summary: Official Apache CouchDB snap - a clustering document oriented database
+summary: Official Apache CouchDB Nouveau snap - a clustering document oriented database
 description: |
   CouchDB is a database that completely embraces the web. Store your data with
   JSON documents. Access your documents and query your indexes with your web
@@ -32,111 +32,111 @@ confinement: strict
 
 architectures:
   - build-on: [amd64]
-  - build-on: [armhf]
-  - build-on: [arm64]
-  - build-on: [s390x]
-  - build-on: [ppc64el]
+  #- build-on: [armhf]
+  #- build-on: [arm64]
+  #- build-on: [s390x]
+  #- build-on: [ppc64el]
 
 parts:
-  erlang-elixir-gradle:
-    plugin: dump
-    build-environment:
-      - ASDF_ERLANG_VERSION: "25.3.2.15"
-      - ASDF_ELIXIR_VERSION: "1.15.8-otp-25"
-      - ASDF_GRADLE_VERSION: "8.10"
-    source: https://github.com/asdf-vm/asdf.git
-    source-branch: v0.14.1
-    source-type: git
-    build-packages:
-      - libncurses-dev
-      - unzip
-      - curl
-    override-build: |
-      source "./asdf.sh"
-      
-      # Install Erlang
-      asdf plugin add erlang
-      asdf install erlang "$ASDF_ERLANG_VERSION"
-      asdf global erlang "$ASDF_ERLANG_VERSION"
-      
-      # Install Erlang
-      asdf plugin add elixir
-      asdf install elixir "$ASDF_ELIXIR_VERSION"
-      asdf global elixir "$ASDF_ELIXIR_VERSION"
+#  erlang-elixir-gradle:
+#    plugin: dump
+#    build-environment:
+#      - ASDF_ERLANG_VERSION: "25.3.2.15"
+#      - ASDF_ELIXIR_VERSION: "1.15.8-otp-25"
+#      - ASDF_GRADLE_VERSION: "8.10"
+#    source: https://github.com/asdf-vm/asdf.git
+#    source-branch: v0.14.1
+#    source-type: git
+#    build-packages:
+#      - libncurses-dev
+#      - unzip
+#      - curl
+#    override-build: |
+#      source "./asdf.sh"
+#
+#      # Install Erlang
+#      asdf plugin add erlang
+#      asdf install erlang "$ASDF_ERLANG_VERSION"
+#      asdf global erlang "$ASDF_ERLANG_VERSION"
+#
+#      # Install Erlang
+#      asdf plugin add elixir
+#      asdf install elixir "$ASDF_ELIXIR_VERSION"
+#      asdf global elixir "$ASDF_ELIXIR_VERSION"
 
-  couchdb:
-    after: [erlang-elixir-gradle]
+  nouveau:
+    #after: [erlang-elixir-gradle]
     plugin: make
-    build-environment:
-      - SPIDERMONKEY_VERSION: "91"
+    #build-environment:
+    #  - SPIDERMONKEY_VERSION: "91"
     source: https://dlcdn.apache.org/couchdb/source/3.4.2/apache-couchdb-3.4.2.tar.gz
     source-type: tar
     override-build: |
       # Use the version of erlang/elixir/gradle we configured before
-      source "$(pwd)/../../erlang-elixir-gradle/build/asdf.sh"
+      #source "$(pwd)/../../erlang-elixir-gradle/build/asdf.sh"
 
       # set-up gradle to use launchpad proxy settings (for snapcraft remote-build)      
       source "$(pwd)/../../nouveau-launcher/src/setup_gradle_launchpad.sh"
       
       # Configure, build and release CouchDB binaries
-      ./configure --with-nouveau --spidermonkey-version "$SPIDERMONKEY_VERSION" && make release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
+      # ./configure --with-nouveau --spidermonkey-version "$SPIDERMONKEY_VERSION" && make nouveau
+      make -f "$(pwd)/../../nouveau-launcher/src/Makefile" release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
       
-      # Verifying that all is working
-      #make check
     build-packages:
-      - gcc
-      - g++
-      - libc6-dev
-      - libicu-dev
-      - libssl-dev
+      #- gcc
+      #- g++
+      #- libc6-dev
+      #- libicu-dev
+      #- libssl-dev
       # Mozilla JS engine
-      - libmozjs-91-dev
+      #- libmozjs-91-dev
       - openjdk-21-jdk-headless
     stage-packages:
-      - libicu70
-      - libssl3
-      - libmozjs-91-0
-      - libgraphite2-3
-      - libharfbuzz0b
-      - libasound2
+      #- libicu70
+      #- libssl3
+      #- libmozjs-91-0
+      #- libgraphite2-3
+      #- libharfbuzz0b
+      #- libasound2
       - openjdk-21-jre-headless
-    stage:
-      - -usr/share/doc
-      - -usr/share/man
-      - -var
+    #stage:
+      #- -usr/share/doc
+      #- -usr/share/man
+      #- -var
   nouveau-launcher:
     source: snap/local
     source-type: local
     plugin: dump
     stage:
       - -setup_gradle_launchpad.sh
+      - -Makefile
 
 environment:
-  COUCHDB_ARGS_FILE: ${SNAP_DATA}/etc/vm.args
-  COUCHDB_FAUXTON_DOCROOT: ${SNAP}/share/www
-  COUCHDB_QUERY_SERVER_JAVASCRIPT: ${SNAP}/bin/couchjs ${COUCHJS_ARGS} ${SNAP}/share/server/main.js
-  COUCHDB_QUERY_SERVER_COFFEESCRIPT: ${SNAP}/bin/couchjs ${COUCHJS_ARGS} ${SNAP}/share/server/main-coffee.js
-  COUCHDB_INI_FILES: ${SNAP}/etc/default.ini ${SNAP}/etc/default.d ${SNAP_DATA}/etc/local.ini ${SNAP_DATA}/etc/local.d
+  #COUCHDB_ARGS_FILE: ${SNAP_DATA}/etc/vm.args
+  #COUCHDB_FAUXTON_DOCROOT: ${SNAP}/share/www
+  #COUCHDB_QUERY_SERVER_JAVASCRIPT: ${SNAP}/bin/couchjs ${COUCHJS_ARGS} ${SNAP}/share/server/main.js
+  #COUCHDB_QUERY_SERVER_COFFEESCRIPT: ${SNAP}/bin/couchjs ${COUCHJS_ARGS} ${SNAP}/share/server/main-coffee.js
+  #COUCHDB_INI_FILES: ${SNAP}/etc/default.ini ${SNAP}/etc/default.d ${SNAP_DATA}/etc/local.ini ${SNAP_DATA}/etc/local.d
   COUCHDB_NOUVEAU_JAR: ${SNAP}/nouveau/lib/nouveau-1.0-SNAPSHOT.jar
   COUCHDB_NOUVEAU_CFG: ${SNAP_DATA}/etc/nouveau.yaml
 
 apps:
-  couchdb:
-    command: bin/couchdb
-    plugs: [network, network-bind, mount-observe]
-  server:
-    daemon: simple
-    command: bin/couchdb
-    plugs: [network, network-bind, mount-observe]
+  #couchdb:
+  #  command: bin/couchdb
+  #  plugs: [network, network-bind, mount-observe]
+  #server:
+  #  daemon: simple
+  #  command: bin/couchdb
+  #  plugs: [network, network-bind, mount-observe]
   nouveau:
     environment:
       JAVA_PATH: ${SNAP}/usr/lib/jvm/java-1.21.0-openjdk-${SNAP_ARCH}/bin/java
     daemon: simple
     command: bin/nouveau.sh
     plugs: [network, network-bind, mount-observe]
-  remsh:
-    command: bin/remsh
-    plugs: [network, network-bind]
-  couchjs:
-    command: bin/couchjs
-    plugs: [network, network-bind]
+  #remsh:
+  #  command: bin/remsh
+  #  plugs: [network, network-bind]
+  #couchjs:
+  #  command: bin/couchjs
+  #  plugs: [network, network-bind]
