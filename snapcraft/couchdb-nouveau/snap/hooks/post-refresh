@@ -22,36 +22,22 @@ else
     SNAP_INSTANCE_COMMON=$(echo ${SNAP_COMMON} | sed -e s/${SNAP_NAME}/${SNAP_INSTANCE_NAME}/)
 fi
 
-LOG=${SNAP_INSTANCE_DATA}/snap-install.log
-
 mkdir -p ${SNAP_INSTANCE_DATA}/etc
-mkdir -p ${SNAP_INSTANCE_DATA}/etc/local.d
-mkdir -p ${SNAP_INSTANCE_COMMON}/data
+mkdir -p ${SNAP_INSTANCE_COMMON}/data/nouveau
 
-if [ ! -s ${SNAP_INSTANCE_DATA}/etc/vm.args ]; then
-   cat ${SNAP}/etc/vm.args > ${SNAP_INSTANCE_DATA}/etc/vm.args
-fi
-
-cat ${SNAP}/etc/default.ini > $SNAP_INSTANCE_DATA/etc/default.ini
-
-LOCAL_INI=$SNAP_INSTANCE_DATA/etc/local.ini
-if [ ! -s ${LOCAL_INI} ]; then
-   cat ${SNAP}/etc/local.ini > ${LOCAL_INI}
-fi
-
-# Ensure that local.ini has the view_index_dir specified
-if ! $(grep -q "^view_index_dir" ${LOCAL_INI}); then
-    view_line=$(echo "view_index_dir = ${SNAP_INSTANCE_COMMON}/data" | sed 's/\//\\\//g')
-    sed --in-place "/^\[couchdb\].*$/a ${view_line}" ${LOCAL_INI} 
-fi
-
-# Ensure that local.ini has the database_dir specified
-if ! $(grep -q "^database_dir" ${LOCAL_INI}); then
-    database_line=$(echo "database_dir = ${SNAP_INSTANCE_COMMON}/data" | sed 's/\//\\\//g')
-    sed --in-place "/^\[couchdb\].*$/a ${database_line}" ${LOCAL_INI} 
-fi
-
-# If nouveau yaml file is there, copy to cfg directory (without overwriting)
-if [ -s ${SNAP}/etc/nouveau.yaml ] && [ ! -s ${COUCHDB_NOUVEAU_CFG} ]; then
-   cat ${SNAP}/etc/nouveau.yaml > ${COUCHDB_NOUVEAU_CFG}
-fi
+## Ensure that local.ini has the view_index_dir specified
+#if ! $(grep -q "^view_index_dir" ${LOCAL_INI}); then
+#    view_line=$(echo "view_index_dir = ${SNAP_INSTANCE_COMMON}/data" | sed 's/\//\\\//g')
+#    sed --in-place "/^\[couchdb\].*$/a ${view_line}" ${LOCAL_INI}
+#fi
+#
+## Ensure that local.ini has the database_dir specified
+#if ! $(grep -q "^database_dir" ${LOCAL_INI}); then
+#    database_line=$(echo "database_dir = ${SNAP_INSTANCE_COMMON}/data" | sed 's/\//\\\//g')
+#    sed --in-place "/^\[couchdb\].*$/a ${database_line}" ${LOCAL_INI}
+#fi
+#
+## If nouveau yaml file is there, copy to cfg directory (without overwriting)
+#if [ -s ${SNAP}/etc/nouveau.yaml ] && [ ! -s ${COUCHDB_NOUVEAU_CFG} ]; then
+#   cat ${SNAP}/etc/nouveau.yaml > ${COUCHDB_NOUVEAU_CFG}
+#fi

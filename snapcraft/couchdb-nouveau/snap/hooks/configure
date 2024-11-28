@@ -14,56 +14,20 @@
 
 set -e
 
-VM_ARGS=$SNAP_DATA/etc/vm.args
-LOCAL_INI=$SNAP_DATA/etc/local.ini
-
-## add or replace for the vm.arg file
-_modify_vm_args() {
-  opt=$1
-  value="$2"
-  replace_line="-$opt $value"
-  if $(grep -q "^# -$opt" $VM_ARGS); then
-    sed --in-place "s/^# -$opt.*/$replace_line/" $VM_ARGS
-  elif $(grep -q "^-$opt " $VM_ARGS); then
-    sed --in-place "s/^-$opt .*/$replace_line/" $VM_ARGS
-  else
-    echo $replace_line >> $VM_ARGS
-  fi
-}
-
-## add or replace for the local.ini file
-_modify_ini_args() {
-  opt=$1
-  value="$2"
-  replace_line="$opt = $value"
-  if $(grep -q "^[;|[:space:]]*$opt[[:space:]]*=" $LOCAL_INI); then
-    sed --in-place "s/^[;|[:space:]]*$opt[[:space:]]*=.*/$replace_line/" $LOCAL_INI 
-  else
-    echo $replace_line >> $LOCAL_INI
-  fi
-}
-
-# The vm_args file can only be changed from the filesystem
-# configuration vm.args file
-
-VM_ARGS_OPTIONS="name setcookie"
-for key in $VM_ARGS_OPTIONS
-do
-  val=$(snapctl get $key)
-  if [ ! -z "$val" ]; then
-    _modify_vm_args $key $val
-    sleep 0.125
-    snapctl unset $key
-  fi
-done
-
-LOCAL_INI_OPTIONS="admin port"
-for key in $LOCAL_INI_OPTIONS
-do
-  val=$(snapctl get $key)
-  if [ ! -z "$val" ]; then
-    _modify_ini_args $key $val
-    sleep 0.125
-    snapctl unset $key
-  fi
-done
+#if grep -q "rootDir: {{nouveau_index_dir}}" nouveau.yaml; then
+#    sed -i.bak 's/{{nouveau_index_dir}}/.\/bla\/blup/' nouveau.yaml
+#else
+#    echo "1: not run"
+#fi
+#
+#if grep -q "{{nouveau_port}}" nouveau.yaml; then
+#    sed -i.bak 's/{{nouveau_port}}/1234/' nouveau.yaml
+#else
+#    echo "2: not run"
+#fi
+#
+#if grep -q "{{nouveau_admin_port}}" nouveau.yaml; then
+#    sed -i.bak 's/{{nouveau_admin_port}}/5678/' nouveau.yaml
+#else
+#    echo "3: not run"
+#fi

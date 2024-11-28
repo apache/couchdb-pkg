@@ -12,12 +12,12 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
+export JAVA_OPTS="-server -Djava.awt.headless=true -Xmx2g"
+
 echo "Starting nouveau (java)"
 echo "java path : ${JAVA_PATH}"
-echo "java opts : ${_JAVA_OPTS}"
+echo "java opts : ${JAVA_OPTS}"
 echo "jar       : ${COUCHDB_NOUVEAU_JAR}"
 echo "cfg       : ${COUCHDB_NOUVEAU_CFG}"
-
-export JAVA_OPTS="-server -Djava.awt.headless=true -Xmx2g"
 
 exec ${JAVA_PATH} ${JAVA_OPTS} -jar ${COUCHDB_NOUVEAU_JAR} server ${COUCHDB_NOUVEAU_CFG}
