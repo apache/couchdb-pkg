@@ -119,8 +119,8 @@ environment:
   #COUCHDB_INI_FILES: ${SNAP}/etc/default.ini ${SNAP}/etc/default.d ${SNAP_DATA}/etc/local.ini ${SNAP_DATA}/etc/local.d
   COUCHDB_NOUVEAU_JAR: ${SNAP}/nouveau/lib/nouveau-1.0-SNAPSHOT.jar
   COUCHDB_NOUVEAU_CFG: ${SNAP_DATA}/etc/nouveau.yaml
-  COUCHDB_NOUVEAU_NOUVEAU_PORT: 5987
-  COUCHDB_NOUVEAU_NOUVEAU_ADMIN_PORT: 5988
+  COUCHDB_NOUVEAU_PORT: 5987
+  COUCHDB_NOUVEAU_ADMIN_PORT: 5988
 
 apps:
   #couchdb:

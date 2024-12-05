@@ -12,7 +12,6 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-
 if [ -z ${SNAP_INSTANCE_KEY} ]
 then
     SNAP_INSTANCE_DATA=${SNAP_DATA}
@@ -25,19 +24,12 @@ fi
 mkdir -p ${SNAP_INSTANCE_DATA}/etc
 mkdir -p ${SNAP_INSTANCE_COMMON}/data/nouveau
 
-## Ensure that nouveau.yaml has the view_index_dir specified
-#if ! $(grep -q "^view_index_dir" ${LOCAL_INI}); then
-#    view_line=$(echo "view_index_dir = ${SNAP_INSTANCE_COMMON}/data" | sed 's/\//\\\//g')
-#    sed --in-place "/^\[couchdb\].*$/a ${view_line}" ${LOCAL_INI}
-#fi
-#
-## Ensure that nouveau.yaml has the database_dir specified
-#if ! $(grep -q "^database_dir" ${LOCAL_INI}); then
-#    database_line=$(echo "database_dir = ${SNAP_INSTANCE_COMMON}/data" | sed 's/\//\\\//g')
-#    sed --in-place "/^\[couchdb\].*$/a ${database_line}" ${LOCAL_INI}
-#fi
-#
 ## If nouveau yaml file is there, copy to cfg directory (without overwriting)
-#if [ -s ${SNAP}/etc/nouveau.yaml ] && [ ! -s ${COUCHDB_NOUVEAU_CFG} ]; then
-#   cat ${SNAP}/etc/nouveau.yaml > ${COUCHDB_NOUVEAU_CFG}
-#fi
+NOUVEAU_CFG=${SNAP_INSTANCE_DATA}/etc/nouveau.yaml
+if [ -s ${SNAP}/etc/nouveau.yaml ] && [ ! -s ${NOUVEAU_CFG} ]; then
+   cat ${SNAP}/etc/nouveau.yaml > ${NOUVEAU_CFG}
+   index_line=$(echo "${SNAP_INSTANCE_COMMON}/data/nouveau" | sed 's/\//\\\//g')
+   sed --in-place "s/{{nouveau_index_dir}}/${index_line}/" ${NOUVEAU_CFG}
+   sed --in-place "s/{{nouveau_port}}/${COUCHDB_NOUVEAU_PORT}/" ${NOUVEAU_CFG}
+   sed --in-place "s/{{nouveau_admin_port}}/${COUCHDB_NOUVEAU_ADMIN_PORT}/" ${NOUVEAU_CFG}
+fi
