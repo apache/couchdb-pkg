@@ -20,12 +20,17 @@ version: 3.4.2-nouveau
 type: app
 base: core22
 license: Apache-2.0
-summary: Official Apache CouchDB Nouveau snap - a clustering document oriented database
+summary: Official Apache CouchDB Nouveau snap (addon)
 description: |
   CouchDB is a database that completely embraces the web. Store your data with
   JSON documents. Access your documents and query your indexes with your web
   browser, via HTTP. Index, combine, and transform your documents with
   JavaScript.
+  
+  Nouveau indexes enable you to query a database by using the Lucene Query 
+  Parser Syntax. A nouveau index uses one, or multiple, fields from your 
+  documents. You can use a nouveau index to run queries to find documents 
+  based on the content they contain.
 assumes: [command-chain, common-data-dir]
 grade: stable
 confinement: strict
@@ -39,21 +44,14 @@ architectures:
 
 parts:
   nouveau:
-    #after: [erlang-elixir-gradle]
     plugin: make
-    #build-environment:
-    #  - SPIDERMONKEY_VERSION: "91"
     source: https://dlcdn.apache.org/couchdb/source/3.4.2/apache-couchdb-3.4.2.tar.gz
     source-type: tar
     override-build: |
-      # Use the version of erlang/elixir/gradle we configured before
-      #source "$(pwd)/../../erlang-elixir-gradle/build/asdf.sh"
-
       # set-up gradle to use launchpad proxy settings (for snapcraft remote-build)      
       source "$(pwd)/../../nouveau-launcher/src/setup_gradle_launchpad.sh"
 
-      # Configure, build and release CouchDB binaries
-      # ./configure --with-nouveau --spidermonkey-version "$SPIDERMONKEY_VERSION" && make nouveau
+      # Configure, build and release Nouveau binaries
       make -f "$(pwd)/../../nouveau-launcher/src/Makefile" release && cp -r rel/couchdb/* $SNAPCRAFT_PART_INSTALL
 
     build-packages:
