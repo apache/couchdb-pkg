@@ -26,8 +26,8 @@ mkdir -p ${SNAP_INSTANCE_COMMON}/data/nouveau
 
 ## If nouveau yaml file is there, copy to cfg directory (without overwriting)
 NOUVEAU_CFG=${SNAP_INSTANCE_DATA}/etc/nouveau.yaml
-if [ -s ${SNAP}/etc/nouveau.yaml ] && [ ! -s ${NOUVEAU_CFG} ]; then
-   cat ${SNAP}/etc/nouveau.yaml > ${NOUVEAU_CFG}
+if [ -s ${SNAP}/nouveau/etc/nouveau.yaml ] && [ ! -s ${NOUVEAU_CFG} ]; then
+   cat ${SNAP}/nouveau/etc/nouveau.yaml > ${NOUVEAU_CFG}
    index_line=$(echo "${SNAP_INSTANCE_COMMON}/data/nouveau" | sed 's/\//\\\//g')
    sed --in-place "s/{{nouveau_index_dir}}/${index_line}/" ${NOUVEAU_CFG}
    sed --in-place "s/{{nouveau_port}}/${COUCHDB_NOUVEAU_PORT}/" ${NOUVEAU_CFG}
