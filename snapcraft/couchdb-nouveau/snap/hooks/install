@@ -30,6 +30,6 @@ if [ -s ${SNAP}/nouveau/etc/nouveau.yaml ] && [ ! -s ${NOUVEAU_CFG} ]; then
    cat ${SNAP}/nouveau/etc/nouveau.yaml > ${NOUVEAU_CFG}
    index_line=$(echo "${SNAP_INSTANCE_COMMON}/data/nouveau" | sed 's/\//\\\//g')
    sed --in-place "s/{{nouveau_index_dir}}/${index_line}/" ${NOUVEAU_CFG}
-   sed --in-place "s/{{nouveau_port}}/${COUCHDB_NOUVEAU_NOUVEAU_PORT}/" ${NOUVEAU_CFG}
-   sed --in-place "s/{{nouveau_admin_port}}/${COUCHDB_NOUVEAU_NOUVEAU_ADMIN_PORT}/" ${NOUVEAU_CFG}
+   sed --in-place "s/{{nouveau_port}}/${COUCHDB_NOUVEAU_PORT}/" ${NOUVEAU_CFG}
+   sed --in-place "s/{{nouveau_admin_port}}/${COUCHDB_NOUVEAU_ADMIN_PORT}/" ${NOUVEAU_CFG}
 fi
