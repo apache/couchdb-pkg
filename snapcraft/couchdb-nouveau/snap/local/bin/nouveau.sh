@@ -11,8 +11,19 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations under
 # the License.
+#
+if [ -z ${SNAP_INSTANCE_KEY} ]
+then
+    SNAP_INSTANCE_DATA=${SNAP_DATA}
+else
+    SNAP_INSTANCE_DATA=$(echo ${SNAP_DATA} | sed -e s/${SNAP_NAME}/${SNAP_INSTANCE_NAME}/)
+fi
 
+export JAVA_PATH="${SNAP}/usr/lib/jvm/java-1.21.0-openjdk-${SNAP_ARCH}/bin/java"
 export JAVA_OPTS="-server -Djava.awt.headless=true -Xmx2g"
+
+COUCHDB_NOUVEAU_JAR: ${SNAP}/nouveau/lib/nouveau-1.0-SNAPSHOT.jar
+COUCHDB_NOUVEAU_CFG: ${SNAP_INSTANCE_DATA}/etc/nouveau.yaml
 
 echo "Starting nouveau (java)"
 echo "java path : ${JAVA_PATH}"
