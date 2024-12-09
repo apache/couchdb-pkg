@@ -154,6 +154,19 @@ s390x-ubuntu-jammy: ubuntu-jammy
 arm64-ubuntu-jammy: ubuntu-jammy
 ppc64le-ubuntu-jammy: ubuntu-jammy
 
+# Ubuntu 24.04 (Noble)
+ubuntu-noble: PLATFORM=noble
+ubuntu-noble: DIST=ubuntu-noble
+ubuntu-noble: SPIDERMONKEY=libmozjs-115-0
+ubuntu-noble: SPIDERMONKEY_DEV=libmozjs-115-dev
+ubuntu-noble: SM_VER=115
+ubuntu-noble: noble
+noble: debian
+
+s390x-ubuntu-noble: ubuntu-noble
+arm64-ubuntu-noble: ubuntu-noble
+ppc64le-ubuntu-noble: ubuntu-noble
+
 # RPM default
 centos: PKGDIR=../rpmbuild/RPMS/$(PKGARCH)
 centos: find-couch-dist link-couch-dist build-rpm copy-pkgs
