@@ -42,6 +42,10 @@ case $1 in
             chown nouveau:nouveau $i >/dev/null 2>&1 || true
         done
 
+        # These should also not be world readable or writable:
+        chmod 0640 /opt/nouveau/etc/nouveau.yaml
+        chmod 0750 /var/lib/nouveau
+
         db_input high couchdb-nouveau/enable || true
         db_go || true
         db_get couchdb-nouveau/enable || true
