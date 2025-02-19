@@ -44,7 +44,7 @@ _modify_ini_args() {
 }
 
 # The vm_args file can only be changed from the filesystem
-# configutaion vm.args file
+# configuration vm.args file
 
 VM_ARGS_OPTIONS="name setcookie"
 for key in $VM_ARGS_OPTIONS
