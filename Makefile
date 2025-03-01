@@ -127,6 +127,13 @@ arm64-ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
 arm64-ubuntu-focal: SM_VER=68
 arm64-ubuntu-focal: focal
 
+aarch64-ubuntu-focal: PLATFORM=focal
+aarch64-ubuntu-focal: DIST=ubuntu-focal
+aarch64-ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
+aarch64-ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
+aarch64-ubuntu-focal: SM_VER=68
+aarch64-ubuntu-focal: focal
+
 ppc64le-ubuntu-focal: PLATFORM=focal
 ppc64le-ubuntu-focal: DIST=ubuntu-focal
 ppc64le-ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
@@ -165,6 +172,7 @@ noble: debian
 
 s390x-ubuntu-noble: ubuntu-noble
 arm64-ubuntu-noble: ubuntu-noble
+aarch64-ubuntu-noble: ubuntu-noble
 ppc64le-ubuntu-noble: ubuntu-noble
 
 # RPM default
@@ -190,16 +198,21 @@ almalinux-8: centos-8
 almalinux-8.8: centos-8
 almalinux-8.9: centos-8
 almalinux-8.10: centos-8
+aarch64-almalinux-8.10: centos-8
+aarch64-almalinux-8: centos-8
 
 # Almalinux 9 is a CentOS 9 alias
 almalinux-9: centos-9
 almalinux-9.2: centos-9
 almalinux-9.4: centos-9
+aarch64-almalinux-9.4: centos-9
+aarch64-almalinux-9: centos-9
 # s390x RHEL 8 clone based
 s390x-centos-8: centos-8
 ppc64le-centos-8: centos-8
 # s390x RHEL 9 clone based
 s390x-centos-9: centos-9
+
 arm64-centos-9: PKGARCH=aarch64
 arm64-centos-9: centos-9
 ppc64le-centos-9: centos-9
