@@ -198,14 +198,18 @@ almalinux-8: centos-8
 almalinux-8.8: centos-8
 almalinux-8.9: centos-8
 almalinux-8.10: centos-8
+aarch64-almalinux-8.10: PKGARCH=aarch64
 aarch64-almalinux-8.10: centos-8
+aarch64-almalinux-8: PKGARCH=aarch64
 aarch64-almalinux-8: centos-8
 
 # Almalinux 9 is a CentOS 9 alias
 almalinux-9: centos-9
 almalinux-9.2: centos-9
 almalinux-9.4: centos-9
+aarch64-almalinux-9.4: PKGARCH=aarch64
 aarch64-almalinux-9.4: centos-9
+aarch64-almalinux-9: PKGARCH=aarch64
 aarch64-almalinux-9: centos-9
 # s390x RHEL 8 clone based
 s390x-centos-8: centos-8
