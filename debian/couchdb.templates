@@ -19,7 +19,7 @@ _Description: General type of CouchDB configuration:
  If you prefer to configure CouchDB yourself, select none. You will then
  need to edit /opt/couchdb/etc/vm.args and /opt/couchdb/etc/local.d/*.ini
  yourself. Be aware that this will bypass *all* configuration steps, including
- setup of a CouchDB admin user - leaving CouchDB in "admin party" mode.
+ setup of a CouchDB admin user. You'll have to create one manually.
 
 Template: couchdb/nodename
 Type: string
