@@ -193,7 +193,7 @@ case $1 in
       clustered)
         db_get couchdb/nodename && nodename="$RET"
 
-        sed -i "/^-name/c\-name ${nodename}" /opt/couchdb/etc/vm.args
+        sed -i "/^-name/c\-name '${nodename}'" /opt/couchdb/etc/vm.args
 
         setbindaddress
 
