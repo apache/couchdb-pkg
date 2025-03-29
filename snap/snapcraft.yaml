@@ -16,7 +16,7 @@
 #   under the License.
 ---
 name: couchdb
-version: 3.4.2
+version: 3.4.3
 type: app
 base: core22
 license: Apache-2.0
@@ -41,10 +41,10 @@ parts:
   erl-iex:
     plugin: dump
     build-environment:
-      - ASDF_ERLANG_VERSION: "25.3.2.15"
-      - ASDF_ELIXIR_VERSION: "1.15.8-otp-25"
+      - ASDF_ERLANG_VERSION: "25.3.2.19"
+      - ASDF_ELIXIR_VERSION: "1.17.3-otp-25"
     source: https://github.com/asdf-vm/asdf.git
-    source-branch: v0.14.1
+    source-branch: v0.16.7
     source-type: git
     build-packages:
       - libncurses-dev
@@ -66,8 +66,8 @@ parts:
     after: [erl-iex]
     plugin: make
     build-environment:
-      - SPIDERMONKEY_VERSION: "91"
-    source: https://dlcdn.apache.org/couchdb/source/3.4.2/apache-couchdb-3.4.2.tar.gz
+      - SPIDERMONKEY_VERSION: "102"
+    source: https://dlcdn.apache.org/couchdb/source/3.4.3/apache-couchdb-3.4.3.tar.gz
     source-type: tar
     override-build: |
       # Use the version of erlang/elixir we configured before
@@ -85,11 +85,11 @@ parts:
       - libicu-dev
       - libssl-dev
       # Mozilla JS engine
-      - libmozjs-91-dev
+      - libmozjs-102-dev
     stage-packages:
       - libicu70
       - libssl3
-      - libmozjs-91-0
+      - libmozjs-102-0
     stage:
       - -usr/share/doc
       - -usr/share/man
