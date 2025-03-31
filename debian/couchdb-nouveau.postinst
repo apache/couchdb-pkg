@@ -46,18 +46,8 @@ case $1 in
         chmod 0640 /opt/nouveau/etc/nouveau.yaml
         chmod 0750 /var/lib/nouveau
 
-        db_input high couchdb-nouveau/enable || true
+        db_input medium couchdb-nouveau/enable || true
         db_go || true
-        db_get couchdb-nouveau/enable || true
-
-        if [ "$RET" = "true" ] && [ -d "/opt/couchdb/etc/default.d" ]; then
-            cat <<EOF > /opt/couchdb/etc/default.d/10-nouveau.ini
-[nouveau]
-enable = true
-url = http://127.0.0.1:5987
-EOF
-            chown couchdb:couchdb /opt/couchdb/etc/default.d/10-nouveau.ini
-        fi
         ;;
 
     abort-upgrade|abort-remove|abort-configure)
