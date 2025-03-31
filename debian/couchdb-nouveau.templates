@@ -3,12 +3,10 @@
 # Failure to do so will result in a rejected pull request.
 
 Template: couchdb-nouveau/enable
-Type: boolean
+Type: note
 Default: true
-_Description: Enable Nouveau in CouchDB (if installed)?
- Enables nouveau in local CouchDB, if it is installed. You
- will need to reload config or restart CouchDB for the change
- to take effect if it is already running.
+_Description: Enable Nouveau in CouchDB
+ Remember to set `[nouveau] enable = true` in CouchDB and reload.
 
 Template: couchdb-nouveau/postrm_remove_indexes
 Type: boolean
