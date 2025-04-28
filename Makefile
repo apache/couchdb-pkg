@@ -159,6 +159,7 @@ jammy: debian
 
 s390x-ubuntu-jammy: ubuntu-jammy
 arm64-ubuntu-jammy: ubuntu-jammy
+aarch64-ubuntu-jammy: ubuntu-jammy
 ppc64le-ubuntu-jammy: ubuntu-jammy
 
 # Ubuntu 24.04 (Noble)
