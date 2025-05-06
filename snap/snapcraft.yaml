@@ -16,7 +16,7 @@
 #   under the License.
 ---
 name: couchdb
-version: 3.4.3
+version: 3.5.0
 type: app
 base: core22
 license: Apache-2.0
@@ -41,10 +41,10 @@ parts:
   erl-iex:
     plugin: dump
     build-environment:
-      - ASDF_ERLANG_VERSION: "25.3.2.19"
-      - ASDF_ELIXIR_VERSION: "1.17.3-otp-25"
+      - ASDF_ERLANG_VERSION: "26.2.5.11"
+      - ASDF_ELIXIR_VERSION: "1.18.3-otp-26"
     source: https://github.com/asdf-vm/asdf.git
-    source-branch: v0.16.7
+    source-tag: v0.15.0
     source-type: git
     build-packages:
       - libncurses-dev
@@ -67,7 +67,7 @@ parts:
     plugin: make
     build-environment:
       - SPIDERMONKEY_VERSION: "102"
-    source: https://dlcdn.apache.org/couchdb/source/3.4.3/apache-couchdb-3.4.3.tar.gz
+    source: https://dlcdn.apache.org/couchdb/source/3.5.0/apache-couchdb-3.5.0.tar.gz
     source-type: tar
     override-build: |
       # Use the version of erlang/elixir we configured before
