@@ -95,6 +95,14 @@ n = 1
   echo "${singlenodeinifile}" > /opt/couchdb/etc/default.d/5-single-node.ini
 }
 
+curl() {
+    if [ ! -z "${adminpw}" ]; then
+        command curl --user "admin:$adminpw" $@
+    else
+        command curl $@
+    fi
+}
+
 createdb() {
   # see if db already exists; if not, create DB
   db=$1
@@ -102,11 +110,7 @@ createdb() {
   if [ "${ip}" = "0.0.0.0" ]; then
     ip=127.0.0.1
   fi
-  if [ ! -z "${adminpw}" ]; then
-    url="http://admin:${adminpw}@${ip}:5984"
-  else
-    url="http://${ip}:5984"
-  fi
+  url="http://${ip}:5984"
   if curl -s "${url}/${db}" | grep -q "${db}"; then
     return 0
   fi
@@ -121,8 +125,8 @@ WARNING: Unable to create standalone system databases.
 CouchDB may not have started correctly (no init?)
 Once CouchDB has started correctly, run the following:
 
-  curl -X PUT http://<admin-user>:<admin-pass>@127.0.0.1:5984/_users
-  curl -X PUT http://<admin-user>:<admin-pass>@127.0.0.1:5984/_replicator
+  curl -X PUT --user '<admin-user>:<admin-pass>' http://127.0.0.1:5984/_users
+  curl -X PUT --user '<admin-user>:<admin-pass>' http://127.0.0.1:5984/_replicator
 
 EOF
   exit 0
