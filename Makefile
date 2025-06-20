@@ -111,43 +111,6 @@ s390x-debian-bookworm: bookworm
 
 bookworm: debian
 
-# Ubuntu 20.04 (Focal)
-ubuntu-focal: PLATFORM=focal
-ubuntu-focal: DIST=ubuntu-focal
-ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
-ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
-ubuntu-focal: SM_VER=68
-ubuntu-focal: focal
-focal: debian
-
-arm64-ubuntu-focal: PLATFORM=focal
-arm64-ubuntu-focal: DIST=ubuntu-focal
-arm64-ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
-arm64-ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
-arm64-ubuntu-focal: SM_VER=68
-arm64-ubuntu-focal: focal
-
-aarch64-ubuntu-focal: PLATFORM=focal
-aarch64-ubuntu-focal: DIST=ubuntu-focal
-aarch64-ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
-aarch64-ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
-aarch64-ubuntu-focal: SM_VER=68
-aarch64-ubuntu-focal: focal
-
-ppc64le-ubuntu-focal: PLATFORM=focal
-ppc64le-ubuntu-focal: DIST=ubuntu-focal
-ppc64le-ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
-ppc64le-ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
-ppc64le-ubuntu-focal: SM_VER=68
-ppc64le-ubuntu-focal: focal
-
-s390x-ubuntu-focal: PLATFORM=focal
-s390x-ubuntu-focal: DIST=ubuntu-focal
-s390x-ubuntu-focal: SPIDERMONKEY=libmozjs-68-0
-s390x-ubuntu-focal: SPIDERMONKEY_DEV=libmozjs-68-dev
-s390x-ubuntu-focal: SM_VER=68
-s390x-ubuntu-focal: focal
-
 # Ubuntu 22.04 (Jammy)
 ubuntu-jammy: PLATFORM=jammy
 ubuntu-jammy: DIST=ubuntu-jammy
