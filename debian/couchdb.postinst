@@ -102,15 +102,16 @@ createdb() {
   if [ "${ip}" = "0.0.0.0" ]; then
     ip=127.0.0.1
   fi
+  url="http://${ip}:5984"
   if [ ! -z "${adminpw}" ]; then
-    url="http://admin:${adminpw}@${ip}:5984"
+    auth="--user \"admin:${adminpw}\""
   else
-    url="http://${ip}:5984"
+    auth=''
   fi
-  if curl -s "${url}/${db}" | grep -q "${db}"; then
+  if curl -s $auth "${url}/${db}" | grep -q "${db}"; then
     return 0
   fi
-  curl -s -X PUT "${url}/${db}" >/dev/null 2>&1 || warnfail
+  curl -s $auth -X PUT "${url}/${db}" >/dev/null 2>&1 || warnfail
   return $?
 }
 
