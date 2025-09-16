@@ -8,6 +8,11 @@ Components: main
 Architectures: amd64 arm64 ppc64el
 Description: Official CouchDB Debian bookworm repository
 
+Codename: trixie
+Components: main
+Architectures: amd64 arm64 ppc64el
+Description: Official CouchDB Debian trixie repository
+
 Codename: jammy
 Components: main
 Architectures: amd64 arm64 ppc64el
