@@ -111,6 +111,39 @@ s390x-debian-bookworm: bookworm
 
 bookworm: debian
 
+# Debian 13 - trixie
+debian-trixie: PLATFORM=trixie
+debian-trixie: DIST=debian-trixie
+debian-trixie: SPIDERMONKEY=libmozjs-128-0
+debian-trixie: SPIDERMONKEY_DEV=libmozjs-128-dev
+debian-trixie: SM_VER=128
+debian-trixie: trixie
+
+arm64-debian-trixie: aarch64-debian-trixie
+arm64v8-debian-trixie: aarch64-debian-trixie
+aarch64-debian-trixie: PLATFORM=trixie
+aarch64-debian-trixie: DIST=debian-trixie
+aarch64-debian-trixie: SPIDERMONKEY=libmozjs-128-0
+aarch64-debian-trixie: SPIDERMONKEY_DEV=libmozjs-128-dev
+aarch64-debian-trixie: SM_VER=128
+aarch64-debian-trixie: trixie
+
+ppc64le-debian-trixie: PLATFORM=trixie
+ppc64le-debian-trixie: DIST=debian-trixie
+ppc64le-debian-trixie: SPIDERMONKEY=libmozjs-128-0
+ppc64le-debian-trixie: SPIDERMONKEY_DEV=libmozjs-128-dev
+ppc64le-debian-trixie: SM_VER=128
+ppc64le-debian-trixie: trixie
+
+s390x-debian-trixie: PLATFORM=trixie
+s390x-debian-trixie: DIST=debian-trixie
+s390x-debian-trixie: SPIDERMONKEY=libmozjs-128-0
+s390x-debian-trixie: SPIDERMONKEY_DEV=libmozjs-128-dev
+s390x-debian-trixie: SM_VER=128
+s390x-debian-trixie: trixie
+
+trixie: debian
+
 # Ubuntu 22.04 (Jammy)
 ubuntu-jammy: PLATFORM=jammy
 ubuntu-jammy: DIST=ubuntu-jammy
