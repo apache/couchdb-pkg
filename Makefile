@@ -35,6 +35,8 @@ SPIDERMONKEY=couch-libmozjs185-1.0
 SPIDERMONKEY_DEV=couch-libmozjs185-dev
 SM_VER=1.8.5
 
+# Java
+JAVA_RUNTIME=java11-runtime-headless | java11-runtime
 
 # Try and guess the correct target...
 all:
@@ -117,6 +119,7 @@ debian-trixie: DIST=debian-trixie
 debian-trixie: SPIDERMONKEY=libmozjs-128-0
 debian-trixie: SPIDERMONKEY_DEV=libmozjs-128-dev
 debian-trixie: SM_VER=128
+debian-trixie: JAVA_RUNTIME=java21-runtime-headless | java21-runtime
 debian-trixie: trixie
 
 arm64-debian-trixie: aarch64-debian-trixie
@@ -126,6 +129,7 @@ aarch64-debian-trixie: DIST=debian-trixie
 aarch64-debian-trixie: SPIDERMONKEY=libmozjs-128-0
 aarch64-debian-trixie: SPIDERMONKEY_DEV=libmozjs-128-dev
 aarch64-debian-trixie: SM_VER=128
+aarch64-debian-trixie: JAVA_RUNTIME=java21-runtime-headless | java21-runtime
 aarch64-debian-trixie: trixie
 
 ppc64le-debian-trixie: PLATFORM=trixie
@@ -133,6 +137,7 @@ ppc64le-debian-trixie: DIST=debian-trixie
 ppc64le-debian-trixie: SPIDERMONKEY=libmozjs-128-0
 ppc64le-debian-trixie: SPIDERMONKEY_DEV=libmozjs-128-dev
 ppc64le-debian-trixie: SM_VER=128
+ppc64le-debian-trixie: JAVA_RUNTIME=java21-runtime-headless | java21-runtime
 ppc64le-debian-trixie: trixie
 
 s390x-debian-trixie: PLATFORM=trixie
@@ -140,6 +145,7 @@ s390x-debian-trixie: DIST=debian-trixie
 s390x-debian-trixie: SPIDERMONKEY=libmozjs-128-0
 s390x-debian-trixie: SPIDERMONKEY_DEV=libmozjs-128-dev
 s390x-debian-trixie: SM_VER=128
+s390x-debian-trixie: JAVA_RUNTIME=java21-runtime-headless | java21-runtime
 s390x-debian-trixie: trixie
 
 trixie: debian
@@ -251,7 +257,7 @@ build-couch:
 
 # ######################################
 sm-ver-debian:
-	sed 's/%SPIDERMONKEY%/$(SPIDERMONKEY)/g;s/%SPIDERMONKEY_DEV%/$(SPIDERMONKEY_DEV)/g' \
+	sed 's/%SPIDERMONKEY%/$(SPIDERMONKEY)/g;s/%SPIDERMONKEY_DEV%/$(SPIDERMONKEY_DEV)/g;s/%JAVA_RUNTIME%/$(JAVA_RUNTIME)/g' \
 	debian/control.in > debian/control
 	echo 'SM_VER = $(SM_VER)' > debian/sm_ver.mk
 

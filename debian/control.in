@@ -62,7 +62,7 @@ Package: couchdb-nouveau
 Architecture: any
 Depends: adduser,
          debconf,
-         java11-runtime-headless | java11-runtime,
+         %JAVA_RUNTIME%,
          init-system-helpers,
          lsb-base,
          procps,
