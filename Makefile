@@ -299,7 +299,7 @@ make-rpmbuild:
 # If we don't change $HOME it'll force building in ~/rpmbuild. Boo.
 build-rpm:
 	$(eval HOME := $(shell readlink -f ..))
-	export HOME=$(HOME) && cd ../rpmbuild && rpmbuild --verbose -bb SPECS/couchdb.spec --define '_version $(VERSION)'
+	export HOME=$(HOME) && cd ../rpmbuild && rpmbuild --verbose -bb SPECS/couchdb.spec --define '_version $(subst -,.,$(VERSION))'
 
 # ######################################
 copy-pkgs:
