@@ -74,7 +74,7 @@ languages and environments.
 %prep
 
 %build
-if [ -d ./nouveau ]; then
+if [ -d ./nouveau -o -d ./extra/nouveau ]; then
     ./configure --spidermonkey-version=%SM_VER% --with-nouveau
 else
     ./configure --spidermonkey-version=%SM_VER%
