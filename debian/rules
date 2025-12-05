@@ -22,7 +22,7 @@ override_dh_auto_clean:
 	-mv src/mango/src/mango_cursor_text.nocompile src/mango/src/mango_cursor_text.erl
 
 override_dh_auto_configure:
-	if [ -d "./nouveau" ]; then \
+	if [ -d "./nouveau" -o -d "./extra/nouveau" ]; then \
 		./configure --spidermonkey-version $(SM_VER) --with-nouveau; \
         else \
 		./configure --spidermonkey-version $(SM_VER); \
