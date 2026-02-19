@@ -14,7 +14,6 @@ COUCHDIR=../couchdb
 DEBCHANGELOG="Automatically generated package from upstream."
 
 JS_DEBCHANGELOG="Automatically generated package from couchdb-ci repository."
-JS_VERSION=1.8.5-1.0.0+couch-2
 
 export DEBFULLNAME="CouchDB Developers"
 export DEBEMAIL="dev@couchdb.apache.org"
@@ -34,6 +33,7 @@ endif
 SPIDERMONKEY=couch-libmozjs185-1.0
 SPIDERMONKEY_DEV=couch-libmozjs185-dev
 SM_VER=1.8.5
+JS_ENGINE=spidermonkey
 
 # Java
 JAVA_RUNTIME=java11-runtime-headless | java11-runtime
@@ -196,6 +196,11 @@ centos9: SPIDERMONKEY_DEV=mozjs78-devel
 centos9: SM_VER=78
 centos9: sm-ver-rpm make-rpmbuild centos
 
+centos-10: DIST=centos-10
+centos-10: centos10
+centos10: JS_ENGINE=quickjs
+centos10: sm-ver-rpm make-rpmbuild centos
+
 # Almalinux 8 is a CentOS 8 alias
 almalinux-8: centos-8
 almalinux-8.8: centos-8
@@ -212,12 +217,15 @@ almalinux-9.2: centos-9
 almalinux-9.4: centos-9
 almalinux-9.5: centos-9
 almalinux-9.6: centos-9
+almalinux-9.7: centos-9
 aarch64-almalinux-9.4: PKGARCH=aarch64
 aarch64-almalinux-9.4: centos-9
 aarch64-almalinux-9.5: PKGARCH=aarch64
 aarch64-almalinux-9.5: centos-9
 aarch64-almalinux-9.6: PKGARCH=aarch64
 aarch64-almalinux-9.6: centos-9
+aarch64-almalinux-9.7: PKGARCH=aarch64
+aarch64-almalinux-9.7: centos-9
 aarch64-almalinux-9: PKGARCH=aarch64
 aarch64-almalinux-9: centos-9
 # s390x RHEL 8 clone based
@@ -229,6 +237,23 @@ s390x-centos-9: centos-9
 arm64-centos-9: PKGARCH=aarch64
 arm64-centos-9: centos-9
 ppc64le-centos-9: centos-9
+
+# Almalinux 10 is a CentOS 10 alias
+almalinux-10: centos-10
+almalinux-10.1: centos-10
+aarch64-almalinux-10: PKGARCH=aarch64
+aarch64-almalinux-10: centos-10
+aarch64-almalinux-10.1: PKGARCH=aarch64
+aarch64-almalinux-10.1: centos-10
+# s390x RHEL 10 clone based
+s390x-centos-10: centos-10
+ppc64le-centos-10: centos-10
+# s390x RHEL 10 clone based
+s390x-centos-10: centos-10
+
+arm64-centos-10: PKGARCH=aarch64
+arm64-centos-10: centos-10
+ppc64le-centos-10: centos-10
 
 # aarch64 RHEL-based
 aarch64-rhel: DIST=rhel
@@ -299,7 +324,7 @@ make-rpmbuild:
 # If we don't change $HOME it'll force building in ~/rpmbuild. Boo.
 build-rpm:
 	$(eval HOME := $(shell readlink -f ..))
-	export HOME=$(HOME) && cd ../rpmbuild && rpmbuild --verbose -bb SPECS/couchdb.spec --define '_version $(VERSION)'
+	export HOME=$(HOME) && cd ../rpmbuild && rpmbuild --verbose -bb SPECS/couchdb.spec --define '_version $(VERSION)' --define '_js_engine $(JS_ENGINE)'
 
 # ######################################
 copy-pkgs:
@@ -311,26 +336,3 @@ clean:
 	if [ -f debian/control.bak ]; then mv -f debian/control.bak debian/control; fi
 	if [ -f rpm/SPECS/couchdb.spec.bak ]; then mv -f rpm/SPECS/couchdb.spec.bak rpm/SPECS/couchdb.spec; fi
 	rm -rf parts prime stage js/build debian/sm_ver.mk
-
-# ######################################
-couch-js-clean:
-	rm -rf js/build ../rpmbuild
-
-couch-js-debs: couch-js-clean
-	mkdir js/build && cd js/build && tar xf ../src/js185-1.0.0.tar.gz --strip-components=1
-	cp -r js/debian js/build
-	if [ "$(shell arch)" = "armv7l" ]; then rm js/build/debian/*symbols; fi
-	cd js/build && dch -v $(JS_VERSION)~$(PLATFORM) $(JS_DEBCHANGELOG)
-	cd js/build && dpkg-buildpackage -b -us -uc
-
-couch-js-rpms: couch-js-clean
-	mkdir -p ../rpmbuild
-	cp -R js/rpm/* ../rpmbuild
-	cp js/src/js185-1.0.0.tar.gz ../rpmbuild/SOURCES
-	cd ../rpmbuild && rpmbuild --verbose -bb SPECS/js.spec
-
-couch-js-68-rpms: couch-js-clean
-	mkdir -p ../rpmbuild
-	cp -R js68/rpm/* ../rpmbuild
-	cd ../rpmbuild/SOURCES && curl -O https://ftp.mozilla.org/pub/firefox/releases/68.12.0esr/source/firefox-68.12.0esr.source.tar.xz
-	cd ../rpmbuild && rpmbuild --verbose -bb SPECS/js68.spec

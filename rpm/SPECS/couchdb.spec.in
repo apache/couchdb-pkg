@@ -33,25 +33,22 @@ Exclusiveos:   linux
 Packager:      CouchDB Developers <dev@couchdb.apache.org>
 Patch1:        0001-build-with-sm68-on-aarch64.patch
 
-BuildRequires: esl-erlang
-BuildRequires: gcc
 Requires(pre): shadow-utils
 
+BuildRequires: esl-erlang
+BuildRequires: gcc
 BuildRequires: git
-BuildRequires: help2man
-BuildRequires: libcurl-devel
-BuildRequires: libicu-devel
-BuildRequires: nodejs >= 6.10.1
 BuildRequires: java-21-openjdk-devel
+BuildRequires: libicu-devel
 
-Requires(post): curl
-Requires(post): %SPIDERMONKEY%
 Requires(post): libicu >= 4.2.1
-Requires(post): procps
+
+%if 0%{?rhel} < 10
+Requires(post): %SPIDERMONKEY%
+%endif
 
 Suggests: java-21-openjdk-headless
 
-BuildRequires:		xfsprogs-devel
 %{?systemd_requires}
 BuildRequires:		systemd
 
@@ -74,10 +71,16 @@ languages and environments.
 %prep
 
 %build
-if [ -d ./nouveau -o -d ./extra/nouveau ]; then
-    ./configure --spidermonkey-version=%SM_VER% --with-nouveau
+if [ %{_js_engine} = quickjs ]; then
+    conf_args="--disable-spidermonkey --js-engine=quickjs"
 else
-    ./configure --spidermonkey-version=%SM_VER%
+    conf_args="--spidermonkey-version=%SM_VER%"
+fi
+
+if [ -d ./nouveau -o -d ./extra/nouveau ]; then
+    ./configure  "$conf_args --with-nouveau"
+else
+    ./configure "$conf_args"
 fi
 %{__make} release
 
