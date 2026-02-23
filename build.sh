@@ -30,11 +30,11 @@ SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # TODO derive these by interrogating the couchdb-ci repo rather than hard coding the list
 DEBIANS="debian-bullseye debian-bookworm debian-trixie"
 UBUNTUS="ubuntu-jammy ubuntu-noble"
-CENTOSES="centos-8 centos-9"
-XPLAT_BASES="debian-bullseye debian-bookworm debian-trixie ubuntu-jammy ubuntu-noble centos-8 centos-9"
+CENTOSES="centos-8 centos-9 centos-10"
+XPLAT_BASES="debian-bullseye debian-bookworm debian-trixie ubuntu-jammy ubuntu-noble centos-8 centos-9 centos-10"
 XPLAT_ARCHES="arm64 ppc64le s390x"
 BINARY_API="https://apache.jfrog.io/artifactory"
-ERLANGVERSION=${ERLANGVERSION:-26.2.5.11}
+ERLANGVERSION=${ERLANGVERSION:-26.2.5.17}
 REPO_NAME="couch-dev"
 
 split-os-ver() {
@@ -118,6 +118,7 @@ build-all-couch() {
               ( ${base} == "centos-8" && ${arch} == "arm64" ) ||
               ( ${base} == "centos-8" && ${arch} == "ppc64le" ) ||
               ( ${base} == "centos-9" && ${arch} == "ppc64le" ) ||
+              ( ${base} == "centos-10" && ${arch} == "ppc64le") ||
               ( ${base} == "debian-bullseye" && ${arch} == "ppc64le" ) ||
               ( ${base} == "debian-bullseye" && ${arch} == "s390x") ||
               ( ${base} == "debian-bookworm" && ${arch} == "ppc64le" ) ||
@@ -189,6 +190,12 @@ upload-couch() {
     elif [ ${DIST} == "el9" ]; then
         # see https://github.com/apache/couchdb-pkg/issues/103
         DIST="el9Server"
+        RELPATH="${DIST}/${PKGARCH}/${fname}"
+        SUFFIX=""
+        binary-upload
+    elif [ ${DIST} == "el10" ]; then
+        # see https://github.com/apache/couchdb-pkg/issues/103
+        DIST="el10Server"
         RELPATH="${DIST}/${PKGARCH}/${fname}"
         SUFFIX=""
         binary-upload
