@@ -146,21 +146,32 @@ echo "deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://ap
 
 #### RHEL/AlmaLinux/RockyLinux 8
 
+As root or under `sudo`
 ```
-sudo dnf install -y yum-utils
-sudo yum-config-manager --add-repo https://apache.jfrog.io/artifactory/couchdb/couchdev.repo
-sudo dnf install -y couchdb
+dnf install -y yum-utils
+yum-config-manager --add-repo https://apache.jfrog.io/artifactory/couchdb/couchdev.repo
+dnf install -y couchdb
 ```
 
 #### RHEL/AlmaLinux/RockyLinux 9
 
+As root or under `sudo`
 ```
-sudo dnf install -y yum-utils
-sudo yum-config-manager --add-repo https://apache.jfrog.io/artifactory/couchdb/couchdev.repo
-sudo dnf config-manager --set-enabled crb
-sudo dnf install epel-release epel-next-release
-sudo dnf install -y mozjs78
-sudo dnf install -y couchdb
+dnf install -y yum-utils
+yum-config-manager --add-repo https://apache.jfrog.io/artifactory/couchdb/couchdev.repo
+dnf config-manager --set-enabled crb
+dnf install epel-release epel-next-release
+dnf install -y mozjs78
+dnf install -y couchdb
+```
+
+#### RHEL/AlmaLinux/RockyLinux 10
+
+As root or under `sudo`
+```
+dnf install -y yum-utils
+yum-config-manager --add-repo https://apache.jfrog.io/artifactory/couchdb/couchdev.repo
+dnf install -y couchdb
 ```
 
 #### Enable Nouveau
