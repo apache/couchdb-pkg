@@ -3,7 +3,8 @@ Section: misc
 Priority: optional
 Maintainer: CouchDB Developers <dev@couchdb.apache.org>
 Standards-Version: 3.9.6
-Build-Depends: debhelper (>= 10),
+Build-Depends: debhelper (>= 13),
+               debhelper-compat (= 13),
                dh-exec,
                erlang-dev (>= 1:19.2.1) | esl-erlang (>= 1:19.2.1),
                erlang-crypto | esl-erlang,
