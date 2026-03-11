@@ -14,7 +14,7 @@
 include debian/sm_ver.mk
 
 %:
-	dh $@ --with=systemd
+	dh $@ --no-automatic-dbgsym
 
 override_dh_auto_clean:
 	dh_auto_clean
@@ -33,18 +33,27 @@ override_dh_auto_build:
 	rm -rf rel/couchdb/var/log
 	-rm -rf rel/couchdb/data
 
+# skip generating buidinfo files
+override_dh_genbuildinfo:
+        # skip
+
+override_dh_genchanges:
+        # skip
+
 # skipping tests until suite is 100% reliable
 override_dh_auto_test:
+        # skip
 
 # instead we rely on dh_install and the couchdb.install file
 override_dh_auto_install:
+        # skip
+
+# do not install man pages
+override_dh_installman:
+        # skip
 
 get-orig-source:
 	uscan --noconf --download-current-version --destdir=. --rename
-
-# this allows us to use a fake/equivs libmozjs185-1.0 in automated testing
-override_dh_shlibdeps:
-	dh_shlibdeps -- --ignore-missing-info -xlibmozjs185-1.0
 
 # bintray doesn't support xz uploads :(
 override_dh_builddeb:
