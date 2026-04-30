@@ -34,7 +34,7 @@ CENTOSES="centos-8 centos-9 centos-10"
 XPLAT_BASES="debian-bullseye debian-bookworm debian-trixie ubuntu-jammy ubuntu-noble centos-8 centos-9 centos-10"
 XPLAT_ARCHES="arm64 ppc64le s390x"
 BINARY_API="https://apache.jfrog.io/artifactory"
-ERLANGVERSION=${ERLANGVERSION:-26.2.5.17}
+ERLANGVERSION=${ERLANGVERSION:-26.2.5.20}
 REPO_NAME="couch-dev"
 
 split-os-ver() {
