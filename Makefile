@@ -178,6 +178,20 @@ arm64-ubuntu-noble: ubuntu-noble
 aarch64-ubuntu-noble: ubuntu-noble
 ppc64le-ubuntu-noble: ubuntu-noble
 
+# Ubuntu 26.04 (Resolute)
+ubuntu-resolute: PLATFORM=resolute
+ubuntu-resolute: DIST=ubuntu-resolute
+ubuntu-resolute: SPIDERMONKEY=libmozjs-128-0
+ubuntu-resolute: SPIDERMONKEY_DEV=libmozjs-128-dev
+ubuntu-resolute: SM_VER=128
+ubuntu-resolute: resolute
+resolute: debian
+
+s390x-ubuntu-resolute: ubuntu-resolute
+arm64-ubuntu-resolute: ubuntu-resolute
+aarch64-ubuntu-resolute: ubuntu-resolute
+ppc64le-ubuntu-resolute: ubuntu-resolute
+
 # RPM default
 centos: PKGDIR=../rpmbuild/RPMS/$(PKGARCH)
 centos: find-couch-dist link-couch-dist build-rpm copy-pkgs
