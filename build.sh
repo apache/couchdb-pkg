@@ -29,9 +29,9 @@ SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # TODO derive these by interrogating the couchdb-ci repo rather than hard coding the list
 DEBIANS="debian-bullseye debian-bookworm debian-trixie"
-UBUNTUS="ubuntu-jammy ubuntu-noble"
+UBUNTUS="ubuntu-jammy ubuntu-noble ubuntu-resolute"
 CENTOSES="centos-8 centos-9 centos-10"
-XPLAT_BASES="debian-bullseye debian-bookworm debian-trixie ubuntu-jammy ubuntu-noble centos-8 centos-9 centos-10"
+XPLAT_BASES="debian-bullseye debian-bookworm debian-trixie ubuntu-jammy ubuntu-noble ubuntu-resolute centos-8 centos-9 centos-10"
 XPLAT_ARCHES="arm64 ppc64le s390x"
 BINARY_API="https://apache.jfrog.io/artifactory"
 ERLANGVERSION=${ERLANGVERSION:-26.2.5.20}
@@ -124,7 +124,8 @@ build-all-couch() {
               ( ${base} == "debian-bookworm" && ${arch} == "ppc64le" ) ||
               ( ${base} == "debian-trixie" && ${arch} == "ppc64le" ) ||
               ( ${base} == "ubuntu-jammy" && ${arch} == "ppc64le" ) ||
-              ( ${base} == "ubuntu-noble" && ${arch} == "ppc64le" )
+              ( ${base} == "ubuntu-noble" && ${arch} == "ppc64le" ) ||
+              ( ${base} == "ubuntu-resolute" && ${arch} == "ppc64le" )
       ]]; then
         CONTAINERARCH="${arch}" build-couch ${base}
       fi
