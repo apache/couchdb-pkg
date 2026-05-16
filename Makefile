@@ -15,8 +15,8 @@ DEBCHANGELOG="Automatically generated package from upstream."
 
 JS_DEBCHANGELOG="Automatically generated package from couchdb-ci repository."
 
-export DEBFULLNAME="CouchDB Developers"
-export DEBEMAIL="dev@couchdb.apache.org"
+export DEBFULLNAME=CouchDB Developers
+export DEBEMAIL=dev@couchdb.apache.org
 
 # Default package directory (over-written for RPM based builds)
 PKGDIR=$(COUCHDIR)
