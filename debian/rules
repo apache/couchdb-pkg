@@ -11,6 +11,10 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
+# Fix erlang i/o in rebar getting confused by the terminal encoding
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
+
 include debian/sm_ver.mk
 
 %:
@@ -29,7 +33,7 @@ override_dh_auto_configure:
 	fi
 
 override_dh_auto_build:
-	dh_auto_build -- release
+	dh_auto_build -- release COMPILE_COMMANDS=false
 	rm -rf rel/couchdb/var/log
 	-rm -rf rel/couchdb/data
 
