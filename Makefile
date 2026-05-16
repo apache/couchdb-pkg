@@ -36,7 +36,7 @@ SM_VER=1.8.5
 JS_ENGINE=spidermonkey
 
 # Java
-JAVA_RUNTIME=java11-runtime-headless | java11-runtime
+JAVA_RUNTIME=java21-runtime-headless | java21-runtime
 
 # Try and guess the correct target...
 all:
