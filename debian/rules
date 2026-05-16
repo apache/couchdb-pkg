@@ -11,6 +11,16 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
+
+# Drop -fdebug-prefix-map. Its value embeds the dpkg version as
+# 3.5.2-$sha~resolute. However that then gets passed to rebar's
+# io:format() as is and ~r is interpreted as an invalid format control
+# sequence
+#
+export DEB_CFLAGS_STRIP   = $(shell dpkg-buildflags --get CFLAGS   | tr ' ' '\n' | grep '^-fdebug-prefix-map=')
+export DEB_CXXFLAGS_STRIP = $(shell dpkg-buildflags --get CXXFLAGS | tr ' ' '\n' | grep '^-fdebug-prefix-map=')
+
+
 include debian/sm_ver.mk
 
 %:
