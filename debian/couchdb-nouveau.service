@@ -22,7 +22,7 @@ ProtectHome=yes
 ProtectSystem=strict
 ReadWritePaths=/var/lib/nouveau/
 SystemCallErrorNumber=EPERM
-SystemCallFilter=@system-service
+SystemCallFilter=@system-service mincore
 User=nouveau
 
 [Install]
