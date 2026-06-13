@@ -232,6 +232,7 @@ almalinux-9.4: centos-9
 almalinux-9.5: centos-9
 almalinux-9.6: centos-9
 almalinux-9.7: centos-9
+almalinux-9.8: centos-9
 aarch64-almalinux-9.4: PKGARCH=aarch64
 aarch64-almalinux-9.4: centos-9
 aarch64-almalinux-9.5: PKGARCH=aarch64
@@ -240,6 +241,8 @@ aarch64-almalinux-9.6: PKGARCH=aarch64
 aarch64-almalinux-9.6: centos-9
 aarch64-almalinux-9.7: PKGARCH=aarch64
 aarch64-almalinux-9.7: centos-9
+aarch64-almalinux-9.8: PKGARCH=aarch64
+aarch64-almalinux-9.8: centos-9
 aarch64-almalinux-9: PKGARCH=aarch64
 aarch64-almalinux-9: centos-9
 # s390x RHEL 8 clone based
@@ -255,10 +258,13 @@ ppc64le-centos-9: centos-9
 # Almalinux 10 is a CentOS 10 alias
 almalinux-10: centos-10
 almalinux-10.1: centos-10
+almalinux-10.2: centos-10
 aarch64-almalinux-10: PKGARCH=aarch64
 aarch64-almalinux-10: centos-10
 aarch64-almalinux-10.1: PKGARCH=aarch64
 aarch64-almalinux-10.1: centos-10
+aarch64-almalinux-10.2: PKGARCH=aarch64
+aarch64-almalinux-10.2: centos-10
 # s390x RHEL 10 clone based
 s390x-centos-10: centos-10
 ppc64le-centos-10: centos-10
