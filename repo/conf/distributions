@@ -1,8 +1,3 @@
-Codename: bullseye
-Components: main
-Architectures: amd64 arm64 ppc64el
-Description: Official CouchDB Debian bullseye repository
-
 Codename: bookworm
 Components: main
 Architectures: amd64 arm64 ppc64el
