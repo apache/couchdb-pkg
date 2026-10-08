@@ -28,13 +28,13 @@ set -e
 SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # TODO derive these by interrogating the couchdb-ci repo rather than hard coding the list
-DEBIANS="debian-bullseye debian-bookworm debian-trixie"
+DEBIANS="debian-bookworm debian-trixie"
 UBUNTUS="ubuntu-jammy ubuntu-noble ubuntu-resolute"
 CENTOSES="centos-8 centos-9 centos-10"
-XPLAT_BASES="debian-bullseye debian-bookworm debian-trixie ubuntu-jammy ubuntu-noble ubuntu-resolute centos-8 centos-9 centos-10"
-XPLAT_ARCHES="arm64 ppc64le"
+XPLAT_BASES="debian-bookworm debian-trixie ubuntu-jammy ubuntu-noble ubuntu-resolute centos-8 centos-9 centos-10"
+XPLAT_ARCHES="arm64"
 BINARY_API="https://apache.jfrog.io/artifactory"
-ERLANGVERSION=${ERLANGVERSION:-27.3.4.13}
+ERLANGVERSION=${ERLANGVERSION:-27.3.4.18}
 REPO_NAME="couch-dev"
 
 split-os-ver() {
