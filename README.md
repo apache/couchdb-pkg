@@ -41,34 +41,46 @@ make copy-couch $(lsb_release -cs) COUCHTARBALL=path/to/couchdb-#.#.#.tar.gz PLA
 
 -----
 
-### Building inside the `couchdbdev` docker containers
+### Building inside the `couchdbci` docker containers
 
-You must first pull down the image or images you need from Docker Hub, or build the images
-using the [apache/couchdb-ci](https://github.com/apache/couchdb-ci) repository. A full
-list of supported environments is at https://hub.docker.com/u/couchdbdev/ .
-
-#### SpiderMonkey 1.8.5
-
-```shell
-docker pull couchdbdev/<os>-<codename>-base
-./build.sh js <os>-<codename>    # for example, debian-stretch, ubuntu-bionic or centos-7.
-```
-
-#### CouchDB
+`build.sh` runs the package build as a `docker buildx build` with an
+`apache/couchdbci-<os>:<codename>-erlang-<version>` image from
+DockerHub. Those are built in the
+[apache/couchdb-ci](https://github.com/apache/couchdb-ci) repo. The
+image is pulled automatically and the resulting packages are written
+to `pkgs/couch/<os>-<codename>/`.
 
 From a downloaded CouchDB tarball:
 
 ```shell
-docker pull couchdbdev/<osname>-<codename>-erlang-<erlang-version>
 ERLANGVERSION=<erlang-version> ./build.sh couch <os>-<codename> path/to/couchdb-#.#.#.tar.gz
 ```
 
 Directly from the Apache source CDN:
 
 ```shell
-docker pull couchdbdev/<osname>-<codename>-erlang-<erlang-version>
 ./build.sh couch <os>-<codename> https://dist.apache.org/repos/dist/release/couchdb/source/#.#.#/apache-couchdb-#.#.#.tar.gz
 ```
+
+For another architecture:
+
+```shell
+CONTAINERARCH=arm64 ./build.sh couch <os>-<codename> path/to/couchdb-#.#.#.tar.gz
+```
+
+The build is run on with buildx. With the `default` builder a foreign
+arch is run under qemu (needs `binfmt_misc` handlers on the host (for
+example `docker run --privileged --rm tonistiigi/binfmt --install
+arm64`). To build natively use an arch specific set of builders. One
+node per arch. For example:
+
+```shell
+docker buildx create --name multiarch --use ssh://my-amd64-host
+docker buildx create --name multiarch --append ssh://my-arm64-host
+```
+
+Then, `buildx` will pick the node based on `--platform`. Use
+`BUILDKIT_PROGRESS=auto` for a less noisy buildx progress view.
 
 -----
 
@@ -76,10 +88,13 @@ docker pull couchdbdev/<osname>-<codename>-erlang-<erlang-version>
 
 ### Prerequisites
 
-1. Linux running Docker
-1. The current user must be capable of running `docker run`.
-1. Enough free disk space to download all of the Docker images + build
-   CouchDB.
+1. Linux running Docker with buildx.
+1. User must be able of running `docker buildx build`.
+1. For non-x86_64 packages, need either qemu `binfmt_misc` handlers,
+   or buildx builders with native nodes (see above).
+1. Enough free disk space on the builder to download all of the Docker
+   images + build CouchDB. Build layers stay in the builder's
+   cache. But can use `docker buildx prune` to clean up if needed.
 
 ### Running the package build
 
@@ -98,17 +113,11 @@ or
 
 Packages will be placed in the `pkgs/couch` subdirectory.
 
-A similar `js-all` target exists, should the SpiderMonkey packages need to be regenerated.
-
 ### Uploading the packages
 
 If you have Apache credentials (set your `BINARY_CREDS` environment variable appropriately), after building all CouchDB packages above, **and signing the rpms with the appropriate GPG key using the `rpmsign --addsign <file.rpm>` command**, simply run:
 
     ./build.sh couch-upload-all
-
-Or, for the SpiderMonkey packages:
-
-    ./build.sh js-upload-all
 
 -----
 
