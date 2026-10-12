@@ -1,0 +1,14 @@
+# Keep only the package sources and CouchDB tarball
+.git
+.idea
+archive
+pkgs
+pkgs.bak*
+*.bak
+repo/db
+repo/dists
+repo/pool
+parts
+prime
+stage
+*.snap

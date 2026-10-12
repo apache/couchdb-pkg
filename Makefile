@@ -21,13 +21,9 @@ export DEBEMAIL=dev@couchdb.apache.org
 # Default package directory (over-written for RPM based builds)
 PKGDIR=$(COUCHDIR)
 
-ifeq ($(shell arch),aarch64)
-PKGARCH=arm64
-else ifeq ($(shell arch),arm64v8)
-PKGARCH=arm64
-else
+# RPMs go into the RPMS/<arch> dir where where <arch> is `uname -m`
+# (x86_64, aarch64, ppc64le, ...). DEB builds figure out their own arch
 PKGARCH=$(shell arch)
-endif
 
 # Overridden for targets with SM60 in per-target env vars below.
 SPIDERMONKEY=couch-libmozjs185-1.0
@@ -42,6 +38,14 @@ JAVA_RUNTIME=java21-runtime-headless | java21-runtime
 all:
 	make `bin/detect-target.sh`
 
+# arch specific prefixes arm64-ubuntu-noble are aliases for plain
+# target
+arm64-%: % ; @:
+arm64v8-%: % ; @:
+aarch64-%: % ; @:
+ppc64le-%: % ; @:
+s390x-%: % ; @:
+
 # Debian default
 debian: sm-ver-debian find-couch-dist copy-debian update-changelog dpkg lintian copy-pkgs
 
@@ -52,30 +56,6 @@ debian-bookworm: SPIDERMONKEY=libmozjs-78-0
 debian-bookworm: SPIDERMONKEY_DEV=libmozjs-78-dev
 debian-bookworm: SM_VER=78
 debian-bookworm: bookworm
-
-arm64-debian-bookworm: aarch64-debian-bookworm
-arm64v8-debian-bookworm: aarch64-debian-bookworm
-aarch64-debian-bookworm: PLATFORM=bookworm
-aarch64-debian-bookworm: DIST=debian-bookworm
-aarch64-debian-bookworm: SPIDERMONKEY=libmozjs-78-0
-aarch64-debian-bookworm: SPIDERMONKEY_DEV=libmozjs-78-dev
-aarch64-debian-bookworm: SM_VER=78
-aarch64-debian-bookworm: bookworm
-
-ppc64le-debian-bookworm: PLATFORM=bookworm
-ppc64le-debian-bookworm: DIST=debian-bookworm
-ppc64le-debian-bookworm: SPIDERMONKEY=libmozjs-78-0
-ppc64le-debian-bookworm: SPIDERMONKEY_DEV=libmozjs-78-dev
-ppc64le-debian-bookworm: SM_VER=78
-ppc64le-debian-bookworm: bookworm
-
-s390x-debian-bookworm: PLATFORM=bookworm
-s390x-debian-bookworm: DIST=debian-bookworm
-s390x-debian-bookworm: SPIDERMONKEY=libmozjs-78-0
-s390x-debian-bookworm: SPIDERMONKEY_DEV=libmozjs-78-dev
-s390x-debian-bookworm: SM_VER=78
-s390x-debian-bookworm: bookworm
-
 
 bookworm: debian
 
@@ -88,32 +68,6 @@ debian-trixie: SM_VER=128
 debian-trixie: JAVA_RUNTIME=java21-runtime-headless | java21-runtime
 debian-trixie: trixie
 
-arm64-debian-trixie: aarch64-debian-trixie
-arm64v8-debian-trixie: aarch64-debian-trixie
-aarch64-debian-trixie: PLATFORM=trixie
-aarch64-debian-trixie: DIST=debian-trixie
-aarch64-debian-trixie: SPIDERMONKEY=libmozjs-128-0
-aarch64-debian-trixie: SPIDERMONKEY_DEV=libmozjs-128-dev
-aarch64-debian-trixie: SM_VER=128
-aarch64-debian-trixie: JAVA_RUNTIME=java21-runtime-headless | java21-runtime
-aarch64-debian-trixie: trixie
-
-ppc64le-debian-trixie: PLATFORM=trixie
-ppc64le-debian-trixie: DIST=debian-trixie
-ppc64le-debian-trixie: SPIDERMONKEY=libmozjs-128-0
-ppc64le-debian-trixie: SPIDERMONKEY_DEV=libmozjs-128-dev
-ppc64le-debian-trixie: SM_VER=128
-ppc64le-debian-trixie: JAVA_RUNTIME=java21-runtime-headless | java21-runtime
-ppc64le-debian-trixie: trixie
-
-s390x-debian-trixie: PLATFORM=trixie
-s390x-debian-trixie: DIST=debian-trixie
-s390x-debian-trixie: SPIDERMONKEY=libmozjs-128-0
-s390x-debian-trixie: SPIDERMONKEY_DEV=libmozjs-128-dev
-s390x-debian-trixie: SM_VER=128
-s390x-debian-trixie: JAVA_RUNTIME=java21-runtime-headless | java21-runtime
-s390x-debian-trixie: trixie
-
 trixie: debian
 
 # Ubuntu 22.04 (Jammy)
@@ -125,11 +79,6 @@ ubuntu-jammy: SM_VER=78
 ubuntu-jammy: jammy
 jammy: debian
 
-s390x-ubuntu-jammy: ubuntu-jammy
-arm64-ubuntu-jammy: ubuntu-jammy
-aarch64-ubuntu-jammy: ubuntu-jammy
-ppc64le-ubuntu-jammy: ubuntu-jammy
-
 # Ubuntu 24.04 (Noble)
 ubuntu-noble: PLATFORM=noble
 ubuntu-noble: DIST=ubuntu-noble
@@ -139,11 +88,6 @@ ubuntu-noble: SM_VER=115
 ubuntu-noble: noble
 noble: debian
 
-s390x-ubuntu-noble: ubuntu-noble
-arm64-ubuntu-noble: ubuntu-noble
-aarch64-ubuntu-noble: ubuntu-noble
-ppc64le-ubuntu-noble: ubuntu-noble
-
 # Ubuntu 26.04 (Resolute)
 ubuntu-resolute: PLATFORM=resolute
 ubuntu-resolute: DIST=ubuntu-resolute
@@ -152,11 +96,6 @@ ubuntu-resolute: SPIDERMONKEY_DEV=libmozjs-128-dev
 ubuntu-resolute: SM_VER=128
 ubuntu-resolute: resolute
 resolute: debian
-
-s390x-ubuntu-resolute: ubuntu-resolute
-arm64-ubuntu-resolute: ubuntu-resolute
-aarch64-ubuntu-resolute: ubuntu-resolute
-ppc64le-ubuntu-resolute: ubuntu-resolute
 
 # RPM default
 centos: PKGDIR=../rpmbuild/RPMS/$(PKGARCH)
@@ -186,10 +125,6 @@ almalinux-8: centos-8
 almalinux-8.8: centos-8
 almalinux-8.9: centos-8
 almalinux-8.10: centos-8
-aarch64-almalinux-8.10: PKGARCH=aarch64
-aarch64-almalinux-8.10: centos-8
-aarch64-almalinux-8: PKGARCH=aarch64
-aarch64-almalinux-8: centos-8
 
 # Almalinux 9 is a CentOS 9 alias
 almalinux-9: centos-9
@@ -199,47 +134,11 @@ almalinux-9.5: centos-9
 almalinux-9.6: centos-9
 almalinux-9.7: centos-9
 almalinux-9.8: centos-9
-aarch64-almalinux-9.4: PKGARCH=aarch64
-aarch64-almalinux-9.4: centos-9
-aarch64-almalinux-9.5: PKGARCH=aarch64
-aarch64-almalinux-9.5: centos-9
-aarch64-almalinux-9.6: PKGARCH=aarch64
-aarch64-almalinux-9.6: centos-9
-aarch64-almalinux-9.7: PKGARCH=aarch64
-aarch64-almalinux-9.7: centos-9
-aarch64-almalinux-9.8: PKGARCH=aarch64
-aarch64-almalinux-9.8: centos-9
-aarch64-almalinux-9: PKGARCH=aarch64
-aarch64-almalinux-9: centos-9
-# s390x RHEL 8 clone based
-s390x-centos-8: centos-8
-ppc64le-centos-8: centos-8
-# s390x RHEL 9 clone based
-s390x-centos-9: centos-9
-
-arm64-centos-9: PKGARCH=aarch64
-arm64-centos-9: centos-9
-ppc64le-centos-9: centos-9
 
 # Almalinux 10 is a CentOS 10 alias
 almalinux-10: centos-10
 almalinux-10.1: centos-10
 almalinux-10.2: centos-10
-aarch64-almalinux-10: PKGARCH=aarch64
-aarch64-almalinux-10: centos-10
-aarch64-almalinux-10.1: PKGARCH=aarch64
-aarch64-almalinux-10.1: centos-10
-aarch64-almalinux-10.2: PKGARCH=aarch64
-aarch64-almalinux-10.2: centos-10
-# s390x RHEL 10 clone based
-s390x-centos-10: centos-10
-ppc64le-centos-10: centos-10
-# s390x RHEL 10 clone based
-s390x-centos-10: centos-10
-
-arm64-centos-10: PKGARCH=aarch64
-arm64-centos-10: centos-10
-ppc64le-centos-10: centos-10
 
 # aarch64 RHEL-based
 aarch64-rhel: DIST=rhel

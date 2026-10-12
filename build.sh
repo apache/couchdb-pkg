@@ -17,11 +17,14 @@
 #   specific language governing permissions and limitations
 #   under the License.
 
-# This is the master shell script to build Docker containers
-# for CouchDB 2.x.
+# This is the main shell script to build CouchDB packages inside the
+# couchdb-ci Docker images.
 
 # stop on error
 set -e
+
+# Full build log. Can set BUILDKIT_PROGRESS=auto for a less noisy log.
+export BUILDKIT_PROGRESS=${BUILDKIT_PROGRESS:-plain}
 
 # This works if we're not called through a symlink
 # otherwise, see https://stackoverflow.com/questions/59895/
@@ -81,26 +84,19 @@ get-couch-tarball() {
 }
 
 build-couch() {
+  # $1 - platform, for example: ubuntu-noble
+  # CONTAINERARCH - arch, for example (amd64)
   split-os-ver $1
-  # We will be changing user to 'jenkins' - ensure it has write permissions
-  chmod a+rwx pkgs pkgs/couch pkgs/js
-  # $1 is plat, $2 is the optional path to a dist tarball
-  if [ -z ${CONTAINERARCH+x} ]; then
-    docker run \
-        --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
-        -u 0 -w /home/jenkins/couchdb-pkg \
-        --platform linux/amd64 \
-        apache/couchdbci-${os}:${version}-erlang-${ERLANGVERSION} \
-        make copy-couch $1 COUCHTARBALL=${COUCHTARBALL}
-  else
-    docker run \
-        --mount type=bind,src=${SCRIPTPATH},dst=/home/jenkins/couchdb-pkg \
-        -u 0 -w /home/jenkins/couchdb-pkg \
-        --platform linux/${CONTAINERARCH} \
-        apache/couchdbci-${os}:${version}-erlang-${ERLANGVERSION} \
-        make copy-couch ${CONTAINERARCH}-$1 COUCHTARBALL=${COUCHTARBALL}
-  fi
-  make clean
+  local arch=${CONTAINERARCH:-amd64}
+  echo " **** building $1 for ${arch} **** "
+  docker buildx build \
+      --platform linux/${arch} \
+      --pull \
+      --build-arg IMAGE=apache/couchdbci-${os}:${version}-erlang-${ERLANGVERSION} \
+      --build-arg TARGET=$1 \
+      --build-arg COUCHTARBALL=${COUCHTARBALL} \
+      --output type=local,dest=${SCRIPTPATH}/pkgs/couch \
+      ${SCRIPTPATH}
 }
 
 build-all-couch() {
@@ -119,8 +115,6 @@ build-all-couch() {
               ( ${base} == "centos-8" && ${arch} == "ppc64le" ) ||
               ( ${base} == "centos-9" && ${arch} == "ppc64le" ) ||
               ( ${base} == "centos-10" && ${arch} == "ppc64le") ||
-              ( ${base} == "debian-bullseye" && ${arch} == "ppc64le" ) ||
-              ( ${base} == "debian-bullseye" && ${arch} == "s390x") ||
               ( ${base} == "debian-bookworm" && ${arch} == "ppc64le" ) ||
               ( ${base} == "debian-trixie" && ${arch} == "ppc64le" ) ||
               ( ${base} == "ubuntu-jammy" && ${arch} == "ppc64le" ) ||
@@ -226,6 +220,9 @@ Recognized commands:
     - a URL to http(s)://domain.com/to/couchdb.tar.gz
 
   Commands marked with * require BINARY_CREDS env var.
+
+  Set CONTAINERARCH=arm64 to build a single platform for another arch (arm64).
+  couch-all builds every architecture in XPLAT_ARCHES.
 EOF
 }
 
